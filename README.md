@@ -10,5 +10,5 @@ Présentation de l'équipe :
 DOUSSET Guillaume, README éditeur
 GALLIOT Félix, développeur
 GAUTON Thibault, superviseur
-NAME Corentin, 
-NAME Corentin 2, 
+MARIE Corentin, 
+GARREAU Corentin 2, 
