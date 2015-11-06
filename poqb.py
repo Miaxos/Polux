@@ -20,7 +20,7 @@ def solve(cube_c54):
     :Example:
 
     solve('OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG')
-
+    return "R2L'F'DFLD'F2L'F'DFLDBDBL2B'D'BD2L'D'LD'RDR'D2F'D'F2DF'D'FDF'D2RD'R'D'B'DBDBD'B'D'L'DLD'F'DFDLD'L'D'R'DRDFD'LDL'D'F'D2FD'B'DF'D'UBU'B'UBD2B'U'BUB'U'BD'"
     """
 
     pass
@@ -30,4 +30,3 @@ def solve(cube_c54):
 if __name__=="__main__":
     cube = 'OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG'
     print ("Pour la résolution de {}\nExécuter la manoeuvre {}".format(cube, solve(cube)))
-
