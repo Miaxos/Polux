@@ -8,13 +8,13 @@ Aide pour la syntaxe: https://confluence.atlassian.com/bitbucketserver/markdown-
 
 Présentation de l'équipe :
 
-DOUSSET Guillaume
+DOUSSET Guillaume  
 GALLIOT Félix
 GRIFFON Anthony
 ...
 
 
-DOUSSET Guillaume, README éditeur
+DOUSSET Guillaume, README éditeur<br />
 GALLIOT Félix, développeur
 GAUTON Thibault, superviseur
 MARIE Corentin, 
