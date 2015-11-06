@@ -24,5 +24,3 @@ MARIE Corentin,
 GARREAU Corentin 2,  
 GRIFFON Anthony,  
 
-
-
