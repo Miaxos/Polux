@@ -1,4 +1,4 @@
-# Polux
+# Polux Blalalalz
 
 Test
 
@@ -18,7 +18,4 @@ DOUSSET Guillaume, README éditeur
 GALLIOT Félix, développeur
 GAUTON Thibault, superviseur
 MARIE Corentin, 
-GARREAU Corentin 2, 
-
-
-
+GARREAU Corentin 2,
