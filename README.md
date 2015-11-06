@@ -1,6 +1,5 @@
-# Polux
-
-Test
+Polux
+=====
 
 Projet Rubik's Cube 
 
