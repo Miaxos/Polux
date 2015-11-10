@@ -15,6 +15,9 @@ MARIE Corentin,
 GARREAU Corentin 2,  
 GRIFFON Anthony, Owner  
 
+Configuration Python utiliséé (pour ne pas avoir de problèmes avec les histoires d'indendation notamment) :
+* Indentation Width = 4
+
 ##### À l'intention de ceux qui mettent des issues avec seulement un titre  
 Merci de bien vouloir décrire le problème / la tâche à effectuer, de façon à ce que ceux à qui l'issue est assignée puissent savoir de quoi il s'agit.  
 
