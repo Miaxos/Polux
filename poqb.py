@@ -31,3 +31,11 @@ if __name__=="__main__":
     cube = 'OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG'
     print ("Pour la résolution de {}\nExécuter la manoeuvre {}".format(cube, solve(cube)))
 
+class cube:
+    '''
+    Un cube est défini par sa chaine. Initialement, on considère le cube résolu.
+    Tel que la chaine de caractère le définissant soit de type:
+    Up + Left + Front + Right + Back + Down (+ : concténation)
+    '''
+    def __init__(self, chaine="WWWWWWWWWGGGGGGGGGRRRRRRRRROOOOOOOOOBBBBBBBBBYYYYYYYYY"):
+        self.chaine = chaine
