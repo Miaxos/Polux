@@ -37,5 +37,5 @@ class cube:
     Tel que la chaine de caractère le définissant soit de type:
     Up + Left + Front + Right + Back + Down (+ : concténation)
     '''
-    def __init__(self, chaine="WWWWWWWWWGGGGGGGGGRRRRRRRRROOOOOOOOOBBBBBBBBBYYYYYYYYY"):
+    def __init__(self, chaine="WWWWWWWWWGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOYYYYYYYYY"):
         self.chaine = chaine
