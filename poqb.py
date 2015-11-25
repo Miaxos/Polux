@@ -1,6 +1,8 @@
 # poqb.py
 # -*- coding: utf-8 -*-
 
+import numpy as np
+
 def solve(cube_c54):
     """La fonction principale du projet qui résoud un Rubik's Cube.
 
@@ -41,20 +43,23 @@ class Cube:
         '''
         Transforme la chaine de caractère qui définit le cube en une liste qui définit les faces du cube
         '''
-        ch = []
+        ch = []                 # On crée un liste qui va contenir tous les caractère de "chaine"
         for k in chaine:
             ch.append(k)
-        self.L=[[]]
+        self.L=[[]]             # On pose L
         
-        for k in range(3):
-            self.L[0].append([list(chaine[0+3*k:3+3*k])])
-        for k in range(4):
+        for k in range(3):                  # Détermination de la face du haut
+            self.L[0].append(list(chaine[0+3*k:3+3*k]))
+        for k in range(4):                  # Détermination des faces gauche, devant, droite , derrière
             self.L.append([list(chaine[9+3*k:12+3*k]),\
                       list(chaine[21+3*k:24+3*k]),\
                       list(chaine[33+3*k:36+3*k])])
         self.L.append([])
-        for k in range(3):
-            self.L[5].append([list(chaine[45+3*k:48+3*k])])
+        for k in range(3):                  # Détermination de la face de dérrière
+            self.L[5].append(list(chaine[45+3*k:48+3*k]))
+            
+        for k in range(6):                  # On transforme chacune des faces en tableau numpy 
+            self.L[k]=np.array(self.L[k])
     
     def afficheFaces(self):
         print(self.L)
