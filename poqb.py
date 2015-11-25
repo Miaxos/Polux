@@ -31,11 +31,31 @@ if __name__=="__main__":
     cube = 'OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG'
     print ("Pour la résolution de {}\nExécuter la manoeuvre {}".format(cube, solve(cube)))
 
-class cube:
+class Cube:
     '''
     Un cube est défini par sa chaine. Initialement, on considère le cube résolu.
     Tel que la chaine de caractère le définissant soit de type:
     Up + Left + Front + Right + Back + Down (+ : concténation)
     '''
     def __init__(self, chaine="WWWWWWWWWGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOYYYYYYYYY"):
-        self.chaine = chaine
+        '''
+        Transforme la chaine de caractère qui définit le cube en une liste qui définit les faces du cube
+        '''
+        ch = []
+        for k in chaine:
+            ch.append(k)
+        self.L=[[]]
+        
+        for k in range(3):
+            self.L[0].append([list(chaine[0+3*k:3+3*k])])
+        for k in range(4):
+            self.L.append([list(chaine[9+3*k:12+3*k]),\
+                      list(chaine[21+3*k:24+3*k]),\
+                      list(chaine[33+3*k:36+3*k])])
+        self.L.append([])
+        for k in range(3):
+            self.L[5].append([list(chaine[45+3*k:48+3*k])])
+    
+    def afficheFaces(self):
+        print(self.L)
+            
