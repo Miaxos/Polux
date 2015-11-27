@@ -13,19 +13,24 @@ class Cube:
         '''
         Transforme la chaine de caractère qui définit le cube en une liste qui définit les faces du cube
         '''
-        self.L=[[]]             # On pose L
+        # On pose L
+        self.L=[[]]
         
-        for k in range(3):                  # Détermination de la face du haut
+        # Détermination de la face du haut
+        for k in range(3): 
             self.L[0].append(list(chaine[0+3*k:3+3*k]))
-        for k in range(4):                  # Détermination des faces gauche, devant, droite , derrière
+        # Détermination des faces gauche, devant, droite , derrière
+        for k in range(4):                
             self.L.append([list(chaine[9+3*k:12+3*k]),\
                       list(chaine[21+3*k:24+3*k]),\
                       list(chaine[33+3*k:36+3*k])])
         self.L.append([])
-        for k in range(3):                  # Détermination de la face de dérrière
+        # Détermination de la face de dérrière
+        for k in range(3): 
             self.L[5].append(list(chaine[45+3*k:48+3*k]))
-            
-        for k in range(6):                  # On transforme chacune des faces en tableau numpy 
+        
+        # On transforme chacune des faces en tableau numpy     
+        for k in range(6):
             self.L[k]=np.array(self.L[k])
 
         self.L = np.array(self.L)
