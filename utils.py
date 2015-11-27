@@ -4,16 +4,10 @@
 import numpy as np
 
 class Cube:
-    '''
-    Un cube est défini par sa chaine. Initialement, on considère le cube résolu.
-    Tel que la chaine de caractère le définissant soit de type:
-    Up + Left + Front + Right + Back + Down (+ : concténation)
-    '''
     def __init__(self, chaine="WWWWWWWWWGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOYYYYYYYYY"):
         '''
         Transforme la chaine de caractère qui définit le cube en une liste qui définit les faces du cube
         '''
-        
         self.L=[[]]             # On pose L
         
         for k in range(3):                  # Détermination de la face du haut
@@ -30,7 +24,7 @@ class Cube:
             self.L[k]=np.array(self.L[k])
 
         self.L = np.array(self.L)
-        
+
     def afficheFaces(self):
         print(self.L, '\n', '-----\n')
 	
@@ -54,13 +48,14 @@ class Cube:
 
             # effectuer la rotation d'1/4 de tour horaire sur la face         
             # sélectionnée :
-            colonne_1 = [face[0] for k in range(-1, -4, -1)]
-            colonne_2 = [face[1] for k in range(-1, -4, -1)]
-            colonne_3 = [face[2] for k in range(-1, -4, -1)]
+            colonne_1 = [face[k][0] for k in range(-1, -4, -1)]
+            colonne_2 = [face[k][1] for k in range(-1, -4, -1)]
+            colonne_3 = [face[k][2] for k in range(-1, -4, -1)]
 
             # les colonnes de la face deviennent ses nouvelles lignes après
             # rotation :
-            face = np.array([colonne_1, colonne_2, colonne_3])          
+            #face = np.array([colonne_1, colonne_2, colonne_3]) # bug de l'aliasing (je code sous anaconda...)
+            self.L[dico[mouvement.upper()]] = np.array([colonne_1, colonne_2, colonne_3])
         
         else :
             raise TypeError
