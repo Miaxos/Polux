@@ -64,8 +64,8 @@ class Cube:
 
             # les colonnes de la face deviennent ses nouvelles lignes après
             # rotation :
-            #face = np.array([colonne_1, colonne_2, colonne_3]) # bug de l'aliasing (je code sous anaconda...)
-            self.L[dico[mouvement.upper()]] = np.array([colonne_1, colonne_2, colonne_3])
+            #face = np.array([colonne_1, colonne_2, colonne_3]) # je ne comprends pas pourquoi l'aliasing ne fonctionne pas
+            self.L[dico[mouvement.upper()]] = np.array([colonne_1, colonne_2, colonne_3]) # ça fonctionne
         
         else :
             raise TypeError
