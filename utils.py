@@ -4,6 +4,11 @@
 import numpy as np
 
 class Cube:
+    '''
+    Un cube est défini par sa chaine. Initialement, on considère le cube résolu.
+    Tel que la chaine de caractère le définissant soit de type:
+    Up + Left + Front + Right + Back + Down (+ : concténation)
+    '''
     def __init__(self, chaine="WWWWWWWWWGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOYYYYYYYYY"):
         '''
         Transforme la chaine de caractère qui définit le cube en une liste qui définit les faces du cube
