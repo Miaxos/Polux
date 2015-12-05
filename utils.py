@@ -7,7 +7,7 @@ class Cube:
     '''
     Un cube est défini par sa chaine. Initialement, on considère le cube résolu.
     Tel que la chaine de caractère le définissant soit de type:
-    Up + Left + Front + Right + Back + Down (+ : concténation)
+    Up + Left + Front + Right + Back + Down (+ : concaténation)
     '''
     def __init__(self, chaine="WWWWWWWWWGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOYYYYYYYYY"):
         '''
@@ -40,7 +40,7 @@ class Cube:
     def afficheFaces(self):
         print(self.L, '\n', '-----\n')
 	
-    def move(self, mouvement, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+    def moveHoraire(self, mouvement, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
         """
         moveSeq(String) - moves the Cube with the given pattern, ON PLACE
         
@@ -56,7 +56,8 @@ class Cube:
         
         if (type(mouvement) == str) and (len(mouvement) == 1) :
             # récupérer la face associée au mouvement :
-            face = self.L[dico[mouvement.upper()]]
+            idFace = dico[mouvement.upper()]
+            face = np.copy(self.L[idFace])
 
             # effectuer la rotation d'1/4 de tour horaire sur la face         
             # sélectionnée :
@@ -67,13 +68,41 @@ class Cube:
             # les colonnes de la face deviennent ses nouvelles lignes après
             # rotation :
             #face = np.array([colonne_1, colonne_2, colonne_3]) # je ne comprends pas pourquoi l'aliasing ne fonctionne pas
-            self.L[dico[mouvement.upper()]] = np.array([colonne_1, colonne_2, colonne_3]) # ça fonctionne
-        
+            self.L[idFace] = np.array([colonne_1, colonne_2, colonne_3]) # ça fonctionne
+
+            # Pour les autres faces entrainées dans la rotation :
+            # si ce sont les faces U ou D :
+            if idFace == 0 or idFace == 5 :
+                if idFace == 0 :
+                    idRow = 0 # il faudra bouger toutes les premières lignes des 4 autres faces si on tourne la face UP
+                else :
+                    idRow = 2 # il faudra bouger toutes les dernières lignes des 4 autres faces si on tourne la face DOWN
+                
+                # Ce qu'il faut faire :
+                # save(idRow(4)) ; idRow(1) --> 4 ;
+                # save(idRow(3)) ; saved_idRow(4) --> 3 ;
+                # save(idRow(2)) ; saved_idRow(3) --> 2 ;
+                # saved_idRow(2) --> 1
+                saveRow = np.copy(self.L[4][idRow])
+                self.L[4][idRow] = self.L[1][idRow]
+                for i in range(3, 0, -1):
+                    oldRow = np.copy(self.L[i][idRow])
+                    self.L[i][idRow] = saveRow
+                    saveRow = oldRow
+                    
+            # si ce sont les faces F ou B :
+            elif idFace == 2 or idFace == 4 :
+                # code
+            
+            # si ce sont les faces L ou R :
+            else :
+                # code
+                
         else :
             raise TypeError
         
 # Exemples :
-cube = Cube("123456789GGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOYYYYYYYYY")
+cube = Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
 cube.afficheFaces()
-cube.move('u')
+cube.move('d')
 cube.afficheFaces()
