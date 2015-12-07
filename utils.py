@@ -74,17 +74,25 @@ class Cube:
             # si ce sont les faces U ou D :
             if idFace == 0 or idFace == 5 :
                 if idFace == 0 :
-                    idRow = 0 # il faudra bouger toutes les premières lignes des 4 autres faces si on tourne la face UP
+                    idRow = 0 # (NB : row = ligne) il faudra bouger toutes les premières lignes des 4 autres faces si on tourne la face UP
                 else :
                     idRow = 2 # il faudra bouger toutes les dernières lignes des 4 autres faces si on tourne la face DOWN
                 
-                # Ce qu'il faut faire :
+                # Ce qu'il faut faire (en ayant arbitrairement choisi de
+                # commencer par la face 4):
                 # save(idRow(4)) ; idRow(1) --> 4 ;
                 # save(idRow(3)) ; saved_idRow(4) --> 3 ;
                 # save(idRow(2)) ; saved_idRow(3) --> 2 ;
                 # saved_idRow(2) --> 1
+                # Légende :
+                # idRow(x) : sélectionne la ligne d'indice idRow sur la
+                # face d'indice x
+                # x --> y : insère la ligne x dans la face y
+
+                # On choisit arbitrairement de commencer par la face 4 :
                 saveRow = np.copy(self.L[4][idRow])
                 self.L[4][idRow] = self.L[1][idRow]
+                # puis on repète cela pour les faces 3 à 1 :
                 for i in range(3, 0, -1):
                     oldRow = np.copy(self.L[i][idRow])
                     self.L[i][idRow] = saveRow
@@ -92,11 +100,37 @@ class Cube:
                     
             # si ce sont les faces F ou B :
             elif idFace == 2 or idFace == 4 :
-                # code
+                if idFace == 2:
+                    idFirstRow = 2
+                    idFirstColumn = 2
+                else :
+                    idFirstRow = 0
+                    idFirstColumn = 0
+
+                idSecondRow = 2 - idFirstRow
+                idSecondColumn = 2 - idFirstColumn
+                # En ayant arbitrairement choisi de commencer par la face 0):
+                # self.L[0][idFirstRow] # face UP
+                # self.L[5][idSecondRow] # face DOWN
+                # self.L[1][idFirstColumn] # face LEFT
+                # self.L[3][idSecondColumn] # face RIGHT
+                saveRow = np.copy(self.L[0][idFirstRow])
+                self.L[0][idFirstRow] = self.L[1][idFirstColumn] # face LEFT --> face UP (sens de rotation horaire)
+
+                oldRow = self.L[3][idSecondColumn]
+                self.L[3][idSecondColumn] = saveRow # face UP --> face RIGHT (sens de rotation horaire)
+                saveRow = oldRow
+
+                oldRow = self.L[5][idSecondColumn]
+                self.L[5][idSecondColumn] = saveRow # face RIGHT --> face DOWN (sens de rotation horaire)
+                saveRow = oldRow
+
+                self.L[1][idSecondColumn] = saveRow # face DOWN --> face LEFT (sens de rotation horaire)           
             
             # si ce sont les faces L ou R :
             else :
                 # code
+                idRow = 0 # TEMPORAIRE, juste là pour que le else ci-dessous ne génère pas une erreur 'expected an indent block'
                 
         else :
             raise TypeError
@@ -104,5 +138,5 @@ class Cube:
 # Exemples :
 cube = Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
 cube.afficheFaces()
-cube.move('d')
+cube.moveHoraire('d')
 cube.afficheFaces()
