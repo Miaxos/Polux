@@ -162,10 +162,64 @@ class Cube:
             j = j+1
         return None
         
+    def suitemvt(self, mvt): 
+        #mvt : liste des mouvenments à faire ex : ['U','B','2F','R'']
+    
+        for i in range(len(mvt)):
+            if len(mvt[i]) == 1
+                self.moveHoraire(mvt[i]) #Le nom des fonctions est provisoire. À changer si besoin
+            if len(mvt[i]) == 2  
+                if mvt[i][0]=='2':
+                    self.moveHoraire(mvt[i][1])
+                    self.moveHoraire(mvt[i][1])
+                if mvt[i][1]=="'": 
+                    self.moveAntiH(mvt[i][0]) #idem
+
+    def rearranger_croix(self): #La croix est déjà formée de base
+        enplace = [] #LFRB
+        for i in range(1,5):
+            if self.L[i][0][1]==self.L[i][1][1]: 
+                enplace.append(1)               #1 si l arrete est bien place 0 sinon
+            else:
+                enplace.append(0)
+        nbplace =sum(enplace)
+
+        while nbplace<2             #il y a necessairement 2 arrete bien place
+            self.moveHoraire('u')
+            enplace = [] #LFRB
+            for i in range(1,5):
+                if self.L[i][0][1]==self.L[i][1][1]:
+                    enplace.append(1)
+                else:
+                    enplace.append(0)
+        nbplace =sum(enplace)
+        
+        if not nbT == 4:
+            ## Cas 2 arrêtes en place côte à côte
+            if enplace[3] == enplace[0] == True:
+                faceact ='R'
+            if enplace[0]==enplace[1] == True:
+                faceact = 'B'
+            if enplace[1]==enplace[2] == True:
+                faceact = 'L'
+            if enplace[2]==enplace[3]==True:
+                faceact = 'F'
+            ##Cas 2 arrêtes en place en face
+            if enplace[0]==enplace[2]:
+                faceact = 'L'
+            if enplace[1]==enplace[3]:
+                faceact = 'F'
+
+            mvt=[faceact, 'U', faceact + "'", 'U', faceact, 'U2', faceact +"'", 'U']
+            suitemvt(mvt)
+
+        
+        
+    
+        
 # Exemples :
 cube = Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 cube.afficheFaces()
 print(cube.locate('U',2))
 
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
-
