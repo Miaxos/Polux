@@ -137,6 +137,8 @@ class Cube:
         ignoreface: str sous la forme (UFD) pour ignorer certaines faces.
         type: 1: corner 2: les autres
         Des qu'il en repère 1 il retourne sa position et la pos de sa liaison(?)
+
+        Return [(pos white, face white), (pos link1, face link1), [(pos link1, face link1) si type 1]]
         '''
         ignoreList = []
         for i in range(0,len(ignoreface)):
@@ -150,16 +152,20 @@ class Cube:
             while i < 3 and not(j in ignoreList):
                 print(self.L[j][i])
                 print('Face',j,"    ",np.where(self.L[j][i]=='O')[0])
-                if len(np.where(self.L[j][i]=='O')[0]) != 0:
-                    c = True
-                    i = 15
-                    print("ZBRA")
+                if type == 1: # CORNER
+                    None
+                elif type == 2: #Autre
+                    if 1 in (np.where(self.L[j][i]=='O')[0]):
+                        return [(i,1,j)]
                 i = i+1
             i = 0
             j = j+1
+        return None
         
 # Exemples :
-cube = Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
+cube = Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 cube.afficheFaces()
-cube.moveHoraire('d')
-cube.afficheFaces()
+print(cube.locate('U',2))
+
+    # Up + Left + Front + Right + Back + Down (+ : concaténation)
+
