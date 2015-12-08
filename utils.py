@@ -159,7 +159,7 @@ class Cube:
                 
         else :
             raise TypeError
-            def locate(self, ignoreface, type, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+    def locate(self, ignoreface, type, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
         '''
         ignoreface: str sous la forme (UFD) pour ignorer certaines faces.
         type: 1: corner 2: les autres
