@@ -159,6 +159,32 @@ class Cube:
                 
         else :
             raise TypeError
+            def locate(self, ignoreface, type, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+        '''
+        ignoreface: str sous la forme (UFD) pour ignorer certaines faces.
+        type: 1: corner 2: les autres
+        Des qu'il en repère 1 il retourne sa position et la pos de sa liaison(?)
+        '''
+        ignoreList = []
+        for i in range(0,len(ignoreface)):
+            idFace = dico[ignoreface[i].upper()]
+            ignoreList.append(idFace)
+        print(ignoreList)
+        j = 0
+        i = 0
+        c = False
+        while c == False:          
+            while i < 3 and not(j in ignoreList):
+                print(self.L[j][i])
+                print('Face',j,"    ",np.where(self.L[j][i]=='O')[0])
+                if len(np.where(self.L[j][i]=='O')[0]) != 0:
+                    c = True
+                    i = 15
+                    print("ZBRA")
+                i = i+1
+            i = 0
+            j = j+1
+
         
 # Exemples :
 # un cube qui permet de voir le déplacement exact de chaque vignette
