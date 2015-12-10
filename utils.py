@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-import numpy as np
 
 class Cube:
     '''
@@ -233,8 +232,42 @@ class Cube:
             mvt=[faceact, 'U', faceact + "'", 'U', faceact, 'U2', faceact +"'", 'U']
             suitemvt(mvt)
 
+    def isX(self, face, couleur, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+        '''
+        Cette fonction détermine si la face est totalement de la couleur demandé
+        Elle renvoie donc un booléen
+        
+        face : str de la face a testée
+        couleur : str de la couleur voulu
+        '''
+        # On suppose que la réponse est Vrai
+        a = True
+        idFace = dico[face.upper()]
+        # Pour toutes les lignes de la face
+        for k in range(3):
+            # Pour toutes les élèments de chaque ligne
+            for i in range(3):
+                # Si on trouve une facette qui n'est pas de la bonne couleur on renvoie Faux
+                if self.L[idFace][k][i] != couleur:
+                    a = False
+        return a
         
         
+    def wFace_1st_crown(self):
+        '''
+        Cette fonction termine la face blanche et fait la 1ère couronne du cube
+        '''
+        # Tant que la face blanche n'est pas totalement blanche
+        while not self.isX('U','W'):
+            # Chercher un coin avec une facette blanche sur toutes autres face hormis la face UP
+            corner = self.locate('U',1,'W')
+            # Si le coin trouvé est sur l'étage du bas (3ème couronne + face DOWN) et qu'il n'a pas déjà été pointé
+            faceCorner = coin[0][1]
+            if 'W' in self.L[faceCorner][2] or faceCorner == 5:
+                # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
+                
+                
+                
     
         
 # Exemples :
@@ -243,3 +276,7 @@ cube = Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 print(cube.locate('URL',2, 'O'))
 #cube.affichage()
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
+
+#Exemple CocoM
+cube=Cube()
+print(cube.isX('L','G'))
