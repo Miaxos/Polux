@@ -141,7 +141,7 @@ class Cube:
                 print('Face', j, "    ", np.where(self.L[j][i] == color)[0])
                 if type == 1:  # CORNER
                     None
-                elif type == 2:  #Autre
+                elif type == 2:  # Arrête
                     if 1 in (np.where(self.L[j][i] == color)[0]):
                         return [(i,1,j)]
                 i = i+1
@@ -198,9 +198,8 @@ class Cube:
                     enplace.append(1)
                 else:
                     enplace.append(0)
-        nbplace =sum(enplace)
-        
-        if not nbT == 4:
+        nbplace = sum(enplace)
+        if not nbT == 4:  # What the fuck is that ? NBT ?
             ## Cas 2 arrêtes en place côte à côte
             if enplace[3] == enplace[0] == True:
                 faceact ='R'
@@ -219,13 +218,10 @@ class Cube:
             mvt=[faceact, 'U', faceact + "'", 'U', faceact, 'U2', faceact +"'", 'U']
             suitemvt(mvt)
 
-        
-        
-    
-        
+
 # Exemples :
 cube = Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
-#cube.afficheFaces()
+cube.afficheFaces()
 print(cube.locate('URL',2, 'O'))
-cube.affichage()
+#cube.affichage()
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
