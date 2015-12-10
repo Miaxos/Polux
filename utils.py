@@ -251,7 +251,7 @@ class Cube:
             # Chercher un coin avec une facette blanche sur toutes autres face hormis la face UP
             corner = self.locate('U',1,'W')
             # Si le coin trouvé est sur l'étage du bas (3ème couronne + face DOWN) et qu'il n'a pas déjà été pointé
-            faceCorner = coin[0][1]
+            faceCorner = corner[0][1]
             if 'W' in self.L[faceCorner][2] or faceCorner == 5:
                 # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
                 
