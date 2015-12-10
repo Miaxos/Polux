@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import numpy as np
 
 class Cube:
     '''
@@ -132,7 +133,7 @@ class Cube:
                 
         else :
             raise TypeError
-    def locate(self, ignoreface, type, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+    def locate(self, ignoreface, type, color, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
         '''
         ignoreface: str sous la forme (UFD) pour ignorer certaines faces.
         type: 1: corner 2: les autres
@@ -151,24 +152,43 @@ class Cube:
         while c == False:          
             while i < 3 and not(j in ignoreList):
                 print(self.L[j][i])
-                print('Face',j,"    ",np.where(self.L[j][i]=='O')[0])
+                print('Face',j,"    ",np.where(self.L[j][i]==color)[0])
                 if type == 1: # CORNER
                     None
                 elif type == 2: #Autre
-                    if 1 in (np.where(self.L[j][i]=='O')[0]):
+                    if 1 in (np.where(self.L[j][i]==color)[0]):
                         return [(i,1,j)]
                 i = i+1
             i = 0
             j = j+1
         return None
-        
+    def affichage(self):
+        img = Image.open('a.png')
+        img = Image.new( 'RGB', (255,255), (220,220,220)) # create a new black image
+
+        draw = ImageDraw.Draw(img)
+        # draw.line((0, 0) + img.size, fill=128)
+        # draw.line((0, img.size[1], img.size[0], 0), fill=128)
+        draw.rectangle([(28,78),(76,126)],(211,211,211))
+        draw.rectangle([(78,78),(126,126)],(211,211,211))
+        draw.rectangle([(128,78),(176,126)],(211,211,211))
+        draw.rectangle([(178,78),(226,126)],(211,211,211))
+
+        draw.rectangle([(78,28),(126,76)],(211,211,211))
+        draw.rectangle([(78,128),(126,176)],(211,211,211))
+
+        draw.rectangle([(78,28),(94,44)], "red")
+        draw.rectangle([(94,28),(110,44)], "white")
+        draw.rectangle([(110,28),(126,44)], "blue")
+
+        img.show() 
     def suitemvt(self, mvt): 
         #mvt : liste des mouvenments à faire ex : ['U','B','2F','R'']
     
         for i in range(len(mvt)):
-            if len(mvt[i]) == 1
+            if len(mvt[i]) == 1:
                 self.moveHoraire(mvt[i]) #Le nom des fonctions est provisoire. À changer si besoin
-            if len(mvt[i]) == 2  
+            if len(mvt[i]) == 2:
                 if mvt[i][0]=='2':
                     self.moveHoraire(mvt[i][1])
                     self.moveHoraire(mvt[i][1])
@@ -184,7 +204,7 @@ class Cube:
                 enplace.append(0)
         nbplace =sum(enplace)
 
-        while nbplace<2             #il y a necessairement 2 arrete bien place
+        while nbplace<2:             #il y a necessairement 2 arrete bien place
             self.moveHoraire('u')
             enplace = [] #LFRB
             for i in range(1,5):
@@ -219,7 +239,7 @@ class Cube:
         
 # Exemples :
 cube = Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
-cube.afficheFaces()
-print(cube.locate('U',2))
-
+#cube.afficheFaces()
+print(cube.locate('URL',2, 'O'))
+#cube.affichage()
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
