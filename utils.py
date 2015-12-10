@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-import numpy as np
+from PIL import Image, ImageDraw
 
 class Cube:
     '''
@@ -241,5 +241,5 @@ class Cube:
 cube = Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 #cube.afficheFaces()
 print(cube.locate('URL',2, 'O'))
-#cube.affichage()
+cube.affichage()
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
