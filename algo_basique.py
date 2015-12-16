@@ -105,7 +105,7 @@ def rearranger_croix(cube): #La croix est déjà formée de base
         if enplace[1]==enplace[3]:
             faceact = 'F'
 
-        mvt=[faceact, 'U', faceact + "'", 'U', faceact, 'U2', faceact +"'", 'U']
+        mvt=faceact+'U'+ faceact + "'"+ 'U'+ faceact+ 'U2'+ faceact +"'"+ 'U'
         suitemvt(mvt)
 
 def isX(cube, face, couleur, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
