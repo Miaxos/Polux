@@ -141,51 +141,17 @@ def wFace_1st_crown(cube):
         if 'W' in cube.L[faceCorner][2] or faceCorner == 5:
             # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
                 
-
-def yellow_cross(cube):
-
-	face=cube.L[6]
-
-	if not face[0][1]==face[1][0]==face[1][2]==face[2][1]: #la croix n'est ps presente
-
-		#cas des arretes opposees
-
-		if face[0][1] == face[2][1] : 
-			mvt = "LBDB'D'L'"
-
-		elif face[1][0] == face[1][2]: 
-			mvt = "BRDR'D'B'"
-		
-		#sinon cas des arretes ajacentes
-
-		elif face[1][0]== face[0][1]: 
-			mvt = "BDRD'R'B'"
-
-		elif face[1][0] == face[2][1]:
-			mvt = "RDFD'F'R'
-
-		elif face[1][2] == face[0][1]:
-			mvt = "LDBD'B'L'"
-
-		elif face[1][2] == face[2][1]:
-			mvt = "FDLD'L'F'"
-
-	#la croix est faite mais il faut que les arretes soient bien placees 
-
-	#recup color des faces:
-	color= {}
-	for i in range(1,6):
-		pass                
+                
                 
     
         
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 cube.afficheFaces()
-print(cube.locate('URL',2, 'O'))
+print(locate(cube, 'URL',2, 'O'))
 #cube.affichage()
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
 #Exemple CocoM
 cube=struct.Cube()
-print(cube.isX('L','G'))
+print(cube.isFull('L','G'))
