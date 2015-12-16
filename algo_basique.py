@@ -65,11 +65,11 @@ def suitemvt(cube, mvt):
 	    if mvt[i] in ['U', 'L', 'F', 'R', 'B', 'D']:
             if mvt[i+1] = 2:
 			    cube.moveHoraire(mvt[i])
-                cube.moveHoraire(mvt[i])
+			    cube.moveHoraire(mvt[i])
             elif mvt[i+1]=="'": 
                 cube.moveAntiH(mvt[i]) #Nom de la fonction a changer si besoin
             else:
-            cube.moveHoraire(mvt[i])
+                cube.moveHoraire(mvt[i])
 
 def rearranger_croix(cube): #La croix est déjà formée de base
     enplace = [] #LFRB
