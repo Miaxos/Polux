@@ -60,12 +60,12 @@ def affichage(cube):
     
 def suitemvt(cube, mvt): 
     #mvt : chaine
-	#cube :declass cube
+    #cube :declass cube
     for i in range(len(mvt)):
-	    if mvt[i] in ['U', 'L', 'F', 'R', 'B', 'D']:
+        if mvt[i] in ['U', 'L', 'F', 'R', 'B', 'D']:
             if mvt[i+1] = 2:
-			    cube.moveHoraire(mvt[i])
-			    cube.moveHoraire(mvt[i])
+                cube.moveHoraire(mvt[i])
+                cube.moveHoraire(mvt[i])
             elif mvt[i+1]=="'": 
                 cube.moveAntiH(mvt[i]) #Nom de la fonction a changer si besoin
             else:
