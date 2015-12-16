@@ -255,22 +255,6 @@ class Cube:
                 for k in range(3) :
                     # on conserve l'ordre des listes :
                     self.L[2][k][idColumn] = saveColumn[k]
-
-                ## JUSQU'ICI : TESTÉ ET APPROUVÉ
                 
         else :
             raise TypeError
-
-
-# Exemples :
-# un cube qui permet de voir le déplacement exact de chaque vignette
-# puisqu'elles sont toutes identifiées de manière unique dans la configuration
-# de départ :
-cube = Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
-
-cube.afficheFaces()
-for i in ['u', 'd', 'f', 'b', 'l', 'r']:
-    print("move = " + str(i))
-    cube.moveHoraire(i)
-    cube.afficheFaces()
-    cube = Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
