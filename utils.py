@@ -2,11 +2,50 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-<<<<<<< HEAD
-=======
 from PIL import Image, ImageDraw
 
->>>>>>> 08cc345398160c58364d5d2ab2d649b4e225c8ed
+# posface, poscube, posligne
+# face, colonne, ligne
+locaz =[ 
+[[0,0,0],[1,0,0],[4,2,0]],
+[[0,1,0],[4,1,0]],
+[[0,2,0],[4,0,0],[3,2,0]],
+[[0,0,1],[1,1,0]],
+[[0,1,1]], #Milieu UP
+[[0,2,0],[3,1,0]],
+[[0,0,2],[1,2,0],[2,0,0]],
+[[0,1,2],[2,1,0]],
+[[0,2,2],[2,2,0],[3,0,0]],
+[[5,0,0],[2,0,2],[1,2,2]],
+[[5,1,0],[2,1,2]],
+[[5,2,0],[2,2,2],[3,0,2]],
+[[5,0,1],[1,1,2]],
+[[5,1,1]], #Milieu DOWN
+[[5,2,1],[3,1,2]],
+[[5,0,2],[1,0,2],[4,2,2]],
+[[5,1,2],[4,1,2]],
+[[5,2,2],[3,2,2],[4,1,2]],
+[[1,0,1],[4,2,1]],
+[[1,2,1],[2,0,1]],
+[[2,2,1],[3,0,1]],
+[[3,2,1],[4,0,1]],
+[[1,1,1]], #Milieu LEFT
+[[2,1,1]], #Milieu FRONT
+[[3,1,1]], #Milieu RIGHT
+[[4,1,1]], #Milieu BACK
+]
+
+def link(posface, poscube, posligne):
+    for i in range(0,len(locaz)):
+        if [posface,poscube,posligne] in locaz[i]:
+            r = []
+            r.append([posface,poscube,posligne])
+            for j in range(0,len(locaz[i])):
+                if locaz[i][j] != [posface,poscube,posligne]:
+                    r.append(locaz[i][j])
+            return r
+
+
 
 class Cube:
     '''
@@ -122,35 +161,38 @@ class Cube:
         else:
             raise TypeError
 
-    def locate(self, ignoreface, type, color, dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+    def locate(self, ignoreface, type, color, ignorepos, dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
         '''
         ignoreface: str sous la forme (UFD) pour ignorer certaines faces.
         type: 1: corner 2: les autres
         Des qu'il en repère 1 il retourne sa position et la pos de sa liaison(?)
 
+        # posface, poscube, posligne
         Return [(pos white, face white), (pos link1, face link1), [(pos link1, face link1) si type 1]]
         '''
         ignoreList = []        
         for i in range(0,len(ignoreface)):
             idFace = dico[ignoreface[i].upper()]
             ignoreList.append(idFace)
-        print(ignoreList)
         j = 0
         i = 0
-        c = False
-        while c == False:
+        while j < 6:
             while i < 3 and not(j in ignoreList):
-                print(self.L[j][i])
-                print('Face', j, "    ", np.where(self.L[j][i] == color)[0])
+                #print(self.L[j][i])
+                #print('Face', j, "    ", np.where(self.L[j][i] == color)[0])
                 if type == 1:  # CORNER
-                    None
+                    if 0 in (np.where(self.L[j][i] == color)[0]) and not([j,0,i] in ignorepos):
+                        return link(j,0,i)
+                    elif 2 in (np.where(self.L[j][i] == color)[0]) and not([j,2,i] in ignorepos):
+                        return link(j,2,i)
                 elif type == 2:  # Arrête
-                    if 1 in (np.where(self.L[j][i] == color)[0]):
-                        return [(i,1,j)]
+                    if 1 in (np.where(self.L[j][i] == color)[0]) and not([j,1,i] in ignorepos):
+                        return link(j,1,i)
                 i = i+1
             i = 0
             j = j+1
         return None
+        
     def affichage(self):
         img = Image.open('a.png')
         img = Image.new( 'RGB', (255,255), (220,220,220)) # create a new black image
@@ -254,18 +296,16 @@ class Cube:
             faceCorner = corner[0][1]
             if 'W' in self.L[faceCorner][2] or faceCorner == 5:
                 # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
-                
-                
-                
-    
-        
+                None
+
+
 # Exemples :
 cube = Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 cube.afficheFaces()
-print(cube.locate('URL',2, 'O'))
+print(cube.locate('U',2, 'R', [[3, 1, 1]]))
 #cube.affichage()
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
 #Exemple CocoM
 cube=Cube()
-print(cube.isX('L','G'))
+#print(cube.isX('L','G'))
