@@ -3,7 +3,7 @@
 
 import numpy as np
 
-import utils.py as struct
+import utils as struct
 
 from PIL import Image, ImageDraw
 
@@ -59,19 +59,17 @@ def affichage(cube):
     img.show()
     
 def suitemvt(cube, mvt): 
-    #mvt : chaine
-	#cube :declass cube
+    #mvt : liste des mouvenments à faire ex : ['U','B','2F','R'']
 
     for i in range(len(mvt)):
-		if mvt[i] in ['U', 'L', 'F', 'R', 'B', 'D']:
-                    
-			if mvt[i+1] = 2:
-				cube.moveHoraire(mvt[i])
-				cube.moveHoraire(mvt[i])
-			elif mvt[i+1]=="'": 
-                cube.moveAntiH(mvt[i]) #Nom de la fonction a changer si besoin
-			else:
-				cube.moveHoraire(mvt[i])
+        if len(mvt[i]) == 1:
+            cube.moveHoraire(mvt[i]) #Le nom des fonctions est provisoire. À changer si besoin
+        if len(mvt[i]) == 2:
+            if mvt[i][0]=='2':
+                cube.moveHoraire(mvt[i][1])
+                cube.moveHoraire(mvt[i][1])
+            if mvt[i][1]=="'": 
+                cube.moveAntiH(mvt[i][0]) #idem
 
 def rearranger_croix(cube): #La croix est déjà formée de base
     enplace = [] #LFRB
