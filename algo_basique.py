@@ -15,7 +15,7 @@ def locate(cube, ignoreface, type, color, dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':
 
     Return [(pos white, face white), (pos link1, face link1), [(pos link1, face link1) si type 1]]
     '''
-    ignoreList = []        
+    ignoreList = []
     for i in range(0,len(ignoreface)):
         idFace = dico[ignoreface[i].upper()]
         ignoreList.append(idFace)
@@ -57,8 +57,8 @@ def affichage(cube):
     draw.rectangle([(110,28),(126,44)], "blue")
 
     img.show()
-    
-def suitemvt(cube, mvt): 
+
+def suitemvt(cube, mvt):
     #mvt : chaine
     #cube :declass cube
     for i in range(len(mvt)):
@@ -66,53 +66,78 @@ def suitemvt(cube, mvt):
             if mvt[i+1] = 2:
                 cube.moveHoraire(mvt[i])
                 cube.moveHoraire(mvt[i])
-            elif mvt[i+1]=="'": 
+            elif mvt[i+1]=="'":
                 cube.moveAntiH(mvt[i]) #Nom de la fonction a changer si besoin
             else:
                 cube.moveHoraire(mvt[i])
 
-def rearranger_croix(cube): #La croix est déjà formée de base
-    enplace = [] #LFRB
-    for i in range(1,5):
-        if cube.L[i][0][1]==cube.L[i][1][1]: 
-            enplace.append(1)               #1 si l arrete est bien place 0 sinon
-        else:
-            enplace.append(0)
-    nbplace =sum(enplace)
+def rearranger_croix(cube, faceup):
+    '''
+    Permet de mettre les arrete de la croix des face up et down a leur place
+    La croix est déjà formée de base
+    faceup : boleen pour differencier face up et down (croix de différente manière)
+    '''
+    if faceup:
+        face = 'U'
+        idplace = 0
+    else:
+        face = 'D'
+        idplace = 2
 
-    while nbplace<2:             #il y a necessairement 2 arrete bien place
-        cube.moveHoraire('u')
-        enplace = [] #LFRB
+    nbplace=0
+    while nbplace<2: #il y a necessairement 2 arrete bien place
+        enplace = [] #les positions dans la liste correspondent aux différentes faces
         for i in range(1,5):
-            if cube.L[i][0][1]==cube.L[i][1][1]:
+            if cube.L[i][idplace][1]==cube.L[i][1][1]:
                 enplace.append(1)
             else:
                 enplace.append(0)
-    nbplace = sum(enplace)
-    if not nbT == 4:  # What the fuck is that ? NBT ?
+            nbplace = sum(enplace)
+        if nbplace < 2:
+            cube.moveHoraire(face)
+
+    if nbplace =! 4 and faceup: #si les 4 sont bien placé, rien a faire
         ## Cas 2 arrêtes en place côte à côte
-        if enplace[3] == enplace[0] == True:
-            faceact ='R'
-        if enplace[0]==enplace[1] == True:
-            faceact = 'B'
-        if enplace[1]==enplace[2] == True:
-            faceact = 'L'
-        if enplace[2]==enplace[3]==True:
-            faceact = 'F'
+        if enplace[3] == enplace[0] == 1:
+            if faceup: #c'est plus opimise niveau mouvment si on considere differremment les face up  et down
+                mvt ="RU'R'U'R"
+            else:
+                mvt ="FD2F'D'FD'F'D'"
+        if enplace[0]==enplace[1] == 1:
+            if faceup:
+                mvt = "BU'B'U'B"
+            else:
+                "RD2R'D'RD'R'D'"
+        if enplace[1]==enplace[2] == 1:
+            if faceup:
+                mvt = "LU'L'U'L"
+            else:
+                mvt = "BD2B'D'BD'B'D'"
+        if enplace[2]==enplace[3]==1:
+            if faceup:
+                mvt = "FU'F'U'F"
+            else:
+                mvt = "LD2L'D'LD'L'D'"
+
         ##Cas 2 arrêtes en place en face
         if enplace[0]==enplace[2]:
-            faceact = 'L'
+            if faceup:
+                mvt = "LU2L'U2L"
+            else:
+                mvt = "LD2L'D'LD'L'FD2F'D'FD'F'D'"
         if enplace[1]==enplace[3]:
-            faceact = 'F'
-
-        mvt=faceact+'U'+ faceact + "'"+ 'U'+ faceact+ 'U2'+ faceact +"'"+ 'U'
+            if faceup:
+                mvt = "FU2F'U2F"
+            else:
+                mvt = "FD2F'D'FD'D'LD2L'D'LD'L'D'"
         suitemvt(mvt)
+
 
 def isX(cube, face, couleur, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
     '''
     Cette fonction détermine si la face est totalement de la couleur demandé
     Elle renvoie donc un booléen
-    
+
     face : str de la face a testée
     couleur : str de la couleur voulu
     '''
@@ -127,7 +152,7 @@ def isX(cube, face, couleur, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
             if cube.L[idFace][k][i] != couleur:
                 a = False
     return a
-    
+
 def wFace_1st_crown(cube):
     '''
     Cette fonction termine la face blanche et fait la 1ère couronne du cube
@@ -140,9 +165,9 @@ def wFace_1st_crown(cube):
         faceCorner = corner[0][1]
         if 'W' in cube.L[faceCorner][2] or faceCorner == 5:
             # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
-                
 
-def yellow_cross(cube):
+
+def D_cross(cube):
 
 	face=cube.L[6]
 
@@ -150,15 +175,15 @@ def yellow_cross(cube):
 
 		#cas des arretes opposees
 
-		if face[0][1] == face[2][1] : 
+		if face[0][1] == face[2][1] :
 			mvt = "LBDB'D'L'"
 
-		elif face[1][0] == face[1][2]: 
+		elif face[1][0] == face[1][2]:
 			mvt = "BRDR'D'B'"
-		
+
 		#sinon cas des arretes ajacentes
 
-		elif face[1][0]== face[0][1]: 
+		elif face[1][0]== face[0][1]:
 			mvt = "BDRD'R'B'"
 
 		elif face[1][0] == face[2][1]:
@@ -169,16 +194,16 @@ def yellow_cross(cube):
 
 		elif face[1][2] == face[2][1]:
 			mvt = "FDLD'L'F'"
+        #sinon aucune presente
+        else:
+			mvt = "FDLD'L'F'LBDB'D'L'"
 
-	#la croix est faite mais il faut que les arretes soient bien placees 
+	#la croix est faite mais il faut que les arretes soient bien placees
 
-	#recup color des faces:
-	color= {}
-	for i in range(1,6):
-		pass                
-                
-    
-        
+	rearranger_croix(cube, False) #on re-arrange la croix
+
+
+
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 cube.afficheFaces()
