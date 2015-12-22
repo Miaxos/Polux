@@ -63,7 +63,7 @@ def suitemvt(cube, mvt):
     #cube :declass cube
     for i in range(len(mvt)):
         if mvt[i] in ['U', 'L', 'F', 'R', 'B', 'D']:
-            if mvt[i+1] = 2:
+            if mvt[i+1] == 2:
                 cube.moveHoraire(mvt[i])
                 cube.moveHoraire(mvt[i])
             elif mvt[i+1]=="'":
@@ -96,7 +96,7 @@ def rearranger_croix(cube, faceup):
         if nbplace < 2:
             cube.moveHoraire(face)
 
-    if nbplace =! 4 and faceup: #si les 4 sont bien placé, rien a faire
+    if nbplace != 4 and faceup: #si les 4 sont bien placé, rien a faire
         ## Cas 2 arrêtes en place côte à côte
         if enplace[3] == enplace[0] == 1:
             if faceup: #c'est plus opimise niveau mouvment si on considere differremment les face up  et down
@@ -132,28 +132,6 @@ def rearranger_croix(cube, faceup):
                 mvt = "FD2F'D'FD'D'LD2L'D'LD'L'D'"
         suitemvt(mvt)
 
-
-def isX(cube, face, couleur, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
-    '''
-    Cette fonction détermine si la face est totalement de la couleur demandé
-    Elle renvoie donc un booléen
-
-    face : str de la face a testée
-    couleur : str de la couleur voulu
-    '''
-    # On suppose que la réponse est Vrai
-    a = True
-    idFace = dico[face.upper()]
-    # Pour toutes les lignes de la face
-    for k in range(3):
-        # Pour toutes les élèments de chaque ligne
-        for i in range(3):
-            # Si on trouve une facette qui n'est pas de la bonne couleur on renvoie Faux
-            if cube.L[idFace][k][i] != couleur:
-                a = False
-    return a
-
-<<<<<<< HEAD
 def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}, dico2={'W':0, 'G':1, 'R':2, 'B':3, 'O':4, 'Y':5}):
     '''
     Si le coin n'est pas situé en dessous de son emplacement final, la fonction tourne la face DOWN
@@ -185,11 +163,6 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
 #    if count == 1:
         
         
-        
-    
-    
-=======
->>>>>>> be61e98eca77507ea53196bf9b187b804ba7f1f7
 def wFace_1st_crown(cube):
     '''
     Cette fonction termine la face blanche et fait la 1ère couronne du cube
@@ -204,7 +177,6 @@ def wFace_1st_crown(cube):
             # Pour eviter le bug python
             truc = 1
             # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
-<<<<<<< HEAD
         else:
             truc = 0
             # Ajouter cette position dans la liste des exceptions
@@ -212,7 +184,7 @@ def wFace_1st_crown(cube):
                 
     
         
-=======
+
 
 
 def D_cross(cube):
@@ -243,16 +215,13 @@ def D_cross(cube):
 		elif face[1][2] == face[2][1]:
 			mvt = "FDLD'L'F'"
         #sinon aucune presente
-        else:
+       else:
 			mvt = "FDLD'L'F'LBDB'D'L'"
 
 	#la croix est faite mais il faut que les arretes soient bien placees
 
 	rearranger_croix(cube, False) #on re-arrange la croix
 
-
-
->>>>>>> be61e98eca77507ea53196bf9b187b804ba7f1f7
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 cube.afficheFaces()
@@ -261,10 +230,6 @@ print(locate(cube, 'URL',2, 'O'))
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
 #Exemple CocoM
-<<<<<<< HEAD
-#cube=struct.Cube()
-#print(isX(cube,'L','G'))
-=======
 cube=struct.Cube()
 print(cube.isX('L','G'))
->>>>>>> be61e98eca77507ea53196bf9b187b804ba7f1f7
+
