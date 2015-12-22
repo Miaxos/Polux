@@ -3,7 +3,7 @@
 
 import numpy as np
 
-import utils.py as struct
+import utils as struct
 
 from PIL import Image, ImageDraw
 
@@ -127,6 +127,40 @@ def isX(cube, face, couleur, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
             if cube.L[idFace][k][i] != couleur:
                 a = False
     return a
+
+def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}, dico2={'W':0, 'G':1, 'R':2, 'B':3, 'O':4, 'Y':5}):
+    '''
+    Si le coin n'est pas situé en dessous de son emplacement final, la fonction tourne la face DOWN
+    du cube de tel sorte qu'il soit alors à la bonne place. Si le coin est déjà bien placé, elle retourne True.
+    
+    positionCoin : chaine de 3 caractère ( Ex : "LFD" ) 
+    couleurCoin  : chaine de 3 caractère ( Ex : "WBR" )
+    
+    Dans l'exemple : sur la face Left le coin est White, sur la face Front le coin est Bleu, etc...
+    '''
+    positionCoinN=[]
+    couleurCoinN=[]
+    for k in range(3):
+        # Transcrit les lettres en valeurs décimal (voir support papier pour explication)
+        positionCoinN.append(dico[positionCoin[k].upper()])
+        couleurCoinN.append(dico2[couleurCoin[k].upper()])
+   
+   # On crée un variable qui compte le nombre de chiffres identique entre posiontCoinN et couleurCoinN
+    count = 0
+    for k in range(3):
+        if positionCoinN[k] in couleurCoinN:
+            count += 1
+    # 4 cas
+    # 1er cas : il n'y a auncun chiffre commun au deux valeur
+    if count == 0:
+        for k in range(2):
+            cube.moveHoraire('d')
+    # 2eme et 3eme cas : il y a 1 seul chiffre en commun
+#    if count == 1:
+        
+        
+        
+    
     
 def wFace_1st_crown(cube):
     '''
@@ -139,8 +173,12 @@ def wFace_1st_crown(cube):
         # Si le coin trouvé est sur l'étage du bas (3ème couronne + face DOWN) et qu'il n'a pas déjà été pointé
         faceCorner = corner[0][1]
         if 'W' in cube.L[faceCorner][2] or faceCorner == 5:
+            # Pour eviter le bug python
+            truc = 1
             # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
-                
+        else:
+            truc = 0
+            # Ajouter cette position dans la liste des exceptions
                 
                 
     
@@ -148,10 +186,10 @@ def wFace_1st_crown(cube):
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 cube.afficheFaces()
-print(cube.locate('URL',2, 'O'))
+print(locate(cube, 'URL',2, 'O'))
 #cube.affichage()
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
 #Exemple CocoM
-cube=struct.Cube()
-print(cube.isX('L','G'))
+#cube=struct.Cube()
+#print(isX(cube,'L','G'))
