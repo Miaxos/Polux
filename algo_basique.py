@@ -7,35 +7,78 @@ import utils as struct
 
 from PIL import Image, ImageDraw
 
-def locate(cube, ignoreface, type, color, dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
-    '''
-    ignoreface: str sous la forme (UFD) pour ignorer certaines faces.
-    type: 1: corner 2: les autres
-    Des qu'il en repère 1 il retourne sa position et la pos de sa liaison(?)
+# posface, poscube, posligne
+# face, colonne, ligne
+locaz =[ 
+[[0,0,0],[1,0,0],[4,2,0]],
+[[0,1,0],[4,1,0]],
+[[0,2,0],[4,0,0],[3,2,0]],
+[[0,0,1],[1,1,0]],
+[[0,1,1]], #Milieu UP
+[[0,2,0],[3,1,0]],
+[[0,0,2],[1,2,0],[2,0,0]],
+[[0,1,2],[2,1,0]],
+[[0,2,2],[2,2,0],[3,0,0]],
+[[5,0,0],[2,0,2],[1,2,2]],
+[[5,1,0],[2,1,2]],
+[[5,2,0],[2,2,2],[3,0,2]],
+[[5,0,1],[1,1,2]],
+[[5,1,1]], #Milieu DOWN
+[[5,2,1],[3,1,2]],
+[[5,0,2],[1,0,2],[4,2,2]],
+[[5,1,2],[4,1,2]],
+[[5,2,2],[3,2,2],[4,1,2]],
+[[1,0,1],[4,2,1]],
+[[1,2,1],[2,0,1]],
+[[2,2,1],[3,0,1]],
+[[3,2,1],[4,0,1]],
+[[1,1,1]], #Milieu LEFT
+[[2,1,1]], #Milieu FRONT
+[[3,1,1]], #Milieu RIGHT
+[[4,1,1]], #Milieu BACK
+]
 
-    Return [(pos white, face white), (pos link1, face link1), [(pos link1, face link1) si type 1]]
-    '''
-    ignoreList = []
-    for i in range(0,len(ignoreface)):
-        idFace = dico[ignoreface[i].upper()]
-        ignoreList.append(idFace)
-    print(ignoreList)
-    j = 0
-    i = 0
-    c = False
-    while c == False:
-        while i < 3 and not(j in ignoreList):
-            print(cube.L[j][i])
-            print('Face', j, "    ", np.where(cube.L[j][i] == color)[0])
-            if type == 1:  # CORNER
-                None
-            elif type == 2:  # Arrête
-                if 1 in (np.where(cube.L[j][i] == color)[0]):
-                    return [(i,1,j)]
-            i = i+1
+def link(posface, poscube, posligne):
+    for i in range(0,len(locaz)):
+        if [posface,poscube,posligne] in locaz[i]:
+            r = []
+            r.append([posface,poscube,posligne])
+            for j in range(0,len(locaz[i])):
+                if locaz[i][j] != [posface,poscube,posligne]:
+                    r.append(locaz[i][j])
+            return r
+            
+def locate(cube, ignoreface, type, color, ignorepos = [], dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+        '''
+        ignoreface: str sous la forme (UFD) pour ignorer certaines faces.
+        type: 1: corner 2: les autres
+        Des qu'il en repère 1 il retourne sa position et la pos de sa liaison(?)
+
+        # posface, poscube, posligne
+        Return [(pos white, face white), (pos link1, face link1), [(pos link1, face link1) si type 1]]
+        '''
+        ignoreList = []        
+        for i in range(0,len(ignoreface)):
+            idFace = dico[ignoreface[i].upper()]
+            ignoreList.append(idFace)
+        j = 0
         i = 0
-        j = j+1
-    return None
+        while j < 6:
+            while i < 3 and not(j in ignoreList):
+                #print(self.L[j][i])
+                #print('Face', j, "    ", np.where(self.L[j][i] == color)[0])
+                if type == 1:  # CORNER
+                    if 0 in (np.where(cube.L[j][i] == color)[0]) and not([j,0,i] in ignorepos):
+                        return link(j,0,i)
+                    elif 2 in (np.where(cube.L[j][i] == color)[0]) and not([j,2,i] in ignorepos):
+                        return link(j,2,i)
+                elif type == 2:  # Arrête
+                    if 1 in (np.where(cube.L[j][i] == color)[0]) and not([j,1,i] in ignorepos):
+                        return link(j,1,i)
+                i = i+1
+            i = 0
+            j = j+1
+        return None
 
 def affichage(cube):
     img = Image.open('a.png')
@@ -188,39 +231,38 @@ def wFace_1st_crown(cube):
 
 
 def D_cross(cube):
+    
+    face=cube.L[6]
+    
+    if not face[0][1]==face[1][0]==face[1][2]==face[2][1]: #la croix n'est ps presente
+        
+        # cas des arretes opposees
+        if face[0][1] == face[2][1] :
+            mvt = "LBDB'D'L'"
 
-	face=cube.L[6]
+        elif face[1][0] == face[1][2]:
+            mvt = "BRDR'D'B'"
 
-	if not face[0][1]==face[1][0]==face[1][2]==face[2][1]: #la croix n'est ps presente
+        #sinon cas des arretes ajacentes
 
-		#cas des arretes opposees
+        elif face[1][0]== face[0][1]:
+            mvt = "BDRD'R'B'"
 
-		if face[0][1] == face[2][1] :
-			mvt = "LBDB'D'L'"
+        elif face[1][0] == face[2][1]:
+            mvt = "RDFD'F'R'"
 
-		elif face[1][0] == face[1][2]:
-			mvt = "BRDR'D'B'"
+        elif face[1][2] == face[0][1]:
+            mvt = "LDBD'B'L'"
 
-		#sinon cas des arretes ajacentes
-
-		elif face[1][0]== face[0][1]:
-			mvt = "BDRD'R'B'"
-
-		elif face[1][0] == face[2][1]:
-			mvt = "RDFD'F'R'"
-
-		elif face[1][2] == face[0][1]:
-			mvt = "LDBD'B'L'"
-
-		elif face[1][2] == face[2][1]:
-			mvt = "FDLD'L'F'"
-        #sinon aucune presente
-       else:
-			mvt = "FDLD'L'F'LBDB'D'L'"
+        elif face[1][2] == face[2][1]:
+            mvt = "FDLD'L'F'"
+     #sinon aucune presente
+        else:
+            mvt = "FDLD'L'F'LBDB'D'L'"
 
 	#la croix est faite mais il faut que les arretes soient bien placees
 
-	rearranger_croix(cube, False) #on re-arrange la croix
+    rearranger_croix(cube, False) #on re-arrange la croix
 
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
@@ -229,7 +271,5 @@ print(locate(cube, 'URL',2, 'O'))
 #cube.affichage()
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
-#Exemple CocoM
-cube=struct.Cube()
-print(cube.isX('L','G'))
+
 

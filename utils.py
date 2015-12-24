@@ -3,6 +3,8 @@
 
 import numpy as np
 
+
+
 class Cube:
     '''
     Un cube est défini par sa chaine. Initialement, on considère le cube résolu.
