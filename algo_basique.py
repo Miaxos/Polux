@@ -95,6 +95,8 @@ def cross(cube, face):
     mvt = ""
     c = False
     loca_arretes = []
+    placement_croix = [0,0,0,0] # [UP, RIGHT, LEFT, DOWN]
+    # Il s'agit de savoir dans quel sens est tourné la croix.
     nombre_arrete_place = 0
     while c == False:
         result = locate(cube, 'RLBFD',2, 'W', loca_arretes)
@@ -105,6 +107,12 @@ def cross(cube, face):
     nombre_arrete_place = len(loca_arretes)
     if nombre_arrete_place == 4:
         return mvt
+    elif nombre_arrete_place == 0:
+        # On doit donc en placer 4
+        placement_croix = [0,0,0,0]
+    else:
+        #On met à jour placement_croix pour qu'il soit conforme au positinnement de la croix.
+        None
     # Deuxieme etape, on place succecivement les arrêtes.
     while nombre_arrete_place < 4:
         prochaine_arrete_a_placer = locate(cube, 'U',2, 'W') # On localise la prochaine arrête.
@@ -113,6 +121,8 @@ def cross(cube, face):
         # On a differents cas ensuite
         # Cas 1: http://rubiks3x3.com/algorithm/?moves=FrdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=FrdRFF
         # 
+        if prochaine_arrete_a_placer[0][0] == 5:
+
         # Cas 2: http://rubiks3x3.com/algorithm/?moves=frdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=frdRFF
         #
         # Cas 3: http://rubiks3x3.com/algorithm/?moves=rdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=rdRff
