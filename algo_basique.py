@@ -39,9 +39,12 @@ locaz =[
 ]
 
 def link(posface, poscube, posligne):
+    """
+    La fonction link donne l'integralité des faces liés à une face.
+    """
     for i in range(0,len(locaz)):
         if [posface,poscube,posligne] in locaz[i]:
-            r = []
+            r = [] # On recompose une liste pour mettre la face du petit cube qui va en argument de la fonction en premier sur le résultat.
             r.append([posface,poscube,posligne])
             for j in range(0,len(locaz[i])):
                 if locaz[i][j] != [posface,poscube,posligne]:
@@ -49,30 +52,29 @@ def link(posface, poscube, posligne):
             return r
             
 def locate(cube, ignoreface, type, color, ignorepos = [], dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
-        '''
-        ignoreface: str sous la forme (UFD) pour ignorer certaines faces.
-        type: 1: corner 2: les autres
-        Des qu'il en repère 1 il retourne sa position et la pos de sa liaison(?)
-
-        # posface, poscube, posligne
-        Return [(pos white, face white), (pos link1, face link1), [(pos link1, face link1) si type 1]]
-        '''
-        ignoreList = []        
-        for i in range(0,len(ignoreface)):
+    """
+    La fonciton locate recherche la position de la face d'un cube ainsi que les faces liées au petit cube.
+    cube: Objet cube
+    ignoreface: String (exemple: 'URL' pour ignorer les faces Up Right Left dans la recherche.)
+    type: 1 ou 2 (1: Coin 2: Arrête)
+    color: La couleur qu'on veut rechercher
+    ignorepos: Une liste qui va contenir des positions de faces, la fonction va ignorer ces faces dans la recherche.
+    Return [(pos white, face white), (pos link1, face link1), [(pos link1, face link1) si type 1]]
+    """
+        ignoreList = [] # On ignore les faces dans la liste.
+        for i in range(0,len(ignoreface)): # On va correspondre la lettre avec le numéro de la face.
             idFace = dico[ignoreface[i].upper()]
             ignoreList.append(idFace)
         j = 0
         i = 0
-        while j < 6:
-            while i < 3 and not(j in ignoreList):
-                #print(self.L[j][i])
-                #print('Face', j, "    ", np.where(self.L[j][i] == color)[0])
-                if type == 1:  # CORNER
+        while j < 6: # On va loop pour faire l'intégralité du cube
+            while i < 3 and not(j in ignoreList): # On va bien sur ignorer les faces sur la ignore list.
+                if type == 1:  # Type 1 : Coin
                     if 0 in (np.where(cube.L[j][i] == color)[0]) and not([j,0,i] in ignorepos):
                         return link(j,0,i)
                     elif 2 in (np.where(cube.L[j][i] == color)[0]) and not([j,2,i] in ignorepos):
                         return link(j,2,i)
-                elif type == 2:  # Arrête
+                elif type == 2:  # Type 2 : Arrête
                     if 1 in (np.where(cube.L[j][i] == color)[0]) and not([j,1,i] in ignorepos):
                         return link(j,1,i)
                 i = i+1
