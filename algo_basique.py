@@ -385,8 +385,7 @@ def D_cross(cube):
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 cube.afficheFaces()
 #print(locate(cube, 'URL',2, 'O'))
-affichage(cube)
-print(cube.L[0][0][0])
+affichage(cube, "test")
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
 
