@@ -175,6 +175,49 @@ def rearranger_croix(cube, faceup):
                 mvt = "FD2F'D'FD'D'LD2L'D'LD'L'D'"
         suitemvt(mvt)
 
+def idChangeCornerDown(positionCoin, couleurCoin):
+    '''
+    Change les références du coin lorsque la face DOWN a été tourné dans le sens horaire 
+    '''
+    L=["LFD","FRD","RBD","BLD"]
+    
+    # On recherche le coin dans la liste
+    # i : rang du mot dans la liste
+    i=0
+    rg = 0
+    while i < 4 and rg < 4:
+            # k : rang de la lettre dans le mot
+            k = 0
+            while k < 3:
+                if positionCoin[k] not in L[i]:
+                    k=3
+                    i+=1
+                    rg+=1
+                k+=1
+            rg=4
+    # On opère le changement de référence
+    # Si le mot n'est pas le dernier de la liste
+    positionCoinInter=L[i]
+    if i < 4:        
+        positionCoinFinal=L[i+1]
+    #Sinon
+    if i==4:
+        positionCoinFinal=L[0]
+    
+    couleurCoinInter=[0,0,0]
+    for m in range(3):
+        for n in range(3):
+            if positionCoin[m]==positionCoinInter[n]:
+                couleurCoinInter[n]=couleurCoin[m]
+                
+    # Concaténation de la couleur finale du coin           
+    couleurCoinFinal = ""    
+    for j in range(3):
+        couleurCoinFinal+=couleurCoinInter[j]
+        
+        
+    return [positionCoinFinal,couleurCoinFinal]      
+            
 def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}, dico2={'W':0, 'G':1, 'R':2, 'B':3, 'O':4, 'Y':5}):
     '''
     Si le coin n'est pas situé en dessous de son emplacement final, la fonction tourne la face DOWN
@@ -185,6 +228,9 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
     
     Dans l'exemple : sur la face Left le coin est White, sur la face Front le coin est Bleu, etc...
     '''
+        
+    
+    
     positionCoinN=[]
     couleurCoinN=[]
     for k in range(3):
@@ -198,12 +244,19 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
         if positionCoinN[k] in couleurCoinN:
             count += 1
     # 4 cas
-    # 1er cas : il n'y a auncun chiffre commun au deux valeur
+    # 1er cas : il n'y a aucun chiffre commun au deux valeur
     if count == 0:
         for k in range(2):
             cube.moveHoraire('d')
-    # 2eme et 3eme cas : il y a 1 seul chiffre en commun
-#    if count == 1:
+    # 2eme cas : il y a 1 seul chiffre en commun et on refait le 
+    elif count == 1:
+        cube.moveHoraire('d')
+        ref = idChangeCornerDown(positionCoin,couleurCoin)
+        cornerInPlace(cube, ref[1], ref[2])
+    # 3ème cas : le coin est à la bonne place
+    # on ne fait rien
+    else:
+        return True
         
         
 def wFace_1st_crown(cube):
@@ -211,7 +264,7 @@ def wFace_1st_crown(cube):
     Cette fonction termine la face blanche et fait la 1ère couronne du cube
     '''
     # Tant que la face blanche n'est pas totalement blanche
-    while not cube.isX('U','W'):
+    while not cube.isFull('U','W'):
         # Chercher un coin avec une facette blanche sur toutes autres face hormis la face UP
         corner = cube.locate('U',1,'W')
         # Si le coin trouvé est sur l'étage du bas (3ème couronne + face DOWN) et qu'il n'a pas déjà été pointé
@@ -265,11 +318,11 @@ def D_cross(cube):
     rearranger_croix(cube, False) #on re-arrange la croix
 
 # Exemples :
-cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
-cube.afficheFaces()
-print(locate(cube, 'URL',2, 'O'))
+#cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
+#cube.afficheFaces()
+#print(locate(cube, 'U',1, 'W'))
 #cube.affichage()
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
-
+print(idChangeCornerDown("DRF","GWO"))
 
