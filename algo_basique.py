@@ -39,9 +39,12 @@ locaz =[
 ]
 
 def link(posface, poscube, posligne):
+    """
+    La fonction link donne l'integralité des faces liés à une face.
+    """
     for i in range(0,len(locaz)):
         if [posface,poscube,posligne] in locaz[i]:
-            r = []
+            r = [] # On recompose une liste pour mettre la face du petit cube qui va en argument de la fonction en premier sur le résultat.
             r.append([posface,poscube,posligne])
             for j in range(0,len(locaz[i])):
                 if locaz[i][j] != [posface,poscube,posligne]:
@@ -49,41 +52,96 @@ def link(posface, poscube, posligne):
             return r
             
 def locate(cube, ignoreface, type, color, ignorepos = [], dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
-        '''
-        ignoreface: str sous la forme (UFD) pour ignorer certaines faces.
-        type: 1: corner 2: les autres
-        Des qu'il en repère 1 il retourne sa position et la pos de sa liaison(?)
-
-        # posface, poscube, posligne
-        Return [(pos white, face white), (pos link1, face link1), [(pos link1, face link1) si type 1]]
-        '''
-        ignoreList = []        
-        for i in range(0,len(ignoreface)):
-            idFace = dico[ignoreface[i].upper()]
-            ignoreList.append(idFace)
-        j = 0
+    """
+    La fonciton locate recherche la position de la face d'un cube ainsi que les faces liées au petit cube.
+    cube: Objet cube
+    ignoreface: String (exemple: 'URL' pour ignorer les faces Up Right Left dans la recherche.)
+    type: 1 ou 2 (1: Coin 2: Arrête)
+    color: La couleur qu'on veut rechercher
+    ignorepos: Une liste qui va contenir des positions de faces, la fonction va ignorer ces faces dans la recherche.
+    Return [(pos white, face white), (pos link1, face link1), [(pos link1, face link1) si type 1]]
+    """
+    ignoreList = [] # On ignore les faces dans la liste.
+    for i in range(0,len(ignoreface)): # On va correspondre la lettre avec le numéro de la face.
+        idFace = dico[ignoreface[i].upper()]
+        ignoreList.append(idFace)
+    j = 0
+    i = 0
+    while j < 6: # On va loop pour faire l'intégralité du cube
+        while i < 3 and not(j in ignoreList): # On va bien sur ignorer les faces sur la ignore list.
+            if type == 1:  # Type 1 : Coin
+                if 0 in (np.where(cube.L[j][i] == color)[0]) and not([j,0,i] in ignorepos):
+                    return link(j,0,i)
+                elif 2 in (np.where(cube.L[j][i] == color)[0]) and not([j,2,i] in ignorepos):
+                    return link(j,2,i)
+            elif type == 2:  # Type 2 : Arrête
+                if 1 in (np.where(cube.L[j][i] == color)[0]) and not([j,1,i] in ignorepos):
+                    return link(j,1,i)
+            i = i+1
         i = 0
-        while j < 6:
-            while i < 3 and not(j in ignoreList):
-                #print(self.L[j][i])
-                #print('Face', j, "    ", np.where(self.L[j][i] == color)[0])
-                if type == 1:  # CORNER
-                    if 0 in (np.where(cube.L[j][i] == color)[0]) and not([j,0,i] in ignorepos):
-                        return link(j,0,i)
-                    elif 2 in (np.where(cube.L[j][i] == color)[0]) and not([j,2,i] in ignorepos):
-                        return link(j,2,i)
-                elif type == 2:  # Arrête
-                    if 1 in (np.where(cube.L[j][i] == color)[0]) and not([j,1,i] in ignorepos):
-                        return link(j,1,i)
-                i = i+1
-            i = 0
-            j = j+1
-        return None
+        j = j+1
+    return None
+def cross(cube, face):
+    """
+    On va fabriquer la croix.
+    cube: Objet cube
+    face: string qui va definir la face où on fait la croix
+    return: String (suite de mvts)
+    On modifie notre objet cube au passage.
+    De façon optimale, en général, il faudrait atteindre la croix en 6 coups (Je sais pas par quel miracle http://www.cubezone.be/crossstudy.html).
+    """
+    # On le fait en 4 étapes, on positionne successivement les différentes arrêtes.
+    # Première étape, regarde si c'est deja terminé.
+    mvt = ""
+    c = False
+    loca_arretes = []
+    placement_croix = [0,0,0,0] # [UP, RIGHT, LEFT, DOWN]
+    # Il s'agit de savoir dans quel sens est tourné la croix.
+    nombre_arrete_place = 0
+    while c == False:
+        result = locate(cube, 'RLBFD',2, 'W', loca_arretes)
+        if result == None:
+            c = True
+        else:
+            loca_arretes.append(append)
+    nombre_arrete_place = len(loca_arretes)
+    if nombre_arrete_place == 4:
+        return mvt
+    elif nombre_arrete_place == 0:
+        # On doit donc en placer 4
+        placement_croix = [0,0,0,0]
+    else:
+        #On met à jour placement_croix pour qu'il soit conforme au positinnement de la croix.
+        None
+    # Deuxieme etape, on place succecivement les arrêtes.
+    while nombre_arrete_place < 4:
+        prochaine_arrete_a_placer = locate(cube, 'U',2, 'W') # On localise la prochaine arrête.
 
-def affichage(cube):
-    img = Image.open('a.png')
+        # En fonction de où elle se trouve et de ce qui est présent sur la croix on tourne la croix
+        # On a differents cas ensuite
+        # Cas 1: http://rubiks3x3.com/algorithm/?moves=FrdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=FrdRFF
+        # 
+        if prochaine_arrete_a_placer[0][0] == 5:
+
+        # Cas 2: http://rubiks3x3.com/algorithm/?moves=frdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=frdRFF
+        #
+        # Cas 3: http://rubiks3x3.com/algorithm/?moves=rdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=rdRff
+        #
+        # Cas 4: Quand la face est orienté sur la face opposé, il suffit de bien positionner la croix et faire tourner.
+        #
+
+        mvt_temps = ""
+    return mvt
+
+
+def affichage(cube, save):
+    """
+    Fonction qui va creer une image PNG qui donne l'affichage du cube.
+    cube: objet cube
+    save: string (Nom du fichier de sauvegarde (ne pas preciser extension))
+    """
     img = Image.new( 'RGB', (255,255), (220,220,220)) # create a new black image
-
+    dico={'O':"orange", 'R':"red", 'W':"white", 'G':"green", 'B':"blue", 'Y':"yellow"}
     draw = ImageDraw.Draw(img)
     # draw.line((0, 0) + img.size, fill=128)
     # draw.line((0, img.size[1], img.size[0], 0), fill=128)
@@ -95,12 +153,81 @@ def affichage(cube):
     draw.rectangle([(78,28),(126,76)],(211,211,211))
     draw.rectangle([(78,128),(126,176)],(211,211,211))
 
-    draw.rectangle([(78,28),(94,44)], "red")
-    draw.rectangle([(94,28),(110,44)], "white")
-    draw.rectangle([(110,28),(126,44)], "blue")
+    # UP
+    draw.rectangle([(78,28),(94,44)], dico[cube.L[0][0][0]])
+    draw.rectangle([(94,28),(110,44)], dico[cube.L[0][0][1]])
+    draw.rectangle([(110,28),(126,44)], dico[cube.L[0][0][2]])
 
-    img.show()
+    draw.rectangle([(78,44),(94,60)], dico[cube.L[0][1][0]])
+    draw.rectangle([(94,44),(110,60)], dico[cube.L[0][1][1]])
+    draw.rectangle([(110,44),(126,60)], dico[cube.L[0][1][2]])
 
+    draw.rectangle([(78,60),(94,76)], dico[cube.L[0][2][0]])
+    draw.rectangle([(94,60),(110,76)], dico[cube.L[0][2][1]])
+    draw.rectangle([(110,60),(126,76)], dico[cube.L[0][2][2]])
+    # FRONT
+    draw.rectangle([(78,78),(94,94)], dico[cube.L[2][0][0]])
+    draw.rectangle([(94,78),(110,94)], dico[cube.L[2][0][1]])
+    draw.rectangle([(110,78),(126,94)], dico[cube.L[2][0][2]])
+
+    draw.rectangle([(78,94),(94,110)], dico[cube.L[2][1][0]])
+    draw.rectangle([(94,94),(110,110)], dico[cube.L[2][1][1]])
+    draw.rectangle([(110,94),(126,110)], dico[cube.L[2][1][2]])
+
+    draw.rectangle([(78,110),(94,126)], dico[cube.L[2][2][0]])
+    draw.rectangle([(94,110),(110,126)], dico[cube.L[2][2][1]])
+    draw.rectangle([(110,110),(126,126)], dico[cube.L[2][2][2]])
+    # DOWN
+    draw.rectangle([(78,128),(94,144)], dico[cube.L[5][0][0]])
+    draw.rectangle([(94,128),(110,144)], dico[cube.L[5][0][1]])
+    draw.rectangle([(110,128),(126,144)], dico[cube.L[5][0][2]])
+
+    draw.rectangle([(78,144),(94,160)], dico[cube.L[5][1][0]])
+    draw.rectangle([(94,144),(110,160)], dico[cube.L[5][1][1]])
+    draw.rectangle([(110,144),(126,160)], dico[cube.L[5][1][2]])
+
+    draw.rectangle([(78,160),(94,176)], dico[cube.L[5][2][0]])
+    draw.rectangle([(94,160),(110,176)], dico[cube.L[5][2][1]])
+    draw.rectangle([(110,160),(126,176)], dico[cube.L[5][2][2]])
+    # LEFT
+    draw.rectangle([(28,78),(44,94)], dico[cube.L[1][0][0]])
+    draw.rectangle([(44,78),(60,94)], dico[cube.L[1][0][1]])
+    draw.rectangle([(60,78),(76,94)], dico[cube.L[1][0][2]])
+
+    draw.rectangle([(28,94),(44,110)], dico[cube.L[1][1][0]])
+    draw.rectangle([(44,94),(60,110)], dico[cube.L[1][1][1]])
+    draw.rectangle([(60,94),(76,110)], dico[cube.L[1][1][2]])
+
+    draw.rectangle([(28,110),(44,126)], dico[cube.L[1][2][0]])
+    draw.rectangle([(44,110),(60,126)], dico[cube.L[1][2][1]])
+    draw.rectangle([(60,110),(76,126)], dico[cube.L[1][2][2]])
+    # RIGHT
+    draw.rectangle([(128,78),(144,94)], dico[cube.L[3][0][0]])
+    draw.rectangle([(144,78),(160,94)], dico[cube.L[3][0][1]])
+    draw.rectangle([(160,78),(176,94)], dico[cube.L[3][0][2]])
+
+    draw.rectangle([(128,94),(144,110)], dico[cube.L[3][1][0]])
+    draw.rectangle([(144,94),(160,110)], dico[cube.L[3][1][1]])
+    draw.rectangle([(160,94),(176,110)], dico[cube.L[3][1][2]])
+
+    draw.rectangle([(128,110),(144,126)], dico[cube.L[3][2][0]])
+    draw.rectangle([(144,110),(160,126)], dico[cube.L[3][2][1]])
+    draw.rectangle([(160,110),(176,126)], dico[cube.L[3][2][2]])
+    # BACK
+    draw.rectangle([(178,78),(194,94)], dico[cube.L[4][0][0]])
+    draw.rectangle([(194,78),(210,94)], dico[cube.L[4][0][1]])
+    draw.rectangle([(210,78),(226,94)], dico[cube.L[4][0][2]])
+
+    draw.rectangle([(178,94),(194,110)], dico[cube.L[4][1][0]])
+    draw.rectangle([(194,94),(210,110)], dico[cube.L[4][1][1]])
+    draw.rectangle([(210,94),(226,110)], dico[cube.L[4][1][2]])
+
+    draw.rectangle([(178,110),(194,126)], dico[cube.L[4][2][0]])
+    draw.rectangle([(194,110),(210,126)], dico[cube.L[4][2][1]])
+    draw.rectangle([(210,110),(226,126)], dico[cube.L[4][2][2]])
+
+    #img.show()
+    img.save(save+".png", "PNG")
 def suitemvt(cube, mvt):
     #mvt : chaine
     #cube :declass cube
@@ -318,10 +445,10 @@ def D_cross(cube):
     rearranger_croix(cube, False) #on re-arrange la croix
 
 # Exemples :
-#cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
-#cube.afficheFaces()
-#print(locate(cube, 'U',1, 'W'))
-#cube.affichage()
+cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
+cube.afficheFaces()
+#print(locate(cube, 'URL',2, 'O'))
+affichage(cube, "test")
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
 print(idChangeCornerDown("DRF","GWO"))
