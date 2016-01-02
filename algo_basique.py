@@ -130,7 +130,7 @@ def cross(cube, face):
         # Cas 4: Quand la face est orienté sur la face opposé, il suffit de bien positionner la croix et faire tourner.
         #
 
-        mvt_temps = ""
+            mvt_temps = ""
     return mvt
 
 
@@ -386,24 +386,44 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
         return True
         
         
-def wFace_1st_crown(cube):
+def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
     '''
     Cette fonction termine la face blanche et fait la 1ère couronne du cube
     '''
     # Tant que la face blanche n'est pas totalement blanche
     while not cube.isFull('U','W'):
+        # Liste des exceptions (coin a ne pas parcourir)
+        exception = []        
+        
         # Chercher un coin avec une facette blanche sur toutes autres face hormis la face UP
-        corner = cube.locate('U',1,'W')
+        corner = cube.locate('U',1,'W', exception)
+        
+        
+            
         # Si le coin trouvé est sur l'étage du bas (3ème couronne + face DOWN) et qu'il n'a pas déjà été pointé
-        faceCorner = corner[0][1]
-        if 'W' in cube.L[faceCorner][2] or faceCorner == 5:
-            # Pour eviter le bug python
-            truc = 1
-            # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
-        else:
-            truc = 0
-            # Ajouter cette position dans la liste des exceptions
+        rowCorner = corner[0][2]
+        if rowCorner == 2 or corner[0][0] == 5:            
+        
+            # Détermination de la couleur "lettrée" du coin
+            couleurCoin=""
+            for k in range(3):
+                couleurCoin+=cube.L[corner[k][0]][corner[k][2]][corner[k][1]]
                 
+            # Détermination de la position "lettrée" du coin
+            positionCoin=""
+            for k in range(3):
+                positionCoin+=dico3[corner[k][0]]
+            
+            # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
+            cornerInPlace(cube, positionCoin, couleurCoin)
+                        
+        else:
+            # Ajouter cette position dans la liste des exceptions
+            exception.append(corner[0])
+            
+    ## Il est possible que la face blanche ne soit pas entièrement remplie et que le nombre de coin
+    ## de la face DOWN ayant une facette blanche soient épuisé
+    ## >>> L'amélioration est en cours de réflexion <<<
                 
     
         
@@ -447,9 +467,9 @@ def D_cross(cube):
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 cube.afficheFaces()
-#print(locate(cube, 'URL',2, 'O'))
+print(locate(cube, 'URL',1, 'O'))
 affichage(cube, "test")
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
-print(idChangeCornerDown("DRF","GWO"))
+#print(idChangeCornerDown("DRF","GWO"))
 
