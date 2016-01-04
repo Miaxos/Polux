@@ -390,6 +390,25 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
     elif count == 2:
         return [positionCoin, couleurCoin]
         
+def bienOriente(positionCoin, couleurCoin):
+    '''
+    positionCoin et couleurCoin sont des chaines de 3 caractères  (EX : "FRU" / "WOG")
+    
+    Détermine si le coin est bien orienté
+    Renvoie True ou False
+    '''
+    verif = [('U','W'),('L','G'),('F','R'),('R','B'),('B','O'),('D','Y')]
+    count=0
+    for k in range(3):
+        for i in range(6):
+            if positionCoin[k]==verif[i][0] and couleurCoin[k]==verif[i][1]:
+                count+=1
+    if count==3:
+        return True
+    else:
+        return False
+                
+        
         
 def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
     '''
@@ -420,8 +439,44 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
                 positionCoin+=dico3[corner[k][0]]
             
             # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
-            cornerInPlace(cube, positionCoin, couleurCoin)
-                        
+            ref = cornerInPlace(cube, positionCoin, couleurCoin)
+            
+            # Si le coin est en FRD
+            if  "F" and "R" and "D" in positionCoin:
+                # Tant que le coin UFR n'est pas bien orientée
+                bienOriente("UFR")
+                # Faire le suite de mouvement
+                cube.moveHoraire("R'")
+                cube.moveHoraire("D'")
+                cube.moveHoraire("R")
+                cube.moveHoraire("D")
+            # Si le coin est en LFD
+            if  "L" and "F" and "D" in positionCoin:
+                # Tant que le coin ULF n'est pas bien orientée
+                bienOriente("LFD")
+                # Faire le suite de mouvement
+                cube.moveHoraire("F'")
+                cube.moveHoraire("D'")
+                cube.moveHoraire("F")
+                cube.moveHoraire("D")
+            # Si le coin est en BLD
+            if  "B" and "L" and "D" in positionCoin:
+                # Tant que le coin UBL n'est pas bien orientée
+                bienOriente("BLD")
+                # Faire le suite de mouvement
+                cube.moveHoraire("L'")
+                cube.moveHoraire("D'")
+                cube.moveHoraire("L")
+                cube.moveHoraire("D")
+            # Si le coin est en RBD
+            if  "R" and "B" and "D" in positionCoin:
+                # Tant que le coin URB n'est pas bien orientée
+                bienOriente("RBD")
+                # Faire le suite de mouvement
+                cube.moveHoraire("B'")
+                cube.moveHoraire("D'")
+                cube.moveHoraire("B")
+                cube.moveHoraire("D")            
         else:
             # Ajouter cette position dans la liste des exceptions
             exception.append(corner[0])
@@ -477,4 +532,6 @@ affichage(cube, "test")
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
 #print(idChangeCornerDown("DRF","GWO"))
+
+print(bienOriente("FRU","RBW"))
 
