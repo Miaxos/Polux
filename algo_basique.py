@@ -310,6 +310,7 @@ def idChangeCornerDown(positionCoin, couleurCoin):
     
     # On recherche le coin dans la liste
     # i : rang du mot dans la liste
+    # rg : variable pour sortir de la boucle while
     i=0
     rg = 0
     while i < 4 and rg < 4:
