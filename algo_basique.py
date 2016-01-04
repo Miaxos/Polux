@@ -375,6 +375,11 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
     if count == 0:
         for k in range(2):
             cube.moveHoraire('d')
+            if k == 0:
+                ref = idChangeCornerDown(positionCoin,couleurCoin)
+            else:
+                return idChangeCornerDown(ref[0], ref[1])
+            
     # 2eme cas : il y a 1 seul chiffre en commun et on refait appelle à la fonction de façon récursif
     elif count == 1:
         cube.moveHoraire('d')
@@ -383,7 +388,7 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
     # 3ème cas : le coin est à la bonne place
     # on ne fait rien
     elif count == 2:
-        return True
+        return [positionCoin, couleurCoin]
         
         
 def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
