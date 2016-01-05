@@ -413,65 +413,78 @@ def bienOriente(positionCoin, couleurCoin):
         
 def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
     '''
-    Cette fonction termine la face blanche et fait la 1ère couronne du cube
+    Cette fonction termine la face blanche et fait la 1ère couronne du cube    
     '''
+    # Liste des exceptions (coin a ne pas parcourir) ici correspond au facette des coins supérieur or facette appartenant à UP
+    exception = [[1,0,0],[1,2,0],[2,0,0],[2,2,0],[3,0,0],[3,2,0],[4,0,0],[4,2,0]]
     # Tant que la face blanche n'est pas totalement blanche
     while not cube.isFull('U','W'):
-        # Liste des exceptions (coin a ne pas parcourir)
-        exception = []        
+                
         
         # Chercher un coin avec une facette blanche sur toutes autres face hormis la face UP
         corner = cube.locate('U',1,'W', exception)
         
+        # S'il reste des facettes blanches sur des coins inférieur
+        if corner != None:
         
             
-        # Si le coin trouvé est sur l'étage du bas (3ème couronne + face DOWN) et qu'il n'a pas déjà été pointé
-        rowCorner = corner[0][2]
-        if rowCorner == 2 or corner[0][0] == 5:            
-        
-            # Détermination de la couleur "lettrée" du coin
-            couleurCoin=""
-            for k in range(3):
-                couleurCoin+=cube.L[corner[k][0]][corner[k][2]][corner[k][1]]
+            # Si le coin trouvé est sur l'étage du bas (3ème couronne + face DOWN) et qu'il n'a pas déjà été pointé
+            rowCorner = corner[0][2]
+            if rowCorner == 2 or corner[0][0] == 5:            
+            
+                # Détermination de la couleur "lettrée" du coin
+                couleurCoin=""
+                for k in range(3):
+                    couleurCoin+=cube.L[corner[k][0]][corner[k][2]][corner[k][1]]
+                    
+                # Détermination de la position "lettrée" du coin
+                positionCoin=""
+                for k in range(3):
+                    positionCoin+=dico3[corner[k][0]]
                 
-            # Détermination de la position "lettrée" du coin
-            positionCoin=""
-            for k in range(3):
-                positionCoin+=dico3[corner[k][0]]
-            
-            # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
-            ref = cornerInPlace(cube, positionCoin, couleurCoin)
-            
-            # Si le coin est en FRD
-            if  "F" and "R" and "D" in positionCoin:
-                # Tant que le coin UFR n'est pas bien orientée
-                while not bienOriente("UFR"):
-                    # Faire le suite de mouvement
-                    suitemvt(cube,"R'D'RD")                    
-            # Si le coin est en LFD
-            if  "L" and "F" and "D" in positionCoin:
-                # Tant que le coin ULF n'est pas bien orientée
-                while not bienOriente("LFD"):
-                    # Faire le suite de mouvement
-                    suitemvt(cube,"F'D'FD")
-            # Si le coin est en BLD
-            if  "B" and "L" and "D" in positionCoin:
-                # Tant que le coin UBL n'est pas bien orientée
-                while not bienOriente("BLD"):
-                    # Faire le suite de mouvement
-                    suitemvt(cube,"L'D'LD")
-            # Si le coin est en RBD
-            if  "R" and "B" and "D" in positionCoin:
-                # Tant que le coin URB n'est pas bien orientée
-                while not bienOriente("RBD"):
-                    # Faire le suite de mouvement
-                    suitemvt(cube,"B'D'BD")            
+                # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
+                ref = cornerInPlace(cube, positionCoin, couleurCoin)
+                
+                # Si le coin est en FRD
+                if  "F" and "R" and "D" in positionCoin:
+                    # Tant que le coin UFR n'est pas bien orientée
+                    refCoin="UFR"
+                    refCouleur=[0,2,2]+[2,2,0]+[3,0,0]
+                    while not bienOriente(refCoin, refCouleur):
+                        # Faire le suite de mouvement
+                        suitemvt(cube,"R'D'RD")                    
+                # Si le coin est en LFD
+                if  "L" and "F" and "D" in positionCoin:
+                    # Tant que le coin ULF n'est pas bien orientée
+                    refCoin="LFU"
+                    refCouleur=[1,2,0]+[2,0,0]+[0,0,2]
+                    while not bienOriente(refCoin, refCouleur):
+                        # Faire le suite de mouvement
+                        suitemvt(cube,"F'D'FD")
+                # Si le coin est en BLD
+                if  "B" and "L" and "D" in positionCoin:
+                    # Tant que le coin UBL n'est pas bien orientée
+                    refCoin="BLU"
+                    refCouleur=[4,2,0]+[1,0,0]+[0,0,0]
+                    while not bienOriente("BLU"):
+                        # Faire le suite de mouvement
+                        suitemvt(cube,"L'D'LD")
+                # Si le coin est en RBD
+                if  "R" and "B" and "D" in positionCoin:
+                    # Tant que le coin URB n'est pas bien orientée
+                    refCoin="RBU"
+                    refCouleur=[3,2,0]+[4,0,0]+[0,2,0]
+                    while not bienOriente("RBU"):
+                        # Faire le suite de mouvement
+                        suitemvt(cube,"B'D'BD")
+        ## Il est possible que la face blanche ne soit pas entièrement remplie et que le nombre de coin
+        ## de la face DOWN ayant une facette blanche soient épuisé
         else:
-            # Ajouter cette position dans la liste des exceptions
-            exception.append(corner[0])
+            corner_final = cube.locate('U',1,'W')
             
-    ## Il est possible que la face blanche ne soit pas entièrement remplie et que le nombre de coin
-    ## de la face DOWN ayant une facette blanche soient épuisé
+        
+            
+    
     ## >>> L'amélioration est en cours de réflexion <<<
                 
     
