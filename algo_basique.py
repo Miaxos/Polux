@@ -446,7 +446,7 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
                 ref = cornerInPlace(cube, positionCoin, couleurCoin)
                 
                 # Si le coin est en FRD
-                if  "F" and "R" and "D" in positionCoin:
+                if  "F" and "R" and "D" in ref[0]:
                     # Tant que le coin UFR n'est pas bien orientée
                     refCoin="UFR"
                     refCouleur=[0,2,2]+[2,2,0]+[3,0,0]
@@ -454,27 +454,27 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
                         # Faire le suite de mouvement
                         suitemvt(cube,"R'D'RD")                    
                 # Si le coin est en LFD
-                if  "L" and "F" and "D" in positionCoin:
-                    # Tant que le coin ULF n'est pas bien orientée
+                if  "L" and "F" and "D" in ref[0]:
+                    # Tant que le coin LFU n'est pas bien orientée
                     refCoin="LFU"
                     refCouleur=[1,2,0]+[2,0,0]+[0,0,2]
                     while not bienOriente(refCoin, refCouleur):
                         # Faire le suite de mouvement
                         suitemvt(cube,"F'D'FD")
                 # Si le coin est en BLD
-                if  "B" and "L" and "D" in positionCoin:
-                    # Tant que le coin UBL n'est pas bien orientée
+                if  "B" and "L" and "D" in ref[0]:
+                    # Tant que le coin BLU n'est pas bien orientée
                     refCoin="BLU"
                     refCouleur=[4,2,0]+[1,0,0]+[0,0,0]
-                    while not bienOriente("BLU"):
+                    while not bienOriente(refCoin, refCouleur):
                         # Faire le suite de mouvement
                         suitemvt(cube,"L'D'LD")
                 # Si le coin est en RBD
-                if  "R" and "B" and "D" in positionCoin:
-                    # Tant que le coin URB n'est pas bien orientée
+                if  "R" and "B" and "D" in ref[0]:
+                    # Tant que le coin RBU n'est pas bien orientée
                     refCoin="RBU"
                     refCouleur=[3,2,0]+[4,0,0]+[0,2,0]
-                    while not bienOriente("RBU"):
+                    while not bienOriente(refCoin, refCouleur):
                         # Faire le suite de mouvement
                         suitemvt(cube,"B'D'BD")
         ## Il est possible que la face blanche ne soit pas entièrement remplie et que le nombre de coin
@@ -482,16 +482,49 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
         else:
             corner_final = cube.locate('U',1,'W')
             
-        
-            
-    
-    ## >>> L'amélioration est en cours de réflexion <<<
+            # Détermination de la couleur "lettrée" du coin
+            couleurCoin=""
+            for k in range(3):
+                couleurCoin+=cube.L[corner_final[k][0]][corner_final[k][2]][corner_final[k][1]]
                 
-    
+            # Détermination de la position "lettrée" du coin
+            positionCoin=""
+            for k in range(3):
+                positionCoin+=dico3[corner_final[k][0]]
         
-
-
-
+            # Si le coin est en UFR
+            if  "F" and "R" and "U" in positionCoin:
+                # Tant que le coin UFR n'est pas bien orientée
+                refCoin="UFR"
+                refCouleur=[0,2,2]+[2,2,0]+[3,0,0]
+                while not bienOriente(refCoin, refCouleur):
+                    # Faire le suite de mouvement
+                    suitemvt(cube,"R'D'RD")                    
+            # Si le coin est en LFU
+            if  "L" and "F" and "U" in positionCoin:
+                # Tant que le coin LFU n'est pas bien orientée
+                refCoin="LFU"
+                refCouleur=[1,2,0]+[2,0,0]+[0,0,2]
+                while not bienOriente(refCoin, refCouleur):
+                    # Faire le suite de mouvement
+                    suitemvt(cube,"F'D'FD")
+            # Si le coin est en BLU
+            if  "B" and "L" and "U" in positionCoin:
+                # Tant que le coin BLU n'est pas bien orientée
+                refCoin="BLU"
+                refCouleur=[4,2,0]+[1,0,0]+[0,0,0]
+                while not bienOriente(refCoin, refCouleur):
+                    # Faire le suite de mouvement
+                    suitemvt(cube,"L'D'LD")
+            # Si le coin est en RBU
+            if  "R" and "B" and "U" in positionCoin:
+                # Tant que le coin RBU n'est pas bien orientée
+                refCoin="RBU"
+                refCouleur=[3,2,0]+[4,0,0]+[0,2,0]
+                while not bienOriente(refCoin, refCouleur):
+                    # Faire le suite de mouvement
+                    suitemvt(cube,"B'D'BD")
+             
 def D_cross(cube):
     
     face=cube.L[6]
