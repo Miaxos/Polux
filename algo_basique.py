@@ -375,7 +375,7 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
     # 1er cas : il n'y a aucun chiffre commun au deux valeur
     if count == 0:
         for k in range(2):
-            cube.moveHoraire('d')
+            suitemvt(cube,"D")
             if k == 0:
                 ref = idChangeCornerDown(positionCoin,couleurCoin)
             else:
@@ -383,7 +383,7 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
             
     # 2eme cas : il y a 1 seul chiffre en commun et on refait appelle à la fonction de façon récursif
     elif count == 1:
-        cube.moveHoraire('d')
+        suitemvt(cube,"D")
         ref = idChangeCornerDown(positionCoin,couleurCoin)
         cornerInPlace(cube, ref[1], ref[2])
     # 3ème cas : le coin est à la bonne place
@@ -445,39 +445,27 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
             # Si le coin est en FRD
             if  "F" and "R" and "D" in positionCoin:
                 # Tant que le coin UFR n'est pas bien orientée
-                bienOriente("UFR")
-                # Faire le suite de mouvement
-                cube.moveHoraire("R'")
-                cube.moveHoraire("D'")
-                cube.moveHoraire("R")
-                cube.moveHoraire("D")
+                while not bienOriente("UFR"):
+                    # Faire le suite de mouvement
+                    suitemvt(cube,"R'D'RD")                    
             # Si le coin est en LFD
             if  "L" and "F" and "D" in positionCoin:
                 # Tant que le coin ULF n'est pas bien orientée
-                bienOriente("LFD")
-                # Faire le suite de mouvement
-                cube.moveHoraire("F'")
-                cube.moveHoraire("D'")
-                cube.moveHoraire("F")
-                cube.moveHoraire("D")
+                while not bienOriente("LFD"):
+                    # Faire le suite de mouvement
+                    suitemvt(cube,"F'D'FD")
             # Si le coin est en BLD
             if  "B" and "L" and "D" in positionCoin:
                 # Tant que le coin UBL n'est pas bien orientée
-                bienOriente("BLD")
-                # Faire le suite de mouvement
-                cube.moveHoraire("L'")
-                cube.moveHoraire("D'")
-                cube.moveHoraire("L")
-                cube.moveHoraire("D")
+                while not bienOriente("BLD"):
+                    # Faire le suite de mouvement
+                    suitemvt(cube,"L'D'LD")
             # Si le coin est en RBD
             if  "R" and "B" and "D" in positionCoin:
                 # Tant que le coin URB n'est pas bien orientée
-                bienOriente("RBD")
-                # Faire le suite de mouvement
-                cube.moveHoraire("B'")
-                cube.moveHoraire("D'")
-                cube.moveHoraire("B")
-                cube.moveHoraire("D")            
+                while not bienOriente("RBD"):
+                    # Faire le suite de mouvement
+                    suitemvt(cube,"B'D'BD")            
         else:
             # Ajouter cette position dans la liste des exceptions
             exception.append(corner[0])
