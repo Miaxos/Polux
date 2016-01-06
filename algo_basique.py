@@ -53,7 +53,7 @@ def link(posface, poscube, posligne):
             
 def locate(cube, ignoreface, type, color, ignorepos = [], dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
     """
-    La fonciton locate recherche la position de la face d'un cube ainsi que les faces liées au petit cube.
+    La fonction locate recherche la position de la face d'un cube ainsi que les faces liées au petit cube.
     cube: Objet cube
     ignoreface: String (exemple: 'URL' pour ignorer les faces Up Right Left dans la recherche.)
     type: 1 ou 2 (1: Coin 2: Arrête)
@@ -300,7 +300,7 @@ def rearranger_croix(cube, faceup):
                 mvt = "FU2F'U2F"
             else:
                 mvt = "FD2F'D'FD'D'LD2L'D'LD'L'D'"
-        suitemvt(mvt)
+        suitemvt(cube,mvt)
 
 def idChangeCornerDown(positionCoin, couleurCoin):
     '''
@@ -521,10 +521,52 @@ def D_cross(cube):
      #sinon aucune presente
         else:
             mvt = "FDLD'L'F'LBDB'D'L'"
-
+        
+        suitemvt(cube, mvt)
 	#la croix est faite mais il faut que les arretes soient bien placees
 
     rearranger_croix(cube, False) #on re-arrange la croix
+
+def place_D_corner(cube):
+    #couleurs des faces
+    colors = {'U' : cube.L[0][1][1], 'L' : cube.L[1][1][1], 'F' : cube.L[2][1][1], 'R': cube.L[3][1][1],
+    'B' : cube.L[4][1][1], 'D' : cube.L[5][1][1]}
+    # les coins actuels de la face D associé aux 3 couleurs
+    corners = {'FLD': cube.L[1][2][2] + cube.L[2][2][0] + cube.L[5][0][0],
+    'FRD' : cube.L[2][2][2] + cube.L[3][2][0] + cube.L[5][0][2],
+    'BRD' : cube.L[3][2][2] + cube.L[4][2][0] + cube.L[5][2][2],
+    'BLD' : cube.L[1][2][0] + cube.L[4][2][2] + cube.L[5][2][0]}
+
+    enplace = []
+
+    for i in corners: #on cherche les coins bien placés
+        if colors[i[0]] + colors[i[1] + colors[i[2]] = corners[i]:
+            enplace.append(i)
+
+
+    #on a forcement 0,1 ou 4 coins bien placés
+    if len(enplace) != 4: #si les 4 ne sont pas tous bien placés
+        if len(enplace) == 0:
+            mvt = "LD'R'DL'D'RD"
+            #si aucun n'est bien placé, on fait une des 4 combinaison de mouvenments.
+            #il y aura alors au moins un bien placé.
+            suitemvt(cube,mvt)
+            place_D_corner(cube)
+        else: #il y a alors forcément un coin bien placé
+            #4 cas différent
+            if enplace[0]='FLD':
+                mvt = "F'DBD'FDB'D'"
+
+            elif enplace[0] ='FRD':
+                mvt ="R'DLD'RDL'D'"
+
+            elif enplace[0] ='BRD':
+                mvt="B'DFD'BDF'D'"
+
+            else:
+                mvt="L'DRD'LDR'D'"
+
+            suitemvt(cube,mvt)
 
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
@@ -536,4 +578,3 @@ affichage(cube, "test")
 #print(idChangeCornerDown("DRF","GWO"))
 
 print(bienOriente("FRU","RBW"))
-
