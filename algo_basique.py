@@ -539,12 +539,12 @@ def place_D_corner(cube):
 
     enplace = []
 
-    for i in corners: #on cherche les coins bien placés
-        if colors[i[0]] + colors[i[1] + colors[i[2]] = corners[i]:
+    for i in corners: #on cherche les coin bien placés
+        if (colors[i[0]] in corners[i]) and  (colors[i[1]] in corners[i]) and (colors[i[2]] in corners[i]):
             enplace.append(i)
 
 
-    #on a forcement 0,1 ou 4 coins bien placés
+    #on a forcement 0,1 ou 4 coin bien placés
     if len(enplace) != 4: #si les 4 ne sont pas tous bien placés
         if len(enplace) == 0:
             mvt = "LD'R'DL'D'RD"
@@ -553,20 +553,58 @@ def place_D_corner(cube):
             suitemvt(cube,mvt)
             place_D_corner(cube)
         else: #il y a alors forcément un coin bien placé
-            #4 cas différent
-            if enplace[0]='FLD':
-                mvt = "F'DBD'FDB'D'"
+            
 
-            elif enplace[0] ='FRD':
-                mvt ="R'DLD'RDL'D'"
+            cornerP = enplace[0]
+            # En fonction de la position des coins, il faut determiner dans quel sens les faire changer de position.
+            #Seul celui en place ne bougera pas.
+            if cornerP != 'FRD'
+                if cornerP != 'BRD':
+                    if colors['F'] in corners['BRD'] and colors['R'] in corners['BRD'] and colors['D'] in corners['BRD']:
+                        sensH = True
+                    else:
+                        sensH = False
+                elif cornerP != 'FLD':
+                    if colors['F'] in corners['FLD'] and colors['R'] in corners['FLD'] and colors['D'] in corners['FLD']:
+                        sensH = False
+                    else:
+                        sensH = True
+            else:
+                if colors['F'] in corners['BLD'] and colors['R'] in corners['BLD'] and colors['D'] in corners['BLD']:
+                    sensH = True
+                else:
+                    sensH = False
+                
+            #Les cas differents en fonction de la position du coin place et le sens dans lequel les faires bouger
+            if cornerP='FLD':
+                if sensH:
+                    mvt ="BD'F'DB'D'FD'"
+                else:
+                    mvt="R'DLD'RDL'D'"
 
-            elif enplace[0] ='BRD':
-                mvt="B'DFD'BDF'D'"
+            elif cornerP ='FRD':
+                if sensH:
+                    mvt="B'DFD'BDF'D'"
+                else:
+                    mvt="'LD'R'DL'D'RD"
+                    
+
+            elif cornerP ='BRD':
+                if sensH:
+                    mvt="L'DRD'LRD'"
+                else:
+                    mvt="FD'B'DF'D'BD"
 
             else:
-                mvt="L'DRD'LDR'D'"
+                if sensH:
+                    mvt="F'DBD'FDB'D'"
+                else:
+                    mvt="RD'L'DR'D'LD"
+                
 
             suitemvt(cube,mvt)
+
+
 
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
