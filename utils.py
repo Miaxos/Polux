@@ -203,6 +203,38 @@ class Cube:
         else :
             self.move_F("horaire", "bottom")
 
+
+    def move_L(self, sens, idColumn = 0):
+        if sens == "horaire" :
+            cycle = [0,2,5,4,0]
+        else :
+            cycle = [0,4,5,2,0]
+
+        old = colonne_en_ligne(idColumn, self.L[cycle[0]])
+        
+        for j in range(1, len(cycle)) :
+            i = cycle[j]
+        
+            if i == 4 :
+                save = colonne_en_ligne(2 - idColumn, self.L[i])
+                for k in range(3) :
+                    self.L[i][k][2 - idColumn] = old[-k - 1]
+
+                for k in range(3):
+                    old[k] = save[-k - 1]
+
+            else :
+                save = colonne_en_ligne(idColumn, self.L[i])
+                for k in range(3) :
+                    self.L[i][k][idColumn] = old[k]
+                old = np.copy(save)
+                                             
+    def move_R(self, sens):
+        if sens == "horaire":
+            self.move_L("antiHoraire", 2)
+        else :
+            self.move_L("horaire", 2)
+
     
     def move(self, mouvement, sens, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
         """
@@ -230,11 +262,11 @@ class Cube:
 
 
 
-##                elif idFace == 1 :
-##                    self.move_L/R(sens)
-##
-##                elif idFace == 3 :
-##                    self.move_L/R(sens)
+                elif idFace == 1 :
+                    self.move_L(sens)
+
+                elif idFace == 3 :
+                    self.move_R(sens)
 
             else :
                 raise TypeError("mouvement inconnu")
