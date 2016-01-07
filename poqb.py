@@ -1,6 +1,22 @@
 # poqb.py
 # -*- coding: utf-8 -*-
 
+import utils as struct
+
+# Exemples :
+# un cube qui permet de voir le déplacement exact de chaque vignette
+# puisqu'elles sont toutes identifiées de manière unique dans la configuration
+# de départ :
+cube = struct.Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
+
+cube.afficheFaces()
+for i in 'udfblr' :
+    print("move = " + str(i).upper())
+    cube.moveHoraire(i)
+    cube.moveAntiHoraire(i)
+    cube.afficheFaces()
+    cube = Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
+
 def solve(cube_c54):
     """La fonction principale du projet qui résoud un Rubik's Cube.
 
