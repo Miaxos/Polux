@@ -11,11 +11,11 @@ cube = struct.Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
 
 cube.afficheFaces()
 for i in 'udfblr' :
-    print("move = " + str(i).upper())
+    print("move = " + i.upper())
     cube.moveHoraire(i)
     cube.moveAntiHoraire(i)
     cube.afficheFaces()
-    cube = Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
+    cube = struct.Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
 
 def solve(cube_c54):
     """La fonction principale du projet qui résoud un Rubik's Cube.
