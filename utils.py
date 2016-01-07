@@ -3,7 +3,24 @@
 
 import numpy as np
 
+def colonne_en_ligne(idColonne, face, fin_plage = 3, debut_plage = 0, pas_plage = 1):
+    """
+    Renvoie les éléments de la colonne d'indice x d'une face donnée au format d'une ligne.
+    Les 3 derniers paramètres servent à sélectionner la colonne de haut en bas
+    ou de bas en haut.
+    """
+    return np.array([face[k][idColonne] for k in range(debut_plage, fin_plage,
+                                               pas_plage)])
 
+def revert_ligne(idLigne, face):
+    copie = np.copy(face[idLigne])
+    for k in range(3):
+        face[idLigne][k] = copie[-k - 1]
+
+def revert_colonne(idColonne, face):
+    copie = np.array([face[k][idColonne] for k in range(3)])
+    for k in range(3):
+        face[k][idColonne] = copie[-k - 1]
 
 class Cube:
     '''
@@ -66,220 +83,161 @@ class Cube:
 
 
     def moveHoraire(self, mouvement, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+        self.move(mouvement, "horaire")
+
+    def moveAntiHoraire(self, mouvement, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+        self.move(mouvement, "antiHoraire")
+
+
+    def move_vignettes(self, idFace, sens):
         """
-        moveSeq(String) - moves the Cube with the given pattern, ON PLACE
-        
-        :param mouvement: String de longueur 1
-        :param dico: dictionnaire des faces/mouvements (étant donné qu'un nom
-        de mouvement correspond à une face, on appelle ce dictionnaire comme
-        on veut).
-        À propos des dictionnaires : leur structure est la suivante :
-        chaque élément d'un dictionnaire est un couple clé/valeur dont la
-        syntaxe est clé:valeur .
-        La commande nomDico[nomClé] renvoie la valeur associée à cette clé.
+        Docstring
+        Basé sur la remarque que pour toutes les faces ont le même mouvement
+        de vignettes "internes" (les auto-collants qui composent la face)
         """
         
-        if (type(mouvement) == str) and (len(mouvement) == 1) :
-            # récupérer la face associée au mouvement :
-            idFace = dico[mouvement.upper()]
-            # pour une meilleure lisibilité du code :
-            face = np.copy(self.L[idFace])
+        face = np.copy(self.L[idFace])
+        
+        if sens == "horaire" :
+            debut_plage = -1
+            fin_plage = -4
+            pas_plage = -1
+            idPremiereLigne = 0
+            idDerniereLigne = 2
 
-            # effectuer la rotation d'1/4 de tour horaire sur la face         
-            # sélectionnée :
-            colonne_1 = [face[k][0] for k in range(-1, -4, -1)]
-            colonne_2 = [face[k][1] for k in range(-1, -4, -1)]
-            colonne_3 = [face[k][2] for k in range(-1, -4, -1)]
-
-            # les colonnes de la face deviennent ses nouvelles lignes après
-            # rotation :
-            ##face = np.array([colonne_1, colonne_2, colonne_3]) # je ne comprends pas pourquoi l'aliasing ne fonctionne pas
-            self.L[idFace] = np.array([colonne_1, colonne_2, colonne_3]) # ça fonctionne
-
-            # Pour les autres faces entrainées dans la rotation :
-
-            # /!\ la face BACK est la SEULE face qui soit inversée suivant
-            # la vue.
-            # En effet, sur une vue plane (éclatée), la première colonne de la
-            # face BACK en partant de la gauche n'est pas la première colonne
-            # de la face BACK en 3D, mais la 3ème...
-            
-            # si mouvement est U ou D :
-            if idFace == 0 or idFace == 5 :
-                if idFace == 0 :
-                    idRow = 0 # (NB : row = ligne) il faudra bouger toutes les premières lignes des 4 autres faces si on tourne la face UP
-                else :
-                    idRow = 2 # il faudra bouger toutes les dernières lignes des 4 autres faces si on tourne la face DOWN
-                
-                # Ce qu'il faut faire (en ayant arbitrairement choisi de
-                # commencer par la face 4):
-                # save(idRow(4)) ; idRow(1) --> 4 ;
-                # save(idRow(3)) ; saved_idRow(4) --> 3 ;
-                # save(idRow(2)) ; saved_idRow(3) --> 2 ;
-                # saved_idRow(2) --> 1
-                # Légende :
-                # idRow(x) : sélectionne la ligne d'indice idRow sur la
-                # face d'indice x
-                # x --> y : insère la ligne x dans la face d'indice y
-
-                # On choisit arbitrairement de commencer par la face 4 :
-                saveRow = np.copy(self.L[4][idRow])
-                self.L[4][2 - idRow] = self.L[1][idRow]
-                # puis on repète cela pour les faces 3 à 1 (sens horaire) :
-                for i in range(3, 0, -1) :
-                    oldRow = np.copy(self.L[i][idRow])
-                    # on conserve le même ordre entre les listes
-                    self.L[i][idRow] = saveRow
-                    saveRow = oldRow
-                    
-            # si mouvement est F ou B :
-            elif idFace == 2 or idFace == 4 :
-            # sur les faces UP & DOWN, il faudra déplacer des lignes uniquement,
-            # soit la première soit la dernière en fonction de si la rotation
-            # est F ou B et en fonction de si la face concernée est UP ou DOWN.
-            # D'où idFirstRow et idSecondRow qui correspondent à ces indices
-            # de ligfne "changeant".
-            # De même pour idFirstColumn et idSecondColumn.
-            # C'est aussi ce qui empêche d'automatiser le processus avec une
-            # boucle for.
-                if idFace == 2:
-                    # l'indice de la ligne de UP que l'on déplacera :
-                    idFirstRow = 2
-                    # l'indice de la colonne de LEFT que l'on déplacera :
-                    idFirstColumn = 2
-                else :
-                    idFirstRow = 0
-                    idFirstColumn = 0
-
-                # l'indice de la ligne de DOWN que l'on déplacera, qui est le
-                # complément à 2 de l'indice de la ligne déplacée de la face
-                # UP :
-                idSecondRow = 2 - idFirstRow
-                # l'indice de la colonne de RIGHT que l'on déplacera, qui est
-                # le complément à 2 de l'indice de la colonne déplacée de la
-                # face LEFT :
-                idSecondColumn = 2 - idFirstColumn
-
-                # On choisit arbitrairement de commencer la rotation par la
-                # face UP :
-                # sauvegarde de la ligne de la face UP amenée à être remplacée
-                # à la fin de la rotation :
-                saveRow = np.copy(self.L[0][idFirstRow])
-                # face LEFT --> face UP (sens de rotation horaire) :
-                self.L[0][idFirstRow] = [self.L[1][k][idFirstColumn] for k in \
-                                         range(-1, -4, -1)]
-
-                # sauvegarde de la colonne de la face RIGHT amenée à être
-                # remplacée à la fin de la rotation :
-                oldRow = np.copy([self.L[3][k][idSecondColumn] for k in \
-                                  range(3)])
-                # face UP --> face RIGHT (sens de rotation horaire) :
-                for k in range(3) :
-                    # on conserve l'ordre des listes :
-                    self.L[3][k][idSecondColumn] = saveRow[k] 
-                saveRow = oldRow
-
-                # sauvegarde de la face DOWN :
-                oldRow = np.copy(self.L[5][idSecondRow])
-                # face RIGHT --> face DOWN (sens de rotation horaire) :
-                self.L[5][idSecondRow] = saveRow 
-                for k in range(-1, -4, -1) :
-                    # on inverse l'ordre des listes (-k - 1 varie de 0 à 3) :
-                    self.L[5][idSecondRow][-k - 1] = saveRow[k] 
-                saveRow = oldRow
-                
-                # face DOWN --> face LEFT (sens de rotation horaire) :
-                for k in range(3) :
-                    # on conserve l'ordre des listes :
-                    self.L[1][k][idSecondColumn] = saveRow[k]
-            
-            # si mouvement est L :
-            elif idFace == 1 :
-                # la couronne est composée de colonnes uniquement :
-                idColumn = 0
-
-                # Les remplacements à effectuer :
-                # face BACK --> face UP                    
-                # face UP --> face FRONT
-                # face FRONT --> face DOWN
-                # face DOWN --> face BACK
-                
-                # On choisit arbitrairement de commencer la rotation par la
-                # face UP :
-                # sauvegarde de la face UP :
-                saveColumn = np.copy([self.L[0][k][idColumn] for k in \
-                                   range(3)])
-                # face BACK --> face UP (sens de rotation horaire) :
-                for k in range(-1, -4, -1) :
-                    # on inverse l'ordre des listes (-k - 1 varie de 0 à 3) :
-                    self.L[0][-k - 1][idColumn] = self.L[4][k][2 - idColumn]
-
-                # même processus pour les remplacements suivants :
-                # UP --> FRONT,
-                # FRONT --> DOWN
-                # en respectant le sens horaire :
-                for j in [2, 5] :
-                    # sauvegarde de la face j
-                    oldColumn = np.copy([self.L[j][k][idColumn] for k in \
-                                   range(3)])
-                                        
-                    for k in range(3) :
-                        # on conserve l'ordre des listes :
-                        self.L[j][k][idColumn] = saveColumn[k]
-                    saveColumn = oldColumn
-
-                # On est obligé de faire le mouvement DOWN --> BACK "à la main",
-                # à cause du décalage d'indice de cette face.
-                for k in range(3):
-                    # on conserve l'ordre des listes :
-                    self.L[4][k][2 - idColumn] = saveColumn[k]                   
-
-                    
-            # si mouvement est R :
-            elif idFace == 3 :
-                # la couronne est composée de colonnes uniquement :
-                idColumn = 2
-                
-                # face FRONT --> face UP
-                # face UP --> face BACK
-                # face BACK --> face DOWN
-                # face DOWN --> face FRONT
-                
-                # On choisit arbitrairement de commencer la rotation par la
-                # face UP :
-                # sauvegarde de la face UP :
-                saveColumn = np.copy([self.L[0][k][idColumn] for k in \
-                                   range(3)])
-                # face FRONT --> face UP (sens de rotation horaire) :
-                for k in range(3) :
-                    # on conserve l'ordre des listes :
-                    self.L[0][k][idColumn] = self.L[2][k][idColumn]
-
-                # sauvegarde BACK :
-                oldColumn = np.copy([self.L[4][k][2 - idColumn] for k in \
-                                   range(3)])
-                # face UP --> face BACK :               
-                for k in range(-1, -4, -1) :
-                    # on inverse l'ordre des listes (-k - 1 varie de 0 à 3) :
-                    self.L[4][-k - 1][2 - idColumn] = saveColumn[k]
-                saveColumn = oldColumn
-
-                # sauvegarde DOWN :
-                oldColumn = np.copy([self.L[5][k][idColumn] for k in \
-                                   range(3)])                
-                # face BACK --> face DOWN :
-                for k in range(-1, -4, -1) :
-                    # on inverse l'ordre des listes (-k - 1 varie de 0 à 3) :
-                    self.L[5][-k - 1][idColumn] = saveColumn[k]
-                saveColumn = oldColumn
-
-                # sauvegarde FRONT :
-                oldColumn = np.copy([self.L[2][k][idColumn] for k in \
-                                   range(3)])                
-                # face DOWN --> face FRONT :
-                for k in range(3) :
-                    # on conserve l'ordre des listes :
-                    self.L[2][k][idColumn] = saveColumn[k]
-                
         else :
-            raise TypeError
+            debut_plage = 0
+            fin_plage = 3
+            pas_plage = 1
+            idPremiereLigne = 2
+            idDerniereLigne = 0
+
+        self.L[idFace] = np.array([colonne_en_ligne(idPremiereLigne, face, fin_plage,
+                                           debut_plage, pas_plage),
+                                   colonne_en_ligne(1, face, fin_plage,
+                                           debut_plage, pas_plage),
+                                   colonne_en_ligne(idDerniereLigne, face, fin_plage,
+                                           debut_plage, pas_plage)])
+
+
+    def move_U(self, sens, idRow = 0):
+        """
+        Docstring
+        on conserve le même ordre entre les listes lors d'un passage d'une face
+        à l'autre
+        """
+
+        if sens == "horaire" :
+            cycle = [4,3,2,1,4]
+
+        else :
+            cycle = [4,1,2,3,4]
+            
+        oldRow = np.copy(self.L[cycle[0]][idRow])
+        
+        for j in range(1, len(cycle)) :
+            i = cycle[j]
+            
+            saveRow = np.copy(self.L[i][idRow])
+            self.L[i][idRow] = np.copy(oldRow)
+            oldRow = np.copy(saveRow)
+
+    def move_D(self, sens):
+        """
+        Docstring
+        """
+        if sens == "horaire" :
+            self.move_U("antiHoraire", 2)
+        else :
+            self.move_U("horaire", 2)
+
+
+    def move_F(self, sens, indicateur = "front"):
+        """
+        Docstring
+        """
+        if sens == "horaire":
+            cycle = [0,3,5,1,0]
+            if indicateur == "bottom" :
+                position = [0,2,2,0,0]
+            else :
+                position = [2,0,0,2,2]
+
+        else :
+            cycle = [0,1,5,3,0]
+            if indicateur == "bottom" :
+                position = [0,0,2,2,0] 
+            else :
+                position = [2,2,0,0,2]
+            
+        old = np.copy(self.L[cycle[0]][position[0]].reshape((3,1)))
+
+        for j in range(1, len(cycle)):
+            i = cycle[j]
+            pos = position[j]
+
+            if j%2 != 0 :
+                # le cycle commence par un changement une ligne en une colonne
+                save = np.copy(colonne_en_ligne(pos, self.L[i], -4, -1, -1))
+                for k in range(3) :
+                    self.L[i][k][pos] = old[k][0] # le reshape ajoute une dimenion à l'array "old"
+                old = np.copy(save)
+                
+                if sens == "antiHoraire" :
+                    revert_colonne(pos, self.L[i])
+                
+            else :
+                save = np.copy(self.L[i][pos]).reshape((3,1))
+                self.L[i][pos] = np.copy(old)
+                old = np.copy(save)
+
+                if sens == "antiHoraire" :
+                    revert_ligne(pos, self.L[i])
+
+    def move_B(self, sens):
+        """
+        Docstring
+        """
+        if sens == "horaire" :
+            self.move_F("antiHoraire", "bottom")
+        else :
+            self.move_F("horaire", "bottom")
+
+    
+    def move(self, mouvement, sens, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+        """
+        Docstring
+        """
+        if (type(sens) == str) and (sens == "horaire" or sens == "antiHoraire") :
+
+            if (type(mouvement) == str) and (len(mouvement) == 1) :
+                idFace = dico[mouvement.upper()]
+                self.move_vignettes(idFace, sens)
+
+                if idFace == 0 :
+                    self.move_U(sens)
+
+                elif idFace == 5 :
+                    self.move_D(sens)
+
+
+
+                elif idFace == 2 :
+                    self.move_F(sens)
+        
+                elif idFace == 4 :
+                    self.move_B(sens)
+
+
+
+##                elif idFace == 1 :
+##                    self.move_L/R(sens)
+##
+##                elif idFace == 3 :
+##                    self.move_L/R(sens)
+
+            else :
+                raise TypeError("mouvement inconnu")
+
+        else :
+            raise TypeError("sens inconnu")
