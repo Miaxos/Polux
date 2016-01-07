@@ -603,6 +603,33 @@ def place_D_corner(cube):
 
             suitemvt(cube,mvt)
 
+def orient_D_corner(cube):
+
+    Face={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}
+    oppFace={1:'R',2:'B',3:'L',4:'F'}
+
+    C= cube.L[5][1][1]
+
+    for i in range(1,5):
+        if cube.L[i][2][0] == cube.L[i][2][2] == C:
+            F=Face[i]
+            Fo = oppFace[i]
+            mvt = F + "D2" + F +"'D'"+F +"D'"+F+"'"+Fo+"'D2" + Fo+"D"+Fo+"'D"+Fo
+            
+            suitemvt(cube,mvt)
+    
+
+    while not cube.isFull('D',C):
+
+        if cube.L[5][0][0] == cube.L[5][0][2] == cube.L[2][1][1]:
+            mvt = "DF2D'F'DF'D'U'F2UFU'FU"
+        elif cube.L[5][2][2] == cube.L[5][0][2] == cube.L[3][1][1]:
+            mvt = "DR2D'R'DR'D'U'R2URU'RU"
+        elif cube.L[5][2][2] == cube.L[5][2][0] == cube.L[4][1][1]:
+            mvt = "DB2D'B'DB'D'U'B2UBU'BU"
+        elif cube.L[5][0][0] == cube.L[5][2][0] == cube.L[1][1][1]:
+            mvt = "DL2D'L'DL'D'U'L2ULU'LU"
+        suitemvt(cube,mvt)
 
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
