@@ -233,13 +233,13 @@ def suitemvt(cube, mvt):
     #cube :declass cube
     for i in range(len(mvt)):
         if mvt[i] in ['U', 'L', 'F', 'R', 'B', 'D']:
-            if mvt[i+1] == 2:
-                cube.moveHoraire(mvt[i])
-                cube.moveHoraire(mvt[i])
-            elif mvt[i+1]=="'":
-                cube.moveAntiH(mvt[i]) #Nom de la fonction a changer si besoin
+
+            if i<len(mvt)-1 and mvt[i+1]=="'" :
+                cube.moveAntiHoraire(mvt[i]) #Nom de la fonction a changer si besoin
             else:
                 cube.moveHoraire(mvt[i])
+        elif mvt[i] == str(2):
+            cube.moveHoraire(mvt[i-1])
 
 def rearranger_croix(cube, faceup):
     '''
@@ -262,42 +262,43 @@ def rearranger_croix(cube, faceup):
                 enplace.append(1)
             else:
                 enplace.append(0)
-            nbplace = sum(enplace)
+        nbplace = sum(enplace)
         if nbplace < 2:
             cube.moveHoraire(face)
 
-    if nbplace != 4 and faceup: #si les 4 sont bien placé, rien a faire
+
+    if nbplace != 4: #si les 4 sont bien placé, rien a faire
         ## Cas 2 arrêtes en place côte à côte
         if enplace[3] == enplace[0] == 1:
             if faceup: #c'est plus opimise niveau mouvment si on considere differremment les face up  et down
-                mvt ="RU'R'U'R"
+                mvt ="RU'R'UR"
             else:
                 mvt ="FD2F'D'FD'F'D'"
-        if enplace[0]==enplace[1] == 1:
+        elif enplace[0]==enplace[1] == 1:
             if faceup:
-                mvt = "BU'B'U'B"
+                mvt = "BU'B'UB"
             else:
-                "RD2R'D'RD'R'D'"
-        if enplace[1]==enplace[2] == 1:
+                mvt="RD2R'D'RD'R'D'"
+        elif enplace[1]==enplace[2] == 1:
             if faceup:
-                mvt = "LU'L'U'L"
+                mvt = "LU'L'UL"
             else:
                 mvt = "BD2B'D'BD'B'D'"
-        if enplace[2]==enplace[3]==1:
+        elif enplace[2]==enplace[3]==1:
             if faceup:
-                mvt = "FU'F'U'F"
+                mvt = "FU'F'UF"
             else:
                 mvt = "LD2L'D'LD'L'D'"
 
         ##Cas 2 arrêtes en place en face
-        if enplace[0]==enplace[2]:
-            if faceup:
-                mvt = "LU2L'U2L"
-            else:
-                mvt = "LD2L'D'LD'L'FD2F'D'FD'F'D'"
-        if enplace[1]==enplace[3]:
+        elif enplace[0]==enplace[2]==1:
             if faceup:
                 mvt = "FU2F'U2F"
+            else:
+                mvt = "LD2L'D'LD'L'FD2F'D'FD'F'D'"
+        elif enplace[1]==enplace[3]==1:
+            if faceup:
+                mvt = "LU2L'U2L"
             else:
                 mvt = "FD2F'D'FD'D'LD2L'D'LD'L'D'"
         suitemvt(cube,mvt)
