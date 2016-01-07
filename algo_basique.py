@@ -494,11 +494,11 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
 
     
 def D_cross(cube):
-    
-    face=cube.L[6]
-    
+
+    face=cube.L[5]
+
     if not face[0][1]==face[1][0]==face[1][2]==face[2][1]: #la croix n'est ps presente
-        
+
         # cas des arretes opposees
         if face[0][1] == face[2][1] :
             mvt = "LBDB'D'L'"
@@ -522,7 +522,7 @@ def D_cross(cube):
      #sinon aucune presente
         else:
             mvt = "FDLD'L'F'LBDB'D'L'"
-        
+
         suitemvt(cube, mvt)
 	#la croix est faite mais il faut que les arretes soient bien placees
 
@@ -554,43 +554,42 @@ def place_D_corner(cube):
             suitemvt(cube,mvt)
             place_D_corner(cube)
         else: #il y a alors forcément un coin bien placé
-            
 
             cornerP = enplace[0]
             # En fonction de la position des coins, il faut determiner dans quel sens les faire changer de position.
             #Seul celui en place ne bougera pas.
-            if cornerP != 'FRD'
+            if cornerP != 'FRD':
                 if cornerP != 'BRD':
-                    if colors['F'] in corners['BRD'] and colors['R'] in corners['BRD'] and colors['D'] in corners['BRD']:
-                        sensH = True
-                    else:
+                    if colors['F'] in corners['BRD'] and colors['R'] in corners['BRD']:
                         sensH = False
+                    else:
+                        sensH = True
                 elif cornerP != 'FLD':
-                    if colors['F'] in corners['FLD'] and colors['R'] in corners['FLD'] and colors['D'] in corners['FLD']:
-                        sensH = False
-                    else:
+                    if colors['F'] in corners['FLD'] and colors['R'] in corners['FLD']:
                         sensH = True
+                    else:
+                        sensH = False
             else:
-                if colors['F'] in corners['BLD'] and colors['R'] in corners['BLD'] and colors['D'] in corners['BLD']:
-                    sensH = True
-                else:
+                if colors['B'] in corners['BLD'] and colors['R'] in corners['BLD']:
                     sensH = False
-                
-            #Les cas differents en fonction de la position du coin place et le sens dans lequel les faires bouger
-            if cornerP='FLD':
-                if sensH:
-                    mvt ="BD'F'DB'D'FD'"
                 else:
+                    sensH = True
+
+            #Les cas differents en fonction de la position du coin place et le sens dans lequel les faires bouger
+            if cornerP=='FLD':
+                if sensH:
                     mvt="R'DLD'RDL'D'"
 
-            elif cornerP ='FRD':
+                else:
+                    mvt ="BD'F'DB'D'FD"
+
+            elif cornerP =='FRD':
                 if sensH:
                     mvt="B'DFD'BDF'D'"
                 else:
                     mvt="'LD'R'DL'D'RD"
-                    
 
-            elif cornerP ='BRD':
+            elif cornerP =='BRD':
                 if sensH:
                     mvt="L'DRD'LRD'"
                 else:
@@ -601,10 +600,8 @@ def place_D_corner(cube):
                     mvt="F'DBD'FDB'D'"
                 else:
                     mvt="RD'L'DR'D'LD"
-                
 
             suitemvt(cube,mvt)
-
 
 
 # Exemples :
