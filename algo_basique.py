@@ -432,7 +432,7 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
                 
         
         # Chercher un coin avec une facette blanche sur toutes autres face hormis la face UP
-        corner = cube.locate('U',1,'W', exception)
+        corner = locate(cube,'U',1,'W', exception)
         
         # S'il reste des facettes blanches sur des coins inférieur
         if corner != None:
@@ -470,7 +470,7 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
         ## Il est possible que la face blanche ne soit pas entièrement remplie et que le nombre de coin
         ## de la face DOWN ayant une facette blanche soient épuisé
         else:
-            corner_final = cube.locate('U',1,'W')
+            corner_final = locate(cube,'U',1,'W')
             
             # Détermination de la couleur "lettrée" du coin
             couleurCoin=""
