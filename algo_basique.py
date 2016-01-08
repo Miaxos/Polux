@@ -81,6 +81,8 @@ def locate(cube, ignoreface, type, color, ignorepos = [], dico={'U':0, 'L':1, 'F
         i = 0
         j = j+1
     return None
+    
+    
 def cross(cube, face):
     """
     On va fabriquer la croix.
@@ -228,6 +230,7 @@ def affichage(cube, save):
 
     #img.show()
     img.save(save+".png", "PNG")
+    
 def suitemvt(cube, mvt):
     #mvt : chaine
     #cube :declass cube
@@ -630,6 +633,23 @@ def orient_D_corner(cube):
         elif cube.L[5][0][0] == cube.L[5][2][0] == cube.L[1][1][1]:
             mvt = "DL2D'L'DL'D'U'L2ULU'LU"
         suitemvt(cube,mvt)
+
+
+def solve(cube_c54) :
+    """
+    Résoud une configuration de cube et renvoie la suite des mouvements à réaliser.
+    
+    :param cube_c54: string d'un cube au format 54
+    """
+        cube = struct.Cube(cube_c54)
+        # process de résolution (à compléter)
+        return cube.solution
+
+
+## AU MOMENT DE MERGER, PENSER A ENLEVER LES EXEMPLES !! ##
+# Sinon, une pythonnerie fait qu'ils seront exécutés au chargement de ce fichier (import alg_basique)..
+# Pour en garder une trace, mettez les dans poqb.py ;) (et n'oubliez pas de faire import alg_basique)
+
 
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
