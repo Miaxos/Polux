@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import utils as struct
+import algo_basique as alg1
 
 # Exemples :
 # un test qui permet de voir que les fonctions modifient bien le cube et que les 
@@ -9,8 +10,7 @@ import utils as struct
 # On crée donc un cube qui permet de voir le déplacement exact de chaque vignette
 # puisqu'elles sont toutes identifiées de manière unique dans la configuration
 # de départ :
-cube = struct.Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
-cube.afficheFaces()
+chaine_conf_unique = "123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR"
 
 def test_1(cube) :
     for i in "udfblr" :
@@ -19,24 +19,20 @@ def test_1(cube) :
         cube.moveAntiHoraire(i)
         cube.afficheFaces()
         cube = struct.Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
-test_1()
+
 # si les fonctions sont correctes, on devrait avoir le même cube qu'au départ.
 
 # Et un dernier test pour vraiment assurer que les fonctions font bien leur job,
 # à l'aide de l'outil fourni sur https://alg.cubing.net
 # Leur configuration de départ étant différente de la nôtre, la voici :
 chaine_alg_cubing_net = "WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY"
-cube = struct.Cube(chaine_alg_cubing_net)
-cube.afficheFaces()
 
 def test_2(cube) :
-    cube.afficheFaces()
     for i in 'udb':
         cube.moveHoraire(i)
     for i in 'lrf':
         cube.moveAntiHoraire(i)
-    cube.afficheFaces()
-test_2()
+
 # et si les fonctions font bien leur job, on doit retrouver cette configuration
 # de couleur pour chaque face :
 # https://alg.cubing.net/?setup=UU-&alg=UDBL-R-F-&view=fullscreen
@@ -63,10 +59,20 @@ def solve(cube_c54):
     return "R2L'F'DFLD'F2L'F'DFLDBDBL2B'D'BD2L'D'LD'RDR'D2F'D'F2DF'D'FDF'D2RD'R'D'B'DBDBD'B'D'L'DLD'F'DFDLD'L'D'R'DRDFD'LDL'D'F'D2FD'B'DF'D'UBU'B'UBD2B'U'BUB'U'BD'"
     """
 
-    pass
-    return "ch'sais pas faire..."
+##    pass
+##    return "ch'sais pas faire..."
+    return alg1.solve(cube_c54)
 
 
 if __name__=="__main__":
+    cube = struct.Cube(chaine_conf_unique)
+    cube.afficheFaces()
+    test_1()
+    
+    cube = struct.Cube(chaine_alg_cubing_net)
+    cube.afficheFaces()
+    test_2()
+    cube.afficheFaces()
+
     cube = 'OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG'
     print ("Pour la résolution de {}\nExécuter la manoeuvre {}".format(cube, solve(cube)))
