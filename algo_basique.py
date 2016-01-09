@@ -498,6 +498,18 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
     
 def D_cross(cube):
 
+    '''
+    Cette fonction permet de faire la croix sur la derniere face
+    Il y a trois cas differrent:
+        on a une moitie de croix qui forme une ligne (arretes opposees)
+        on a une moite de croix qui 'encadre' un coin (arretes adjacentes)
+        aucune vignette de la croix n'est présente
+    Pour chacun des cas, il y a une séquence qui fait la croix.
+    Pour les 2 1er cas, il y a différentes disposition des cube, la séquence reste la meme mais pas avec le meme referentiel de face.
+    ensuite on rearrange la croix, pour que les arretes jaune soit avec leur 2eme couleur.
+    rearranger_croix est adapté pour ça
+    '''
+    
     face=cube.L[5]
 
     if not face[0][1]==face[1][0]==face[1][2]==face[2][1]: #la croix n'est ps presente
