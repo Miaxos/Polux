@@ -459,6 +459,7 @@ def rearranger_croix(cube, faceup):
     La croix est déjà formée de base
     faceup : boleen pour differencier face up et down (croix de différente manière)
     '''
+    mvt = ""
     if faceup:
         face = 'U'
         idplace = 0
@@ -477,6 +478,7 @@ def rearranger_croix(cube, faceup):
         nbplace = sum(enplace)
         if nbplace < 2:
             cube.moveHoraire(face)
+            mvt = mvt + face
 
 
     if nbplace != 4: #si les 4 sont bien placé, rien a faire
@@ -513,7 +515,8 @@ def rearranger_croix(cube, faceup):
                 mvt = "LU2L'U2L"
             else:
                 mvt = "FD2F'D'FD'D'LD2L'D'LD'L'D'"
-        suitemvt(cube,mvt)
+    return mvt
+        # suitemvt(cube,mvt)
 
 def idChangeCornerDown(positionCoin, couleurCoin):
     '''
@@ -901,7 +904,10 @@ for i in range(0,len(example)):
     affichage(cu, str(i)+" debut")
     a = cross(cu,"W")
     suitemvt(cu,a)
-    affichage(cu, str(i)+" end_" + a)
+    affichage(cu, str(i)+" end_1_" + a)
+    b = rearranger_croix(cu, "U")
+    suitemvt(cu,b)
+    affichage(cu, str(i)+" end_2_" + a + b)
 
 
 
