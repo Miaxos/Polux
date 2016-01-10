@@ -33,6 +33,7 @@ class Cube:
         Transforme la chaine de caractère qui définit le cube en une liste qui définit les faces du cube
         '''       
         # On pose L
+        self.chaine = chaine
         self.L=[[]]             
                     
         # Détermination de la face du haut

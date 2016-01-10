@@ -75,14 +75,31 @@ def locate(cube, ignoreface, type, color, ignorepos = [], dico={'U':0, 'L':1, 'F
                 elif 2 in (np.where(cube.L[j][i] == color)[0]) and not([j,2,i] in ignorepos):
                     return link(j,2,i)
             elif type == 2:  # Type 2 : Arrête
-                if 1 in (np.where(cube.L[j][i] == color)[0]) and not([j,1,i] in ignorepos):
+                if (1 in (np.where(cube.L[j][i] == color)[0]) and not([j,1,i] in ignorepos) and not i == 1 ):
                     return link(j,1,i)
+                elif i == 1:
+                    if 0 in (np.where(cube.L[j][i] == color)[0]) and not([j,0,i] in ignorepos):
+                        return link(j,0,i)
+                    elif 2 in (np.where(cube.L[j][i] == color)[0]) and not([j,2,i] in ignorepos):
+                        return link(j,2,i)
             i = i+1
+        k = 0
         i = 0
         j = j+1
     return None
-    
-    
+
+def place_croix(placement, mvt):
+    r = []
+    if mvt == 'U':
+        for i in range(0,4):
+            j = (i+1)%4
+            r.append(placement[j])
+        return r
+    elif mvt == "U'":
+        for i in range(0,4):
+            r.append(placement[(3+i)%4])
+        return r
+
 def cross(cube, face):
     """
     On va fabriquer la croix.
@@ -95,35 +112,55 @@ def cross(cube, face):
     # On le fait en 4 étapes, on positionne successivement les différentes arrêtes.
     # Première étape, regarde si c'est deja terminé.
     mvt = ""
+    dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}
+    cubetemp = cube
     c = False
     loca_arretes = []
-    placement_croix = [0,0,0,0] # [UP, RIGHT, LEFT, DOWN]
+    placement_croix = {'L':0, 'R':0, 'F':0, 'B':0} 
     # Il s'agit de savoir dans quel sens est tourné la croix.
     nombre_arrete_place = 0
     while c == False:
-        result = locate(cube, 'RLBFD',2, 'W', loca_arretes)
+        result = locate(cube, '',2, 'W', loca_arretes)
         if result == None:
             c = True
         else:
-            loca_arretes.append(append)
-    nombre_arrete_place = len(loca_arretes)
-    if nombre_arrete_place == 4:
-        return mvt
-    elif nombre_arrete_place == 0:
-        # On doit donc en placer 4
-        placement_croix = [0,0,0,0]
-    else:
-        #On met à jour placement_croix pour qu'il soit conforme au positinnement de la croix.
-        None
+            # posface, poscube, posligne
+            # face, colonne, ligne
+            #if result[0][0] == 0 and result[0][1] == 1: 'L':1, 'F':2, 'R':3, 'B':4
+            for j in range(0,len(result)):
+                if not(result[j][0] == 0):
+                    loca_arretes.append(result[j])
+                else:
+                    if result[j][1] == 0:
+                        placement_croix['L'] = 1 
+                    elif result[j][1] == 2:
+                        placement_croix['R'] = 1 
+                    elif result[j][1] == 1 and result[j][2] == 2:
+                        placement_croix['F'] = 1 
+                    elif result[j][1] == 1 and result[j][2] == 0:
+                        placement_croix['B'] = 1 
+    place_liste = [placement_croix['L'], placement_croix['F'], placement_croix['R'], placement_croix['B']]
+
+    ignoreArrete = []
     # Deuxieme etape, on place succecivement les arrêtes.
-    while nombre_arrete_place < 4:
-        prochaine_arrete_a_placer = locate(cube, 'U',2, 'W') # On localise la prochaine arrête.
+    prochaine_arrete_a_placer = locate(cube, 'U',2, 'W') # On localise la prochaine arrête.
+    while 1 == 1:
+        cubetemp = struct.Cube(cube.chaine)
+        if mvt != "":
+            suitemvt(cubetemp,mvt)
+            # stt = str(mvt) + "test.png"
+            # affichage(cubetemp, stt)
+            #cubetemp.afficheFaces()
+        prochaine_arrete_a_placer = locate(cubetemp, 'U',2, 'W') # On localise la prochaine arrête.
+        if prochaine_arrete_a_placer != None:
+            None
+        else:
+            return mvt
 
         # En fonction de où elle se trouve et de ce qui est présent sur la croix on tourne la croix
         # On a differents cas ensuite
         # Cas 1: http://rubiks3x3.com/algorithm/?moves=FrdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=FrdRFF
-        # 
-        if prochaine_arrete_a_placer[0][0] == 5:
+        #     
 
         # Cas 2: http://rubiks3x3.com/algorithm/?moves=frdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=frdRFF
         #
@@ -132,7 +169,176 @@ def cross(cube, face):
         # Cas 4: Quand la face est orienté sur la face opposé, il suffit de bien positionner la croix et faire tourner.
         #
 
-            mvt_temps = ""
+        if prochaine_arrete_a_placer[0][0] == 1: # LEFT
+            if prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 2:
+                #BAS
+                while place_liste[0]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "L"
+                while place_liste[3]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "B'"
+                place_liste[3]=1
+            elif prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 0:
+                #HAUT
+                mvt = mvt + "L'"
+                while place_liste[3]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "B'"
+                place_liste[3]=1
+            elif prochaine_arrete_a_placer[0][1] == 0:
+                #GAUCHE
+                while place_liste[3]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "B'"
+                place_liste[3] = 1
+            elif prochaine_arrete_a_placer[0][1] == 2:
+                #DROIT
+                while place_liste[1]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "F"
+                place_liste[1] = 1
+
+        elif prochaine_arrete_a_placer[0][0] == 2: # FRONT
+            if prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 2:
+                #BAS
+                while place_liste[1]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "F"
+                while place_liste[0]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "R'"
+                place_liste[0]=1
+            elif prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 0:
+                #HAUT
+                mvt = mvt + "F'"
+                while place_liste[0]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "R'"
+                place_liste[0]=1
+            elif prochaine_arrete_a_placer[0][1] == 0:
+                #GAUCHE
+                while place_liste[0]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "L'"
+                place_liste[0] = 1
+            elif prochaine_arrete_a_placer[0][1] == 2:
+                #DROIT
+                while place_liste[2]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "R"
+                place_liste[2] = 1
+
+        elif prochaine_arrete_a_placer[0][0] == 3: # RIGHT
+            if prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 2:
+                #BAS
+                while place_liste[2]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "R"
+                while place_liste[1]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "F'"
+                place_liste[1]=1
+            elif prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 0:
+                #HAUT
+                mvt = mvt + "R'"
+                while place_liste[1]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "F'"
+                place_liste[1]=1
+            elif prochaine_arrete_a_placer[0][1] == 0:
+                #GAUCHE
+                while place_liste[1]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "F'"
+                place_liste[1]=1
+            elif prochaine_arrete_a_placer[0][1] == 2:
+                #DROIT
+                while place_liste[3]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "B"
+                place_liste[3] = 1
+
+        elif prochaine_arrete_a_placer[0][0] == 4: # BACK
+            if prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 2:
+                #BAS
+                while place_liste[3]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "B"
+                while place_liste[2]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "R'"
+                place_liste[2]=1
+            elif prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 0:
+                #HAUT
+                mvt = mvt + "B'"
+                while place_liste[2]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "R'"
+                place_liste[2]=1
+            elif prochaine_arrete_a_placer[0][1] == 0:
+                #GAUCHE
+                while place_liste[2]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "R'"
+                place_liste[2]=1
+            elif prochaine_arrete_a_placer[0][1] == 2:
+                #DROIT
+                while place_liste[0]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "L"
+                place_liste[0] = 1
+
+        elif prochaine_arrete_a_placer[0][0] == 5: # DOWN
+            if prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 2:
+                #BAS
+                while place_liste[3]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "B2"
+                place_liste[3]=1
+            elif prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 0:
+                #HAUT
+                while place_liste[1]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "F2"
+                place_liste[1]=1
+            elif prochaine_arrete_a_placer[0][1] == 0:
+                #GAUCHE
+                while place_liste[0]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "L2"
+                place_liste[0]=1
+            elif prochaine_arrete_a_placer[0][1] == 2:
+                #DROIT
+                while place_liste[2]==1:
+                    mvt = mvt + "U"
+                    place_liste = place_croix(place_liste, 'U')
+                mvt = mvt + "R2"
+                place_liste[2]=1  
+
     return mvt
 
 
@@ -653,9 +859,9 @@ def solve(cube_c54) :
     
     :param cube_c54: string d'un cube au format 54
     """
-        cube = struct.Cube(cube_c54)
-        # process de résolution (à compléter)
-        return cube.solution
+    cube = struct.Cube(cube_c54)
+    # process de résolution (à compléter)
+    return cube.solution
 
 
 ## AU MOMENT DE MERGER, PENSER A ENLEVER LES EXEMPLES !! ##
@@ -666,10 +872,13 @@ def solve(cube_c54) :
 # Exemples :
 cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
 cube.afficheFaces()
-print(locate(cube, 'URL',1, 'O'))
-affichage(cube, "test")
+#print(locate(cube, 'U',1, 'W', [[4, 2, 1], [1, 0, 1],[1, 0, 2], [5, 0, 2], [4, 2, 2]]))
+print(cross(cube,"W"))
+#suitemvt(cube,"LB'FR'U")
+#affichage(cube, "lp.png")
+
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
 #print(idChangeCornerDown("DRF","GWO"))
 
-print(bienOriente("FRU","RBW"))
+#print(bienOriente("FRU","RBW"))
