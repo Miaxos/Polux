@@ -119,38 +119,39 @@ def cross(cube, face):
     placement_croix = {'L':0, 'R':0, 'F':0, 'B':0} 
     # Il s'agit de savoir dans quel sens est tourné la croix.
     nombre_arrete_place = 0
-    while c == False:
-        result = locate(cube, '',2, 'W', loca_arretes)
-        if result == None:
-            c = True
-        else:
-            # posface, poscube, posligne
-            # face, colonne, ligne
-            #if result[0][0] == 0 and result[0][1] == 1: 'L':1, 'F':2, 'R':3, 'B':4
-            for j in range(0,len(result)):
-                if not(result[j][0] == 0):
-                    loca_arretes.append(result[j])
-                else:
-                    if result[j][1] == 0:
-                        placement_croix['L'] = 1 
-                    elif result[j][1] == 2:
-                        placement_croix['R'] = 1 
-                    elif result[j][1] == 1 and result[j][2] == 2:
-                        placement_croix['F'] = 1 
-                    elif result[j][1] == 1 and result[j][2] == 0:
-                        placement_croix['B'] = 1 
-    place_liste = [placement_croix['L'], placement_croix['F'], placement_croix['R'], placement_croix['B']]
-
-    ignoreArrete = []
+    # while c == False:
+    #     result = locate(cube, '',2, 'W', loca_arretes)
+    #     if result == None:
+    #         c = True
+    #     else:
+    #         # posface, poscube, posligne
+    #         # face, colonne, ligne
+    #         #if result[0][0] == 0 and result[0][1] == 1: 'L':1, 'F':2, 'R':3, 'B':4
+    #         for j in range(0,len(result)):
+    #             if not(result[j][0] == 0):
+    #                 loca_arretes.append(result[j])
+    #             else:
+    #                 if result[j][1] == 0:
+    #                     placement_croix['L'] = 1 
+    #                 elif result[j][1] == 2:
+    #                     placement_croix['R'] = 1 
+    #                 elif result[j][1] == 1 and result[j][2] == 2:
+    #                     placement_croix['F'] = 1 
+    #                 elif result[j][1] == 1 and result[j][2] == 0:
+    #                     placement_croix['B'] = 1 
+    # place_liste = [placement_croix['L'], placement_croix['F'], placement_croix['R'], placement_croix['B']]
+    # ignoreArrete = []
+    place_liste = [0,0,0,0]
     # Deuxieme etape, on place succecivement les arrêtes.
     prochaine_arrete_a_placer = locate(cube, 'U',2, 'W') # On localise la prochaine arrête.
     while 1 == 1:
         cubetemp = struct.Cube(cube.chaine)
         if mvt != "":
             suitemvt(cubetemp,mvt)
-            # stt = str(mvt) + "test.png"
-            # affichage(cubetemp, stt)
-            #cubetemp.afficheFaces()
+            
+            # cubetemp.afficheFaces()
+        # stt = str(mvt) + "test.png"
+        # affichage(cubetemp, stt)    
         prochaine_arrete_a_placer = locate(cubetemp, 'U',2, 'W') # On localise la prochaine arrête.
         if prochaine_arrete_a_placer != None:
             None
@@ -168,7 +169,9 @@ def cross(cube, face):
         #
         # Cas 4: Quand la face est orienté sur la face opposé, il suffit de bien positionner la croix et faire tourner.
         #
-
+        # print(prochaine_arrete_a_placer)
+        # print(place_liste)
+        # print(mvt)
         if prochaine_arrete_a_placer[0][0] == 1: # LEFT
             if prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 2:
                 #BAS
@@ -222,7 +225,7 @@ def cross(cube, face):
                 while place_liste[0]==1:
                     mvt = mvt + "U"
                     place_liste = place_croix(place_liste, 'U')
-                mvt = mvt + "R'"
+                mvt = mvt + "L'"
                 place_liste[0]=1
             elif prochaine_arrete_a_placer[0][1] == 0:
                 #GAUCHE
@@ -870,12 +873,37 @@ def solve(cube_c54) :
 
 
 # Exemples :
-cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
-cube.afficheFaces()
+# cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
+# cube.afficheFaces()
 #print(locate(cube, 'U',1, 'W', [[4, 2, 1], [1, 0, 1],[1, 0, 2], [5, 0, 2], [4, 2, 2]]))
-print(cross(cube,"W"))
+# print(cross(cube,"W"))
 #suitemvt(cube,"LB'FR'U")
 #affichage(cube, "lp.png")
+
+example = ["YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
+"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
+"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
+"OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
+"BBOWWGWBGRRGROWOWBYYWWOOYGOWRRBBBGGBYGYOGOBRYROGRYYRYW",
+"RYYOWGGORYYOYWBWYBRRGWOGOGYBRWGBBGOOYRRGGOBWWBBWBYRORW",
+"WYGWWYBGYRROWRBRBOYRGOOYGGYORWGBGYRYBWWBOGOBROBRBYWGOW",
+"WRRGWBWYBORGRGWROGYBBOOOYGYBRWRBGYGRBBWGOOGROYWOWYWBYY",
+"ROOWWBYYWBROBGBOOGWWYGOBYGBRRGWBOBYWRWGYYRYGWGBORYORRG",
+"YBWWWOWYBORRBBYOYGRRGWOBOGWBRWOBGWGGRYBYYOBGOYGRRYRGOW",
+"GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
+"BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
+"RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
+"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
+"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW"]
+
+for i in range(0,len(example)):
+    cu = struct.Cube(example[i])
+    affichage(cu, str(i)+" debut")
+    a = cross(cu,"W")
+    suitemvt(cu,a)
+    affichage(cu, str(i)+" end_" + a)
+
+
 
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
 
