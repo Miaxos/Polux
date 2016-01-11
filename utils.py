@@ -31,7 +31,8 @@ class Cube:
     def __init__(self, chaine="WWWWWWWWWGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOYYYYYYYYY"):
         '''
         Transforme la chaine de caractère qui définit le cube en une liste qui définit les faces du cube
-        '''       
+        '''
+        self.chaine = chaine       
         if len(chaine) == 54 :
             # On pose L
             self.L=[[]]             
