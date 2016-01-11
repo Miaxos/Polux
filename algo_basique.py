@@ -27,7 +27,7 @@ locaz =[
 [[5,2,1],[3,1,2]],
 [[5,0,2],[1,0,2],[4,2,2]],
 [[5,1,2],[4,1,2]],
-[[5,2,2],[3,2,2],[4,1,2]],
+[[5,2,2],[3,2,2],[4,0,2]],
 [[1,0,1],[4,2,1]],
 [[1,2,1],[2,0,1]],
 [[2,2,1],[3,0,1]],
@@ -525,27 +525,34 @@ def idChangeCornerDown(positionCoin, couleurCoin):
     L=["LFD","FRD","RBD","BLD"]
     
     # On recherche le coin dans la liste
-    # i : rang du mot dans la liste
-    # rg : variable pour sortir de la boucle while
-    i=0
-    rg = 0
-    while i < 4 and rg < 4:
-            # k : rang de la lettre dans le mot
-            k = 0
-            while k < 3:
-                if positionCoin[k] not in L[i]:
-                    k=3
-                    i+=1
-                    rg+=1
-                k+=1
-            rg=4
+    # i : curseur mot dans la liste
+    # rg : rang du mot trouvé
+    i=0   
+    while i < 4:        
+                # k : rang de la lettre dans le mot
+                k = 0
+                count = 0
+                while k < 3:
+                    if positionCoin[k] not in L[i]:
+                        k=3
+                        i+=1
+                    else:
+                        count+=1
+                        k+=1
+                    
+                    if count == 3:
+                        rg = i
+                        i+=1
+                 
+                
+
     # On opère le changement de référence
     # Si le mot n'est pas le dernier de la liste
-    positionCoinInter=L[i]
-    if i < 4:        
-        positionCoinFinal=L[i+1]
+    positionCoinInter=L[rg]
+    if rg < 4:        
+        positionCoinFinal=L[rg+1]
     #Sinon
-    if i==4:
+    if rg == 4:
         positionCoinFinal=L[0]
     # On pose couleurCoinInter pour pouvoir placer les couleur à l'emplacement voulu
     couleurCoinInter=[0,0,0]
@@ -571,9 +578,9 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
     couleurCoin  : chaine de 3 caractère ( Ex : "WBR" )
     
     Dans l'exemple : sur la face Left le coin est White, sur la face Front le coin est Bleu, etc...
-    '''
-        
     
+    renvoie la positionCoin et couleurCoin  du coin bien placé
+    '''         
     
     positionCoinN=[]
     couleurCoinN=[]
@@ -587,29 +594,32 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
     for k in range(3):
         if positionCoinN[k] in couleurCoinN:
             count += 1
-    # 4 cas
+    # 3 cas
     # 1er cas : il n'y a aucun chiffre commun au deux valeur
     if count == 0:
-        for k in range(2):
-            suitemvt(cube,"D")
+        for k in range(2):            
+            suitemvt(cube, "D")
+            affichage(cube, "ex"+"end_3")
             if k == 0:
                 ref = idChangeCornerDown(positionCoin,couleurCoin)
             else:
-                return idChangeCornerDown(ref[0], ref[1])
+                return idChangeCornerDown(ref[0], ref[1]), "D2"
             
     # 2eme cas : il y a 1 seul chiffre en commun et on refait appelle à la fonction de façon récursif
     elif count == 1:
         suitemvt(cube,"D")
+        affichage(cube, "ex"+"end_3")
         ref = idChangeCornerDown(positionCoin,couleurCoin)
-        cornerInPlace(cube, ref[1], ref[2])
+        return cornerInPlace(cube, ref[0], ref[1])[0], cornerInPlace(cube, ref[0], ref[1])[1]+"D"
     # 3ème cas : le coin est à la bonne place
     # on ne fait rien
     elif count == 2:
-        return [positionCoin, couleurCoin]
+        affichage(cube, "ex"+"end_3")
+        return [positionCoin, couleurCoin], ""
         
 def bienOriente(positionCoin, couleurCoin):
     '''
-    positionCoin et couleurCoin sont des chaines de 3 caractères  (EX : "FRU" / "WOG")
+    positionCoin et couleurCoin sont des chaines de 3 caractères  (EX : "FRU" / "BWR" => mal orienté | "FRU" / "RBW" => bien orienté)
     
     Détermine si le coin est bien orienté
     Renvoie True ou False
@@ -625,19 +635,21 @@ def bienOriente(positionCoin, couleurCoin):
     else:
         return False
                 
-def remplacement(positionCoin,coord,mvt):
+def remplacement(cube,positionCoin,coord,mvt):
     # Tant que le coin positionCoin n'est pas bien orientée
     refCoin=positionCoin
     refCouleur=coord
     while not bienOriente(refCoin, refCouleur):
-        # Faire le suite de mouvement
-        suitemvt(cube,mvt)        
+        # Faire la suite de mouvement
+        suitemvt(cube,mvt)
+        refCouleur=coord
+        affichage(cube, "ex"+"end_3")        
         
-def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
+def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
     '''
     Cette fonction termine la face blanche et fait la 1ère couronne du cube    
     '''
-    # Liste des exceptions (coin a ne pas parcourir) ici correspond au facette des coins supérieur or facette appartenant à UP
+    # Liste des exceptions (coin a ne pas parcourir) ici correspond au facette des coins supérieur ou facette appartenant à UP
     exception = [[1,0,0],[1,2,0],[2,0,0],[2,2,0],[3,0,0],[3,2,0],[4,0,0],[4,2,0]]
     # Tant que la face blanche n'est pas totalement blanche
     while not cube.isFull('U','W'):
@@ -668,17 +680,34 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
                 ref = cornerInPlace(cube, positionCoin, couleurCoin)
                 
                 # Si le coin est en FRD
-                if  "F" and "R" and "D" in ref[0]:
-                    remplacement("UFR",[0,2,2]+[2,2,0]+[3,0,0],"R'D'RD")
+                if  ("F" in ref[0][0]) and ("R" in ref[0][0]) and ("D" in ref[0][0]):
+                    # Tant que le coin positionCoin n'est pas bien orientée
+                    while not bienOriente("UFR",cube.L[0][2][2]+cube.L[2][0][2]+cube.L[3][0][0]):
+                        # Faire la suite de mouvement
+                        suitemvt(cube,"R'D'RD")
+                        affichage(cube, "ex"+"end_3") 
                 # Si le coin est en LFD
-                if  "L" and "F" and "D" in ref[0]:
-                    remplacement("LFU",[1,2,0]+[2,0,0]+[0,0,2],"F'D'FD")                    
+                if  ("L" in ref[0][0]) and ("F" in ref[0][0]) and ("D" in ref[0][0]):
+                    # Tant que le coin positionCoin n'est pas bien orientée
+                    while not bienOriente("LFU",cube.L[1][0][2]+cube.L[2][0][0]+cube.L[0][2][0]):
+                        # Faire la suite de mouvement
+                        suitemvt(cube,"F'D'FD")
+                        affichage(cube, "ex"+"end_3")                    
                 # Si le coin est en BLD
-                if  "B" and "L" and "D" in ref[0]:
-                    remplacement("BLU",[4,2,0]+[1,0,0]+[0,0,0],"L'D'LD")                    
+                if  ("B" in ref[0][0]) and ("L" in ref[0][0]) and ("D" in ref[0][0]):
+                    # Tant que le coin positionCoin n'est pas bien orientée
+                    while not bienOriente("BLU",cube.L[4][0][2]+cube.L[1][0][0]+cube.L[0][0][0]):
+                        # Faire la suite de mouvement
+                        suitemvt(cube,"L'D'LD")
+                        affichage(cube, "ex"+"end_3")                    
                 # Si le coin est en RBD
-                if  "R" and "B" and "D" in ref[0]:
-                    remplacement("RBU",[3,2,0]+[4,0,0]+[0,2,0],"B'D'BD")                    
+                if  ("R" in ref[0][0]) and ("B" in ref[0][0]) and ("D" in ref[0][0]):
+                    # Tant que le coin positionCoin n'est pas bien orientée
+                    while not bienOriente("RBU",cube.L[3][0][2]+cube.L[4][0][0]+cube.L[0][0][2]):
+                        # Faire la suite de mouvement
+                        suitemvt(cube,"B'D'BD")
+                        affichage(cube, "ex"+"end_3")
+                    
         ## Il est possible que la face blanche ne soit pas entièrement remplie et que le nombre de coin
         ## de la face DOWN ayant une facette blanche soient épuisé
         else:
@@ -695,17 +724,37 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 'F':2, 3:'R', 4:'B', 5:'D'}):
                 positionCoin+=dico3[corner_final[k][0]]
         
             # Si le coin est en UFR
-            if  "U" and "F" and "R" in positionCoin:
-                remplacement("UFR",[0,2,2]+[2,2,0]+[3,0,0],"R'D'RD")                    
+            if  ("U" in positionCoin) and ("F" in positionCoin) and ("R" in positionCoin):
+#                remplacement(cube,"UFR",[0,2,2]+[2,2,0]+[3,0,0],"R'D'RD")
+                # Tant que le coin positionCoin n'est pas bien orientée
+                while not bienOriente("UFR",cube.L[0][2][2]+cube.L[2][0][2]+cube.L[3][0][0]):
+                    # Faire la suite de mouvement
+                    suitemvt(cube,"R'D'RD")
+                    affichage(cube, "ex"+"end_3")                   
             # Si le coin est en LFU
-            if  "L" and "F" and "U" in positionCoin:
-                remplacement("LFU",[1,2,0]+[2,0,0]+[0,0,2],"F'D'FD")
+            if  ("L" in positionCoin) and ("F" in positionCoin) and ("U" in positionCoin):
+#                remplacement(cube,"LFU",[1,2,0]+[2,0,0]+[0,0,2],"F'D'FD")
+                # Tant que le coin positionCoin n'est pas bien orientée
+                while not bienOriente("LFU",cube.L[1][0][2]+cube.L[2][0][0]+cube.L[0][2][0]):
+                    # Faire la suite de mouvement
+                    suitemvt(cube,"F'D'FD")
+                    affichage(cube, "ex"+"end_3")
             # Si le coin est en BLU
-            if  "B" and "L" and "U" in positionCoin:
-                remplacement("BLU",[4,2,0]+[1,0,0]+[0,0,0],"L'D'LD")
+            if  ("B" in positionCoin) and ("L" in positionCoin) and ("U" in positionCoin):
+#                remplacement(cube,"BLU",[4,2,0]+[1,0,0]+[0,0,0],"L'D'LD")
+                # Tant que le coin positionCoin n'est pas bien orientée
+                while not bienOriente("BLU",cube.L[4][0][2]+cube.L[1][0][0]+cube.L[0][0][0]):
+                    # Faire la suite de mouvement
+                    suitemvt(cube,"L'D'LD")
+                    affichage(cube, "ex"+"end_3")
             # Si le coin est en RBU
-            if  "R" and "B" and "U" in positionCoin:
-                remplacement("RBU",[3,2,0]+[4,0,0]+[0,2,0],"B'D'BD")
+            if  ("R" in positionCoin) and ("B" in positionCoin) and ("U" in positionCoin):
+#                remplacement(cube,"RBU",[3,2,0]+[4,0,0]+[0,2,0],"B'D'BD")
+                # Tant que le coin positionCoin n'est pas bien orientée
+                while not bienOriente("RBU",cube.L[3][0][2]+cube.L[4][0][0]+cube.L[0][0][2]):
+                    # Faire la suite de mouvement
+                    suitemvt(cube,"B'D'BD")
+                    affichage(cube, "ex"+"end_3")
 
     
 def D_cross(cube):
@@ -897,7 +946,8 @@ example = ["YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
 "BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
 "RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
 "RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
-"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW"]
+"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
+"RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"]
 
 for i in range(0,len(example)):
     cu = struct.Cube(example[i])
@@ -908,6 +958,21 @@ for i in range(0,len(example)):
     b = rearranger_croix(cu, "U")
     suitemvt(cu,b)
     affichage(cu, str(i)+" end_2_" + a + b)
+    wFace_1st_crown(cu)
+    affichage(cu, "ex"+"end_3")   
+
+# Test CocoM
+#ex = "RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
+#cu = struct.Cube(ex)
+#affichage(cu, "ex"+" debut")
+#a = cross(cu,"W")
+#suitemvt(cu,a)
+#affichage(cu, "ex"+" end_1_" + a)
+#b = rearranger_croix(cu, "U")
+#suitemvt(cu,b)
+#affichage(cu, "ex"+" end_2_" + a + b)
+#wFace_1st_crown(cu)
+#affichage(cu, "ex"+"end_3")
 
 
 
