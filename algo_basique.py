@@ -802,7 +802,21 @@ def bienOriente(cube, positionCoin, couleurCoin):
 #        # Faire la suite de mouvement
 #        suitemvt(cube,mvt)
 #        refCouleur=coord
-#        affichage(cube, "ex"+"end_3")        
+#        affichage(cube, "ex"+"end_3")
+
+def coinMalOriente(cube):
+    L=["LFU","FRU","RBU","BLU"]    
+    C=[cube.L[1][0][2]+cube.L[2][0][0]+cube.L[0][2][0],
+       cube.L[2][0][2]+cube.L[3][0][0]+cube.L[0][2][2],
+       cube.L[3][0][2]+cube.L[4][0][0]+cube.L[0][0][2],
+       cube.L[4][0][2]+cube.L[1][0][0]+cube.L[0][0][0]]
+    a = False
+    k=0
+    while a == False or k < 3:
+        if not bienOriente(cube, L, C):
+            a = True
+            k+=1
+    return a, L[k]
         
 def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
     '''
@@ -812,7 +826,7 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
     exception = [[1,0,0],[1,2,0],[2,0,0],[2,2,0],[3,0,0],[3,2,0],[4,0,0],[4,2,0]]
     # Tant que la face blanche n'est pas totalement blanche
     mvmt = ""
-    while not cube.isFull('U','W'):
+    while not cube.isFull('U','W'):  #or coinMalOriente(cube)[0]
                 
         
         # Chercher un coin avec une facette blanche sur toutes autres face hormis la face UP
@@ -1271,8 +1285,8 @@ def solve(cube_c54) :
 #affichage(cube, "lp.png")
 
 example = [
-"OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG"
-#"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
+#"OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG"
+"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
 #"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
 #"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
 #"OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
@@ -1300,15 +1314,16 @@ for i in range(0,len(example)):
     suitemvt(cu,b)
     affichage(cu, str(i)+" end_2_" + a + b)
     c = wFace_1st_crown(cu)
-    affichage(cu, str(i)+"ex"+"end_3" + a + b +c)   
+    affichage(cu, str(i)+"ex"+"end_3" + a + b +c)
+#    print(coinMalOriente(cu))
     d = solve_second_crown(cu)
     affichage(cu, str(i)+" end_4_" + a + b + c + d)
     D_cross(cu)
     affichage(cu, str(i)+" end_4_" + a + b + c + d + "X")
-    place_D_corner(cu)
-    affichage(cu, str(i)+" end_4_" + a + b + c + d + "XX")
-    orient_D_corner(cu)
-    affichage(cu, str(i)+" end_4_" + a + b + c + d + "XXX")
+#    place_D_corner(cu)
+#    affichage(cu, str(i)+" end_4_" + a + b + c + d + "XX")
+#    orient_D_corner(cu)
+#    affichage(cu, str(i)+" end_4_" + a + b + c + d + "XXX")
 
 ## Test CocoM
 #ex = "RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
