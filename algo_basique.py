@@ -1121,8 +1121,9 @@ def D_cross(cube):
 
         suitemvt(cube, mvt)
 	#la croix est faite mais il faut que les arretes soient bien placees
-
-    return mvt + rearranger_croix(cube, False) #on re-arrange la croix
+    rearranger_croix(cube, False)
+    
+#    return mvt + mvt1  #on re-arrange la croix
 
 def place_D_corner(cube):
     #couleurs des faces
@@ -1204,7 +1205,7 @@ def place_D_corner(cube):
 
 def orient_D_corner(cube):
     # mouvement totale
-    mvt_tot = ""
+
 
     Face={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}
     oppFace={1:'R',2:'B',3:'L',4:'F'}
@@ -1217,7 +1218,7 @@ def orient_D_corner(cube):
             Fo = oppFace[i]
             mvt = F + "D2" + F +"'D'"+F +"D'"+F+"'"+Fo+"'D2" + Fo+"D"+Fo+"'D"+Fo
             
-            mvt_tot += mvt            
+                       
             suitemvt(cube,mvt)
     
 
@@ -1232,10 +1233,9 @@ def orient_D_corner(cube):
         elif cube.L[5][0][0] == cube.L[5][2][0] == cube.L[1][1][1]:
             mvt = "DL2D'L'DL'D'U'L2ULU'LU"
             
-        mvt_tot += mvt
         suitemvt(cube,mvt)
     
-    return mvt_tot      
+#    return mvt_tot      
     
 
 def solve(cube_c54) :
@@ -1271,22 +1271,23 @@ def solve(cube_c54) :
 #affichage(cube, "lp.png")
 
 example = [
-"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
-"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
-"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
-"OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
-"BBOWWGWBGRRGROWOWBYYWWOOYGOWRRBBBGGBYGYOGOBRYROGRYYRYW",
-"RYYOWGGORYYOYWBWYBRRGWOGOGYBRWGBBGOOYRRGGOBWWBBWBYRORW",
-"WYGWWYBGYRROWRBRBOYRGOOYGGYORWGBGYRYBWWBOGOBROBRBYWGOW",
-"WRRGWBWYBORGRGWROGYBBOOOYGYBRWRBGYGRBBWGOOGROYWOWYWBYY",
-"ROOWWBYYWBROBGBOOGWWYGOBYGBRRGWBOBYWRWGYYRYGWGBORYORRG",
-"YBWWWOWYBORRBBYOYGRRGWOBOGWBRWOBGWGGRYBYYOBGOYGRRYRGOW",
-"GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
-"BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
-"RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
-"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
-"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
-"RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
+"OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG"
+#"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
+#"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
+#"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
+#"OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
+#"BBOWWGWBGRRGROWOWBYYWWOOYGOWRRBBBGGBYGYOGOBRYROGRYYRYW",
+#"RYYOWGGORYYOYWBWYBRRGWOGOGYBRWGBBGOOYRRGGOBWWBBWBYRORW",
+#"WYGWWYBGYRROWRBRBOYRGOOYGGYORWGBGYRYBWWBOGOBROBRBYWGOW",
+#"WRRGWBWYBORGRGWROGYBBOOOYGYBRWRBGYGRBBWGOOGROYWOWYWBYY",
+#"ROOWWBYYWBROBGBOOGWWYGOBYGBRRGWBOBYWRWGYYRYGWGBORYORRG",
+#"YBWWWOWYBORRBBYOYGRRGWOBOGWBRWOBGWGGRYBYYOBGOYGRRYRGOW",
+#"GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
+#"BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
+#"RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
+#"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
+#"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
+#"RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
 ]
 
 for i in range(0,len(example)):
@@ -1300,6 +1301,14 @@ for i in range(0,len(example)):
     affichage(cu, str(i)+" end_2_" + a + b)
     c = wFace_1st_crown(cu)
     affichage(cu, str(i)+"ex"+"end_3" + a + b +c)   
+    d = solve_second_crown(cu)
+    affichage(cu, str(i)+" end_4_" + a + b + c + d)
+    D_cross(cu)
+    affichage(cu, str(i)+" end_4_" + a + b + c + d + "X")
+    place_D_corner(cu)
+    affichage(cu, str(i)+" end_4_" + a + b + c + d + "XX")
+    orient_D_corner(cu)
+    affichage(cu, str(i)+" end_4_" + a + b + c + d + "XXX")
 
 ## Test CocoM
 #ex = "RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
@@ -1318,18 +1327,18 @@ for i in range(0,len(example)):
 #affichage(cu, "ex3_"+"end_3"+c)
 
 
-ex2 = "RWYWWWOWWBGBYRBOBRGOYRGYRROBBBYOGRBRGYGOGOGYBWGWRYOWOY"
-ex3 = "BWYWWWBWBOORYGWRRYOBGOORYGBRRBYBYYYWGGOBRWROROOWGYGGBG"
-cu = struct.Cube(ex3)
-affichage(cu, "ex3_"+" debut")
+#ex2 = "RWYWWWOWWBGBYRBOBRGOYRGYRROBBBYOGRBRGYGOGOGYBWGWRYOWOY"
+#ex3 = "BWYWWWBWBOORYGWRRYOBGOORYGBRRBYBYYYWGGOBRWROROOWGYGGBG"
+#cu = struct.Cube(ex3)
+#affichage(cu, "ex3_"+" debut")
 #a = cross(cu,"W")
 #suitemvt(cu,a)
 #affichage(cu, "ex_"+" end_1_" + a)
 #b = rearranger_croix(cu, "U")
 #suitemvt(cu,b)
 #affichage(cu, "ex_"+" end_2_" + a + b)
-c = wFace_1st_crown(cu)
-affichage(cu, "ex3_"+"end_3"+c)
+#c = wFace_1st_crown(cu)
+#affichage(cu, "ex3_"+"end_3"+c)
 #exCubeTG="WWWWWWWWWBBBOOOGGGRRRBBYBOGOGOYRRBOOYGGYYRYGRBYOBYRYRG"
 #cubeTG=struct.Cube(exCubeTG)
 #mouvementTG=solve_second_crown(cubeTG)
