@@ -1125,8 +1125,13 @@ def place_D_corner(cube):
                     mvt="RD'L'DR'D'LD"
 
             suitemvt(cube,mvt)
+            
+    return mvt
+        
 
 def orient_D_corner(cube):
+    # mouvement totale
+    mvt_tot = ""
 
     Face={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}
     oppFace={1:'R',2:'B',3:'L',4:'F'}
@@ -1139,6 +1144,7 @@ def orient_D_corner(cube):
             Fo = oppFace[i]
             mvt = F + "D2" + F +"'D'"+F +"D'"+F+"'"+Fo+"'D2" + Fo+"D"+Fo+"'D"+Fo
             
+            mvt_tot += mvt            
             suitemvt(cube,mvt)
     
 
@@ -1152,8 +1158,12 @@ def orient_D_corner(cube):
             mvt = "DB2D'B'DB'D'U'B2UBU'BU"
         elif cube.L[5][0][0] == cube.L[5][2][0] == cube.L[1][1][1]:
             mvt = "DL2D'L'DL'D'U'L2ULU'LU"
+            
+        mvt_tot += mvt
         suitemvt(cube,mvt)
-
+    
+    return mvt_tot      
+    
 
 def solve(cube_c54) :
     """
@@ -1162,13 +1172,16 @@ def solve(cube_c54) :
     :param cube_c54: string d'un cube au format 54
     """
     cube = struct.Cube(cube_c54)
-    a = cross(cu,"W")
-    b = rearranger_croix(cu, "U")
-    c = wFace_1st_crown(cu)
-    d = solve_second_crown(cu)
-    e = D_cross(cu)
-    # process de résolution (à compléter)
-    return cube.solution
+    a = cross(cube,"W")
+    b = rearranger_croix(cube, "U")
+    c = wFace_1st_crown(cube)
+    d = solve_second_crown(cube)
+    e = D_cross(cube)
+    f = place_D_corner(cube)
+    g = orient_D_corner(cube)
+    
+    solution = a+b+c+d+e+f+g
+    return solution
 
 
 ## AU MOMENT DE MERGER, PENSER A ENLEVER LES EXEMPLES !! ##
