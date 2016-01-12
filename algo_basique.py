@@ -1049,7 +1049,7 @@ def D_cross(cube):
         suitemvt(cube, mvt)
 	#la croix est faite mais il faut que les arretes soient bien placees
 
-    rearranger_croix(cube, False) #on re-arrange la croix
+    return mvt + rearranger_croix(cube, False) #on re-arrange la croix
 
 def place_D_corner(cube):
     #couleurs des faces
@@ -1162,6 +1162,11 @@ def solve(cube_c54) :
     :param cube_c54: string d'un cube au format 54
     """
     cube = struct.Cube(cube_c54)
+    a = cross(cu,"W")
+    b = rearranger_croix(cu, "U")
+    c = wFace_1st_crown(cu)
+    d = solve_second_crown(cu)
+    e = D_cross(cu)
     # process de résolution (à compléter)
     return cube.solution
 
@@ -1212,7 +1217,7 @@ for i in range(0,len(example)):
 
 ## Test CocoM
 #ex = "RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
-<<<<<<< HEAD
+
 #ex2 = "RWYWWWOWWBGBYRBOBRGOYRGYRROBBBYOGRBRGYGOGOGYBWGWRYOWOY"
 #ex3 = "BWYWWWBWBOORYGWRRYOBGOORYGBRRBYBYYYWGGOBRWROROOWGYGGBG"
 #cu = struct.Cube(ex3)
@@ -1226,7 +1231,7 @@ for i in range(0,len(example)):
 #c = wFace_1st_crown(cu)
 #affichage(cu, "ex3_"+"end_3"+c)
 
-=======
+
 ex2 = "RWYWWWOWWBGBYRBOBRGOYRGYRROBBBYOGRBRGYGOGOGYBWGWRYOWOY"
 ex3 = "BWYWWWBWBOORYGWRRYOBGOORYGBRRBYBYYYWGGOBRWROROOWGYGGBG"
 cu = struct.Cube(ex3)
@@ -1242,7 +1247,7 @@ affichage(cu, "ex3_"+"end_3"+c)
 #exCubeTG="WWWWWWWWWBBBOOOGGGRRRBBYBOGOGOYRRBOOYGGYYRYGRBYOBYRYRG"
 #cubeTG=struct.Cube(exCubeTG)
 #mouvementTG=solve_second_crown(cubeTG)
->>>>>>> 30c42ce760fcdf4c2e5d92fa762d4baa2172c8f9
+
 
 
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
