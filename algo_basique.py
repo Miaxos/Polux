@@ -764,6 +764,159 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
                     mvmt += "B'D'BD"
                     affichage(cube, "ex"+"end_3")
     return mvmt
+
+#permet de verifier que la deuxieme couronne est terminee
+def second_crown_correct(cube):
+    #on regarde les facettes de la seconde couronne
+    arete_crown_2_BL=[cube.L[4][1][2],cube.L[1][1][0]]
+    arete_crown_2_LF=[cube.L[1][1][2],cube.L[2][1][0]]
+    arete_crown_2_FR=[cube.L[2][1][2],cube.L[3][1][0]]
+    arete_crown_2_RB=[cube.L[3][1][2],cube.L[4][1][0]]
+
+    colorL=cube.L[1][1][1]
+    colorF=cube.L[2][1][1]
+    colorR=cube.L[3][1][1]
+    colorB=cube.L[4][1][1]
+    #on regarde si la couleur des facettes correspondent a la couleur de la face
+    if(arete_crown_2_BL[0]!=colorB or arete_crown_2_BL[1]!=colorL):
+        return [False, "BL"]
+    if(arete_crown_2_LF[0]!=colorL or arete_crown_2_LF[1]!=colorF):
+        return [False, "LF"]
+    if(arete_crown_2_FR[0]!=colorF or arete_crown_2_FR[1]!=colorR):
+        return [False, "FR"]
+    if(arete_crown_2_RB[0]!=colorR or arete_crown_2_RB[1]!=colorB):
+        return [False, "RB"]
+    
+    return [True, None]
+
+#utilise pour resoudre la seconde couronne
+def check_T_shape(cube):
+    #On regarde les cubes en haut des faces L, R, F, B
+    areteL=[cube.L[1][2][1],cube.L[5][1][0]]
+    areteF=[cube.L[2][2][1],cube.L[5][0][1]]
+    areteR=[cube.L[3][2][1],cube.L[5][1][2]]
+    areteB=[cube.L[4][2][1],cube.L[5][2][1]]
+    
+
+    colorL=cube.L[1][1][1]
+    colorF=cube.L[2][1][1]
+    colorR=cube.L[3][1][1]
+    colorB=cube.L[4][1][1]
+
+    mvt=""
+
+    if(areteL[0]!='Y' and areteL[1]!='Y'):
+        if(areteL[0]==colorL):
+            mvt=""
+            return [1,mvt,areteL[1]]
+        if(areteL[0]==colorF):
+            mvt="D"
+            return [2,mvt,areteL[1]]
+        if(areteL[0]==colorR):
+            mvt="D2"
+            return [3,mvt,areteL[1]]
+        if(areteL[0]==colorB):
+            mvt="D'"
+            return [4,mvt,areteL[1]]
+
+    if(areteF[0]!='Y' and areteF[1]!='Y'):
+        if(areteF[0]==colorL):
+            mvt="D'"
+            return [1,mvt,areteF[1]]
+        if(areteF[0]==colorF):
+            mvt=""
+            return [2,mvt,areteF[1]]
+        if(areteF[0]==colorR):
+            mvt="D"
+            return [3,mvt,areteF[1]]
+        if(areteF[0]==colorB):
+            mvt="D2"
+            return [4,mvt,areteF[1]]
+
+    if(areteR[0]!='Y' and areteR[1]!='Y'):
+        if(areteR[0]==colorL):
+            mvt="D2"
+            return [1,mvt,areteR[1]]
+        if(areteR[0]==colorF):
+            mvt="D'"
+            return [2,mvt,areteR[1]]
+        if(areteR[0]==colorR):
+            mvt=""
+            return [3,mvt,areteR[1]]
+        if(areteR[0]==colorB):
+            mvt="D"
+            return [4,mvt,areteR[1]]
+
+    if(areteB[0]!='Y' and areteB[1]!='Y'):
+        if(areteB[0]==colorL):
+            mvt="D"
+            return [1,mvt,areteB[1]]
+        if(areteB[0]==colorF):
+            mvt="D2"
+            return [2,mvt,areteB[1]]
+        if(areteB[0]==colorR):
+            mvt="D'"
+            return [3,mvt,areteB[1]]
+        if(areteB[0]==colorB):
+            mvt=""
+            return [4,mvt,areteB[1]]
+        
+
+    return [None, None, None]
+
+
+#la premiere couronne doit etre faite
+def solve_second_crown(cube) :
+    mvt=""
+    i=0
+    numface=["L", "F", "R", "B"]
+    #on regarde si la deuxieme couronne est completee
+    correct = second_crown_correct(cube)
+    #tant que la deuxieme couronne n'est pas completee
+    while correct[0]==False:
+        print(i,cube.L)
+        mvtTour=""
+        #on appelle check_T_Shape
+        face=check_T_shape(cube)
+        print(face)
+        #si la fonction retourne une face, on regarde de quel coté doit se mettre le cube en comparant la couleur de la facette qui est sur la face jaune et la couleur des faces a droite et a gauche
+        if(face[0]!=None and face[1]!=None and face[2]!=None):
+            mvtTour+=face[1]
+                #explication du calcul, on prends le numero de la face retournee par la fonction check_T_shape() et on verifie a gauche, L=1, F=2, R=3, B=4
+                #on enleve 1 pour que ca aille de 0 a 3
+                #on enleve 1 pour avoir la face a gauche de celle ci
+                #on met modulo 4 pour que si on a -1 ca le transforme en 3
+                #on ajoute 1 pour avoir le numéro réel
+                #ce qui nous donne le numero de la face a gauche par rapport a celle que l'on cherche
+            if(face[2]==cube.L[((face[0])%4)+1][1][1]):
+                mvtTour+="D'"+numface[(face[0])%4]+"'"+"D"+numface[(face[0])%4]+"D"+numface[(face[0]-1)%4]+"D'"+numface[(face[0]-1)%4]+"'"
+                #explication du calcul, on prends le numero de la face retournee par la fonction check_T_shape() et on verifie a droite, L=1, F=2, R=3, B=4
+                #on enleve 1 pour que ca aille de 0 a 3
+                #on ajoute 1 pour avoir la face a droite de celle ci
+                #on met modulo 4 pour que si on a -1 ca le transforme en 3
+                #on ajoute 1 pour avoir le numéro réel
+                #ce qui nous donne le numero de la face a droite par rapport a celle que l'on cherche
+            if(face[2]==cube.L[((face[0]-2)%4)+1][1][1]):
+                mvtTour+="D"+numface[(face[0]-2)%4]+"D'"+numface[(face[0]-2)%4]+"'"+"D'"+numface[(face[0]-1)%4]+"'"+"D"+numface[(face[0]-1)%4]
+                    
+        else:
+            if(correct[1]=="BL"):
+                f=0
+            elif(correct[1]=="LF"):
+                f=1
+            elif(correct[1]=="FR"):
+                f=2
+            elif(correct[1]=="RB"):
+                f=3
+            mvtTour+="D"+numface[(f-1)%4]+"D'"+numface[(f-1)%4]+"'"+"D'"+numface[f%4]+"'"+"D"+numface[f%4]
+
+        
+        mvt+=mvtTour
+        suitemvt(cube,mvtTour)
+        #on recommence tant que la deuxieme couronne n'est pas terminee
+        correct = second_crown_correct(cube)
+        i+=1
+    return mvt
     
 def D_cross(cube):
 
@@ -983,7 +1136,9 @@ affichage(cu, "ex3_"+" debut")
 #affichage(cu, "ex_"+" end_2_" + a + b)
 c = wFace_1st_crown(cu)
 affichage(cu, "ex3_"+"end_3"+c)
-
+#exCubeTG="WWWWWWWWWBBBOOOGGGRRRBBYBOGOGOYRRBOOYGGYYRYGRBYOBYRYRG"
+#cubeTG=struct.Cube(exCubeTG)
+#mouvementTG=solve_second_crown(cubeTG)
 
 
     # Up + Left + Front + Right + Back + Down (+ : concaténation)
