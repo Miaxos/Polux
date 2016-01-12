@@ -549,10 +549,10 @@ def idChangeCornerDown(positionCoin, couleurCoin):
     # On opère le changement de référence
     # Si le mot n'est pas le dernier de la liste
     positionCoinInter=L[rg]
-    if rg < 4:        
+    if rg < 3:        
         positionCoinFinal=L[rg+1]
     #Sinon
-    if rg == 4:
+    if rg == 3:
         positionCoinFinal=L[0]
     # On pose couleurCoinInter pour pouvoir placer les couleur à l'emplacement voulu
     couleurCoinInter=[0,0,0]
@@ -599,7 +599,7 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
     if count == 0:
         for k in range(2):            
             suitemvt(cube, "D")
-            affichage(cube, "ex"+"end_3")
+            affichage(cube, "1ex"+"end_3"+str(k))
             if k == 0:
                 ref = idChangeCornerDown(positionCoin,couleurCoin)
             else:
@@ -608,14 +608,100 @@ def cornerInPlace(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R
     # 2eme cas : il y a 1 seul chiffre en commun et on refait appelle à la fonction de façon récursif
     elif count == 1:
         suitemvt(cube,"D")
-        affichage(cube, "ex"+"end_3")
+        affichage(cube, "2ex"+"end_3")
         ref = idChangeCornerDown(positionCoin,couleurCoin)
         return cornerInPlace(cube, ref[0], ref[1])[0], cornerInPlace(cube, ref[0], ref[1])[1]+"D"
     # 3ème cas : le coin est à la bonne place
     # on ne fait rien
     elif count == 2:
-        affichage(cube, "ex"+"end_3")
+        affichage(cube, "3ex"+"end_3")
         return [positionCoin, couleurCoin], ""
+
+def cornerInPlace2(cube, positionCoin, couleurCoin, dico={'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+    '''
+    Si le coin n'est pas situé en dessous de son emplacement final, la fonction tourne la face DOWN
+    du cube de tel sorte qu'il soit alors à la bonne place. Si le coin est déjà bien placé, elle retourne True.
+    
+    positionCoin : chaine de 3 caractère ( Ex : "LFD" ) 
+    couleurCoin  : chaine de 3 caractère ( Ex : "WBR" )
+    
+    Dans l'exemple : sur la face Left le coin est White, sur la face Front le coin est Bleu, etc...
+    
+    renvoie la positionCoin et couleurCoin  du coin bien placé
+    '''         
+    dico2={cube.L[0][1][1]:0, cube.L[1][1][1]:1, cube.L[2][1][1]:2, cube.L[3][1][1]:3, cube.L[4][1][1]:4, cube.L[5][1][1]:5}
+    
+    
+    positionCoinN=[]
+    couleurCoinN=[]
+    for k in range(3):
+        # Transcrit les lettres en valeurs décimal (voir support papier pour explication)
+        positionCoinN.append(dico[positionCoin[k].upper()])
+        couleurCoinN.append(dico2[couleurCoin[k].upper()])
+   
+   # On crée un variable qui compte le nombre de chiffres identique entre posiontCoinN et couleurCoinN
+    count = 0
+    for k in range(3):
+        if positionCoinN[k] in couleurCoinN:
+            count += 1
+    # 2 cas
+    # 1er cas : il y a 1 seul chiffre en commun et on tourne la face DOWN une fois
+    if count == 1:
+        suitemvt(cube,"D")
+        affichage(cube, "2ex"+"end_3")
+        ref = idChangeCornerDown(positionCoin,couleurCoin)
+#        return cornerInPlace(cube, ref[0], ref[1])[0], cornerInPlace(cube, ref[0], ref[1])[1]+"D"
+        
+        positionCoinN=[]
+        couleurCoinN=[]
+        for k in range(3):
+            # Transcrit les lettres en valeurs décimal (voir support papier pour explication)
+            positionCoinN.append(dico[ref[0][k].upper()])
+            couleurCoinN.append(dico2[ref[1][k].upper()])        
+        
+        count = 0
+        for k in range(3):
+            if positionCoinN[k] in couleurCoinN:
+                count += 1      
+        
+        # 1er cas : il n'y a aucun chiffre commun au deux valeur -> le coin est à l'opposé
+        if count == 0:
+            for k in range(2):            
+                suitemvt(cube, "D")
+                affichage(cube, "1ex"+"end_3"+str(k))
+                if k == 0:
+                    ref1 = idChangeCornerDown(ref[0],ref[1])
+                else:
+                    # Au final la face DOWN aura été tournée 3 fois donc D3 que l'on simplifie par D'
+                    ref2 = idChangeCornerDown(ref1[0], ref1[1])                    
+                    return ref2, "D'"
+                
+        
+        # 2ème cas : le coin est à la bonne place
+        # on ne fait rien
+        elif count == 2:
+            affichage(cube, "3ex"+"end_3")
+            return [ref[0], ref[1]], "D"
+            
+    #2eme cas : il y a 0 ou 2 chiffres commum
+    else:
+        # 1er cas : il n'y a aucun chiffre commun au deux valeur -> le coin est à l'opposé
+        if count == 0:
+            for k in range(2):            
+                suitemvt(cube, "D")
+                affichage(cube, "1ex"+"end_3"+str(k))
+                if k == 0:
+                    ref = idChangeCornerDown(positionCoin,couleurCoin)
+                else:
+                    ref2 = idChangeCornerDown(ref[0], ref[1])                    
+                    return ref2, "D2"
+                
+        
+        # 2ème cas : le coin est à la bonne place
+        # on ne fait rien
+        elif count == 2:
+            affichage(cube, "3ex"+"end_3")
+            return [positionCoin, couleurCoin], ""
         
 def bienOriente(cube, positionCoin, couleurCoin):
     '''
@@ -678,7 +764,7 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
                     positionCoin+=dico3[corner[k][0]]
                 
                 # Déplacer la face DOWN de telle sorte que le coin soit directement en dessous de son emplacement finale
-                ref = cornerInPlace(cube, positionCoin, couleurCoin)
+                ref = cornerInPlace2(cube, positionCoin, couleurCoin)
                 
                 # Ajout du mouvement effectué dans mvmt
                 mvmt += ref[1]
@@ -734,35 +820,35 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
             # Si le coin est en UFR
             if  ("U" in positionCoin) and ("F" in positionCoin) and ("R" in positionCoin):
                 # Tant que le coin positionCoin n'est pas bien orientée
-                while not bienOriente(cube, "UFR", cube.L[0][2][2]+cube.L[2][0][2]+cube.L[3][0][0]):
-                    # Faire la suite de mouvement
-                    suitemvt(cube,"R'D'RD")
-                    mvmt += "R'D'RD"
-                    affichage(cube, "ex"+"end_3")                   
+#                while not bienOriente(cube, "UFR", cube.L[0][2][2]+cube.L[2][0][2]+cube.L[3][0][0]):
+                # Faire la suite de mouvement
+                suitemvt(cube,"R'D'RD")
+                mvmt += "R'D'RD"
+                affichage(cube, "ex"+"end_3")                   
             # Si le coin est en LFU
             if  ("L" in positionCoin) and ("F" in positionCoin) and ("U" in positionCoin):
                 # Tant que le coin positionCoin n'est pas bien orientée
-                while not bienOriente(cube, "LFU", cube.L[1][0][2]+cube.L[2][0][0]+cube.L[0][2][0]):
-                    # Faire la suite de mouvement
-                    suitemvt(cube,"F'D'FD")
-                    mvmt += "F'D'FD"
-                    affichage(cube, "ex"+"end_3")
+#                while not bienOriente(cube, "LFU", cube.L[1][0][2]+cube.L[2][0][0]+cube.L[0][2][0]):
+                # Faire la suite de mouvement
+                suitemvt(cube,"F'D'FD")
+                mvmt += "F'D'FD"
+                affichage(cube, "ex"+"end_3")
             # Si le coin est en BLU
             if  ("B" in positionCoin) and ("L" in positionCoin) and ("U" in positionCoin):
                 # Tant que le coin positionCoin n'est pas bien orientée
-                while not bienOriente(cube, "BLU", cube.L[4][0][2]+cube.L[1][0][0]+cube.L[0][0][0]):
-                    # Faire la suite de mouvement
-                    suitemvt(cube,"L'D'LD")
-                    mvmt += "L'D'LD"
-                    affichage(cube, "ex"+"end_3")
+#                while not bienOriente(cube, "BLU", cube.L[4][0][2]+cube.L[1][0][0]+cube.L[0][0][0]):
+                # Faire la suite de mouvement
+                suitemvt(cube,"L'D'LD")
+                mvmt += "L'D'LD"
+                affichage(cube, "ex"+"end_3")
             # Si le coin est en RBU
             if  ("R" in positionCoin) and ("B" in positionCoin) and ("U" in positionCoin):
                 # Tant que le coin positionCoin n'est pas bien orientée
-                while not bienOriente(cube, "RBU", cube.L[3][0][2]+cube.L[4][0][0]+cube.L[0][0][2]):
-                    # Faire la suite de mouvement
-                    suitemvt(cube,"B'D'BD")
-                    mvmt += "B'D'BD"
-                    affichage(cube, "ex"+"end_3")
+#                while not bienOriente(cube, "RBU", cube.L[3][0][2]+cube.L[4][0][0]+cube.L[0][0][2]):
+                # Faire la suite de mouvement
+                suitemvt(cube,"B'D'BD")
+                mvmt += "B'D'BD"
+                affichage(cube, "ex"+"end_3")
     return mvmt
     
 def D_cross(cube):
@@ -940,49 +1026,51 @@ def solve(cube_c54) :
 #suitemvt(cube,"LB'FR'U")
 #affichage(cube, "lp.png")
 
-#example = ["YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
-#"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
-#"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
-#"OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
-#"BBOWWGWBGRRGROWOWBYYWWOOYGOWRRBBBGGBYGYOGOBRYROGRYYRYW",
-#"RYYOWGGORYYOYWBWYBRRGWOGOGYBRWGBBGOOYRRGGOBWWBBWBYRORW",
-#"WYGWWYBGYRROWRBRBOYRGOOYGGYORWGBGYRYBWWBOGOBROBRBYWGOW",
-#"WRRGWBWYBORGRGWROGYBBOOOYGYBRWRBGYGRBBWGOOGROYWOWYWBYY",
-#"ROOWWBYYWBROBGBOOGWWYGOBYGBRRGWBOBYWRWGYYRYGWGBORYORRG",
-#"YBWWWOWYBORRBBYOYGRRGWOBOGWBRWOBGWGGRYBYYOBGOYGRRYRGOW",
-#"GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
-#"BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
-#"RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
-#"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
-#"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
-#"RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"]
-#
-#for i in range(0,len(example)):
-#    cu = struct.Cube(example[i])
-#    affichage(cu, str(i)+" debut")
-#    a = cross(cu,"W")
-#    suitemvt(cu,a)
-#    affichage(cu, str(i)+" end_1_" + a)
-#    b = rearranger_croix(cu, "U")
-#    suitemvt(cu,b)
-#    affichage(cu, str(i)+" end_2_" + a + b)
-#    wFace_1st_crown(cu)
-#    affichage(cu, "ex"+"end_3")   
+example = [
+"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
+"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
+"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
+"OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
+"BBOWWGWBGRRGROWOWBYYWWOOYGOWRRBBBGGBYGYOGOBRYROGRYYRYW",
+"RYYOWGGORYYOYWBWYBRRGWOGOGYBRWGBBGOOYRRGGOBWWBBWBYRORW",
+"WYGWWYBGYRROWRBRBOYRGOOYGGYORWGBGYRYBWWBOGOBROBRBYWGOW",
+"WRRGWBWYBORGRGWROGYBBOOOYGYBRWRBGYGRBBWGOOGROYWOWYWBYY",
+"ROOWWBYYWBROBGBOOGWWYGOBYGBRRGWBOBYWRWGYYRYGWGBORYORRG",
+"YBWWWOWYBORRBBYOYGRRGWOBOGWBRWOBGWGGRYBYYOBGOYGRRYRGOW",
+"GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
+"BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
+"RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
+"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
+"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
+"RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
+]
+
+for i in range(0,len(example)):
+    cu = struct.Cube(example[i])
+    affichage(cu, str(i)+" debut")
+    a = cross(cu,"W")
+    suitemvt(cu,a)
+    affichage(cu, str(i)+" end_1_" + a)
+    b = rearranger_croix(cu, "U")
+    suitemvt(cu,b)
+    affichage(cu, str(i)+" end_2_" + a + b)
+    c = wFace_1st_crown(cu)
+    affichage(cu, str(i)+"ex"+"end_3" + a + b +c)   
 
 ## Test CocoM
 #ex = "RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
-ex2 = "RWYWWWOWWBGBYRBOBRGOYRGYRROBBBYOGRBRGYGOGOGYBWGWRYOWOY"
-ex3 = "BWYWWWBWBOORYGWRRYOBGOORYGBRRBYBYYYWGGOBRWROROOWGYGGBG"
-cu = struct.Cube(ex3)
-affichage(cu, "ex3_"+" debut")
-#a = cross(cu,"W")
-#suitemvt(cu,a)
-#affichage(cu, "ex_"+" end_1_" + a)
-#b = rearranger_croix(cu, "U")
-#suitemvt(cu,b)
-#affichage(cu, "ex_"+" end_2_" + a + b)
-c = wFace_1st_crown(cu)
-affichage(cu, "ex3_"+"end_3"+c)
+#ex2 = "RWYWWWOWWBGBYRBOBRGOYRGYRROBBBYOGRBRGYGOGOGYBWGWRYOWOY"
+#ex3 = "BWYWWWBWBOORYGWRRYOBGOORYGBRRBYBYYYWGGOBRWROROOWGYGGBG"
+#cu = struct.Cube(ex3)
+#affichage(cu, "ex3_"+" debut")
+##a = cross(cu,"W")
+##suitemvt(cu,a)
+##affichage(cu, "ex_"+" end_1_" + a)
+##b = rearranger_croix(cu, "U")
+##suitemvt(cu,b)
+##affichage(cu, "ex_"+" end_2_" + a + b)
+#c = wFace_1st_crown(cu)
+#affichage(cu, "ex3_"+"end_3"+c)
 
 
 
