@@ -452,6 +452,79 @@ def suitemvt(cube, mvt):
                 cube.moveHoraire(mvt[i])
         elif mvt[i] == str(2):
             cube.moveHoraire(mvt[i-1])
+    cube.solution += mvt
+    
+def optimisation_sol(cube):
+    sol = cube.solution
+    i=1
+   
+    while i < len(sol): # Pas de boucle for pour ne pas avoir de probleme quand on reduit la taille de la chaine
+        if sol[i] in ['U', 'L', 'F', 'R', 'B', 'D']:
+            move = sol[i] #mouvement considere
+            if i+1<len(sol) and (sol[i+1] == "'" or sol[i+1]=='2'): # On verifie que ce n'est pas un moveHoraire simple
+                move+= sol[i+1]
+
+            prec = sol[i-1] #mouvement precedent
+            if prec not in ['U', 'L', 'F', 'R', 'B', 'D']: #idem pour precedent
+                prec = sol[i-2] + prec
+
+
+            if prec[0]==move[0]: #si on a des mouvements pour une meme face
+                lp = len(prec)
+                lm = len(move) #taille des mouvements
+
+                if lp==1 and lm==1:
+                    new_move= move + '2' # cas avec des moveHoraire simples
+
+                else:
+                    nbrot=0
+                    #on compte le nombre de rotation a faire pour aboutir au nouveau mouvement
+                    #moveHoraire = 1 rotation
+                    #moveAntiHoraire = -1 rotation
+
+                    if lp==2: #si le precedent n'est pas un moveHoraire simple
+                        if prec[1]=='2':
+                            nbrot +=2 #on a 2 moveHoraire
+                        else:
+                            nbrot -= 1 #on a 1 moveAntiHoraire
+                    else:
+                        nbrot +=1 #on a 1 moveHoraire
+
+                    if lm==2: #on refait la meme chose pour le mouvement considere
+                        if move[1] == '2':
+                            nbrot += 2
+                        else:
+                            nbrot -= 1
+                    else:
+                        nbrot +=1
+
+                    move = move[0] #Pour eviter d'avoir des U'2 et autre a la fin
+                    if nbrot == -2 or nbrot == 2 :
+                        new_move = move + '2' #2 ou -2 rotation
+
+                    elif nbrot == -1 or nbrot == 3:
+                        new_move = move + "'" #-1 rotation - 3 rotation
+
+                    elif nbrot == 1:
+                        new_move=move
+
+                    else:
+                        new_move="" #Aucune rotation implique qu'on va simplement les enlever
+                
+                sol = sol[:i-lp] + new_move + sol[i+lm:] # on redefini la solution en replacant les 2 mouvements par les nouveau
+
+                i=i-lp-lm #on reprend l'optimisation la ou on l a laisse
+                
+                if i <0: #Sans cette verification, on entre dans une boucle infinie
+                    i=0
+            else:
+                i+=1
+        else:
+            i+=1
+
+    cube.solution = sol #on revoie la solution optimisée ver cube.solution
+
+
 
 def rearranger_croix(cube, faceup):
     '''
