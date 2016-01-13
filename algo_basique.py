@@ -118,28 +118,6 @@ def cross(cube):
     placement_croix = {'L':0, 'R':0, 'F':0, 'B':0} 
     # Il s'agit de savoir dans quel sens est tourné la croix.
     nombre_arrete_place = 0
-    # while c == False:
-    #     result = locate(cube, '',2, 'W', loca_arretes)
-    #     if result == None:
-    #         c = True
-    #     else:
-    #         # posface, poscube, posligne
-    #         # face, colonne, ligne
-    #         #if result[0][0] == 0 and result[0][1] == 1: 'L':1, 'F':2, 'R':3, 'B':4
-    #         for j in range(0,len(result)):
-    #             if not(result[j][0] == 0):
-    #                 loca_arretes.append(result[j])
-    #             else:
-    #                 if result[j][1] == 0:
-    #                     placement_croix['L'] = 1 
-    #                 elif result[j][1] == 2:
-    #                     placement_croix['R'] = 1 
-    #                 elif result[j][1] == 1 and result[j][2] == 2:
-    #                     placement_croix['F'] = 1 
-    #                 elif result[j][1] == 1 and result[j][2] == 0:
-    #                     placement_croix['B'] = 1 
-    # place_liste = [placement_croix['L'], placement_croix['F'], placement_croix['R'], placement_croix['B']]
-    # ignoreArrete = []
     place_liste = [0,0,0,0]
     # Deuxieme etape, on place succecivement les arrêtes.
     prochaine_arrete_a_placer = locate(cube, 'U',2, cube.L[0][1][1]) # On localise la prochaine arrête.
@@ -148,29 +126,11 @@ def cross(cube):
         if mvt != "":
             suitemvt(cubetemp,mvt)
             
-            # cubetemp.afficheFaces()
-        # stt = str(mvt) + "test.png"
-        # affichage(cubetemp, stt)    
         prochaine_arrete_a_placer = locate(cubetemp, 'U',2, cube.L[0][1][1]) # On localise la prochaine arrête.
         if prochaine_arrete_a_placer != None:
             None
         else:
             return mvt
-
-        # En fonction de où elle se trouve et de ce qui est présent sur la croix on tourne la croix
-        # On a differents cas ensuite
-        # Cas 1: http://rubiks3x3.com/algorithm/?moves=FrdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=FrdRFF
-        #     
-
-        # Cas 2: http://rubiks3x3.com/algorithm/?moves=frdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=frdRFF
-        #
-        # Cas 3: http://rubiks3x3.com/algorithm/?moves=rdRff&fields=nwnwwwnwnnonnonnnnngnngnnnnnrnnrnnnnnbnnbnnnnnnnnnnnnn&initrevmove=rdRff
-        #
-        # Cas 4: Quand la face est orienté sur la face opposé, il suffit de bien positionner la croix et faire tourner.
-        #
-        # print(prochaine_arrete_a_placer)
-        # print(place_liste)
-        # print(mvt)
         if prochaine_arrete_a_placer[0][0] == 1: # LEFT
             if prochaine_arrete_a_placer[0][1] == 1 and prochaine_arrete_a_placer[0][2] == 2:
                 #BAS
@@ -1307,125 +1267,3 @@ def solve(cube_c54) :
     optimisation_sol(cu)
 
     return "la solution est :"+cu.solution
-
-
-
-
-
-## AU MOMENT DE MERGER, PENSER A ENLEVER LES EXEMPLES !! ##
-# Sinon, une pythonnerie fait qu'ils seront exécutés au chargement de ce fichier (import alg_basique)..
-# Pour en garder une trace, mettez les dans poqb.py ;) (et n'oubliez pas de faire import alg_basique)
-
-
-# Exemples :
-# cube = struct.Cube("OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG")
-# cube.afficheFaces()
-#print(locate(cube, 'U',1, 'W', [[4, 2, 1], [1, 0, 1],[1, 0, 2], [5, 0, 2], [4, 2, 2]]))
-# print(cross(cube,"W"))
-#suitemvt(cube,"LB'FR'U")
-#affichage(cube, "lp.png")
-
-
-# example = [
-# "OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG",
-# "YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
-# "YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
-# "WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
-# "WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
-# "OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
-# "BBOWWGWBGRRGROWOWBYYWWOOYGOWRRBBBGGBYGYOGOBRYROGRYYRYW",
-# "RYYOWGGORYYOYWBWYBRRGWOGOGYBRWGBBGOOYRRGGOBWWBBWBYRORW",
-# "WYGWWYBGYRROWRBRBOYRGOOYGGYORWGBGYRYBWWBOGOBROBRBYWGOW",
-# "WRRGWBWYBORGRGWROGYBBOOOYGYBRWRBGYGRBBWGOOGROYWOWYWBYY",
-# "ROOWWBYYWBROBGBOOGWWYGOBYGBRRGWBOBYWRWGYYRYGWGBORYORRG",
-# "YBWWWOWYBORRBBYOYGRRGWOBOGWBRWOBGWGGRYBYYOBGOYGRRYRGOW",
-# "GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
-# "BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
-# "RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
-# "RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
-# "OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
-# "RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
-# ]
-
-# for i in range(0,len(example)):
-#     # cu = struct.Cube(example[i])
-#     print(str(i))
-#     print(len(solve(example[i]).replace("'","")))
-
-# for i in range(0,len(example)):
-#     cu = struct.Cube(example[i])
-#     cutest = struct.Cube(example[i])
-# #    affichage(cu, str(i)+" debut")
-#     a = cross(cu)
-#     suitemvt(cu,a)
-# #    affichage(cu, str(i)+" end_1_" + a)
-#     b = rearranger_croix(cu, "U")
-#     suitemvt(cu,b)
-# #    affichage(cu, str(i)+" end_2_" + a + b)
-#     c = wFace_1st_crown(cu)
-# #    affichage(cu, str(i)+" end_3" + a + b +c)
-#     d = solve_second_crown(cu)
-# #    affichage(cu, str(i)+" end_4_" + a + b + c + d)
-#     D_cross(cu)
-# #    affichage(cu, str(i)+" end_5_" + a + b + c + d + "X")
-#     place_D_corner(cu)
-# #    affichage(cu, str(i)+" end_6_" + a + b + c + d + "XX")
-#     orient_D_corner(cu)
-
-#    affichage(cu, str(i)+" end_4_" + a + b + c + d + "XXX")
-
-    
-#print(cu.solution)
-#print(len(cu.solution))
-#optimisation_sol(cu)
-#print(len(cu.solution))
-#suitemvt(cutest, cu.solution)
-#affichage(cutest, 'verification')
-# soluce = solve("RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW")
-
-# print((soluce, len(soluce)))
-#suitemvt(cutest, soluce)
-#affichage(cutest, 'test_solve')
-
-
-
-## Test CocoM
-#ex = "RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
-
-#ex2 = "RWYWWWOWWBGBYRBOBRGOYRGYRROBBBYOGRBRGYGOGOGYBWGWRYOWOY"
-#ex3 = "BWYWWWBWBOORYGWRRYOBGOORYGBRRBYBYYYWGGOBRWROROOWGYGGBG"
-#cu = struct.Cube(ex3)
-#affichage(cu, "ex3_"+" debut")
-##a = cross(cu,"W")
-##suitemvt(cu,a)
-##affichage(cu, "ex_"+" end_1_" + a)
-##b = rearranger_croix(cu, "U")
-##suitemvt(cu,b)
-##affichage(cu, "ex_"+" end_2_" + a + b)
-#c = wFace_1st_crown(cu)
-#affichage(cu, "ex3_"+"end_3"+c)
-
-
-#ex2 = "RWYWWWOWWBGBYRBOBRGOYRGYRROBBBYOGRBRGYGOGOGYBWGWRYOWOY"
-#ex3 = "BWYWWWBWBOORYGWRRYOBGOORYGBRRBYBYYYWGGOBRWROROOWGYGGBG"
-#cu = struct.Cube(ex3)
-#affichage(cu, "ex3_"+" debut")
-#a = cross(cu,"W")
-#suitemvt(cu,a)
-#affichage(cu, "ex_"+" end_1_" + a)
-#b = rearranger_croix(cu, "U")
-#suitemvt(cu,b)
-#affichage(cu, "ex_"+" end_2_" + a + b)
-#c = wFace_1st_crown(cu)
-#affichage(cu, "ex3_"+"end_3"+c)
-#exCubeTG="WWWWWWWWWBBBOOOGGGRRRBBYBOGOGOYRRBOOYGGYYRYGRBYOBYRYRG"
-#cubeTG=struct.Cube(exCubeTG)
-#mouvementTG=solve_second_crown(cubeTG)
-
-
-
-    # Up + Left + Front + Right + Back + Down (+ : concaténation)
-
-#print(idChangeCornerDown("DRF","GWO"))
-
-#print(bienOriente("FRU","RBW"))
