@@ -100,11 +100,10 @@ def place_croix(placement, mvt):
             r.append(placement[(3+i)%4])
         return r
 
-def cross(cube, face):
+def cross(cube):
     """
     On va fabriquer la croix.
     cube: Objet cube
-    face: string qui va definir la face où on fait la croix
     return: String (suite de mvts)
     On modifie notre objet cube au passage.
     De façon optimale, en général, il faudrait atteindre la croix en 6 coups (Je sais pas par quel miracle http://www.cubezone.be/crossstudy.html).
@@ -143,7 +142,7 @@ def cross(cube, face):
     # ignoreArrete = []
     place_liste = [0,0,0,0]
     # Deuxieme etape, on place succecivement les arrêtes.
-    prochaine_arrete_a_placer = locate(cube, 'U',2, 'W') # On localise la prochaine arrête.
+    prochaine_arrete_a_placer = locate(cube, 'U',2, cube.L[0][1][1]) # On localise la prochaine arrête.
     while 1 == 1:
         cubetemp = struct.Cube(cube.chaine)
         if mvt != "":
@@ -152,7 +151,7 @@ def cross(cube, face):
             # cubetemp.afficheFaces()
         # stt = str(mvt) + "test.png"
         # affichage(cubetemp, stt)    
-        prochaine_arrete_a_placer = locate(cubetemp, 'U',2, 'W') # On localise la prochaine arrête.
+        prochaine_arrete_a_placer = locate(cubetemp, 'U',2, cube.L[0][1][1]) # On localise la prochaine arrête.
         if prochaine_arrete_a_placer != None:
             None
         else:
@@ -1297,7 +1296,7 @@ example = [
 for i in range(0,len(example)):
     cu = struct.Cube(example[i])
     affichage(cu, str(i)+" debut")
-    a = cross(cu,"W")
+    a = cross(cu)
     suitemvt(cu,a)
     affichage(cu, str(i)+" end_1_" + a)
     b = rearranger_croix(cu, "U")
