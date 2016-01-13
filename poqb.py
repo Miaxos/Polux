@@ -1,6 +1,7 @@
 # poqb.py
 # -*- coding: utf-8 -*-
 
+import os
 import utils as struct
 import algo_basique as alg1
 
@@ -65,14 +66,17 @@ def solve(cube_c54):
 
 
 if __name__=="__main__":
-    cube = struct.Cube(chaine_conf_unique)
-    cube.afficheFaces()
-    test_1()
-    
-    cube = struct.Cube(chaine_alg_cubing_net)
-    cube.afficheFaces()
-    test_2()
-    cube.afficheFaces()
-
-    cube = 'OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG'
-    print ("Pour la résolution de {}\nExécuter la manoeuvre {}".format(cube, solve(cube)))
+#    cube = struct.Cube(chaine_conf_unique)
+#    cube.afficheFaces()
+#    test_1()
+#    
+#    cube = struct.Cube(chaine_alg_cubing_net)
+#    cube.afficheFaces()
+#    test_2()
+#    cube.afficheFaces()
+#
+#    cube = 'OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG'
+#    print ("Pour la résolution de {}\nExécuter la manoeuvre {}".format(cube, solve(cube)))
+    m = input("entrez la chaine de caractère correspondant au cube")    
+    print(solve(m))
+    os.system("pause")
