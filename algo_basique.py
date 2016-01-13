@@ -1286,9 +1286,10 @@ def orient_D_corner(cube):
 def solve(cube_c54) :
     """
     Résoud une configuration de cube et renvoie la suite des mouvements à réaliser.
-    
+
     :param cube_c54: string d'un cube au format 54
     """
+<<<<<<< HEAD
     cube = struct.Cube(cube_c54)
     a = cross(cube,"W")
     suitemvt(cu,a)
@@ -1302,6 +1303,28 @@ def solve(cube_c54) :
     
     solution = a+b+c+d+e+f+g
     return solution
+=======
+    cu = struct.Cube(cube_c54)
+    a = cross(cu)
+    suitemvt(cu,a)
+
+    b = rearranger_croix(cu, "U")
+    suitemvt(cu,b)
+
+    c = wFace_1st_crown(cu)
+
+    d = solve_second_crown(cu)
+
+    D_cross(cu)
+
+    place_D_corner(cu)
+
+    orient_D_corner(cu)
+
+    optimisation_sol(cu)
+
+    return cu.solution
+>>>>>>> 2cf0d7d8225966a32589c316b3e0560638dd7e42
 
 
 ## AU MOMENT DE MERGER, PENSER A ENLEVER LES EXEMPLES !! ##
@@ -1357,6 +1380,7 @@ for i in range(0,len(example)):
     place_D_corner(cu)
 #    affichage(cu, str(i)+" end_6_" + a + b + c + d + "XX")
     orient_D_corner(cu)
+<<<<<<< HEAD
 #    affichage(cu, str(i)+" end" + a + b + c + d + "XXX")
     print(i)
 print(cu.solution)
@@ -1365,6 +1389,20 @@ optimisation_sol(cu)
 print(len(cu.solution))
 suitemvt(cutest, cu.solution)
 affichage(cutest, 'verification')
+=======
+    affichage(cu, str(i)+" end_4_" + a + b + c + d + "XXX")
+    
+#print(cu.solution)
+#print(len(cu.solution))
+#optimisation_sol(cu)
+#print(len(cu.solution))
+#suitemvt(cutest, cu.solution)
+#affichage(cutest, 'verification')
+
+soluce = solve("RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW")
+suitemvt(cutest, soluce)
+affichage(cutest, 'test_solve')
+>>>>>>> 2cf0d7d8225966a32589c316b3e0560638dd7e42
 
 
 ## Test CocoM
