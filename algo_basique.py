@@ -730,7 +730,7 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
     exception = [[1,0,0],[1,2,0],[2,0,0],[2,2,0],[3,0,0],[3,2,0],[4,0,0],[4,2,0]]
     # Tant que la face blanche n'est pas totalement blanche
     mvmt = ""
-    while not cube.isFull('U','W'):  #or coinMalOriente(cube)[0]
+    while not cube.isFull('U','W'):
                 
         
         # Chercher un coin avec une facette blanche sur toutes autres face hormis la face UP
