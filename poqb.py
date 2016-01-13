@@ -60,23 +60,11 @@ def solve(cube_c54):
     return "R2L'F'DFLD'F2L'F'DFLDBDBL2B'D'BD2L'D'LD'RDR'D2F'D'F2DF'D'FDF'D2RD'R'D'B'DBDBD'B'D'L'DLD'F'DFDLD'L'D'R'DRDFD'LDL'D'F'D2FD'B'DF'D'UBU'B'UBD2B'U'BUB'U'BD'"
     """
 
-##    pass
-##    return "ch'sais pas faire..."
+
     return alg1.solve(cube_c54)
 
 
 if __name__=="__main__":
-#    cube = struct.Cube(chaine_conf_unique)
-#    cube.afficheFaces()
-#    test_1()
-#    
-#    cube = struct.Cube(chaine_alg_cubing_net)
-#    cube.afficheFaces()
-#    test_2()
-#    cube.afficheFaces()
-#
-#    cube = 'OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG'
-#    print ("Pour la résolution de {}\nExécuter la manoeuvre {}".format(cube, solve(cube)))
     m = input("entrez la chaine de caractère correspondant au cube")    
     print(solve(m))
     os.system("pause")
