@@ -5,39 +5,6 @@ import os
 import utils as struct
 import algo_basique as alg1
 
-# Exemples :
-# un test qui permet de voir que les fonctions modifient bien le cube et que les 
-# fonctions horaire et antiHoraire tournent bien.
-# On crée donc un cube qui permet de voir le déplacement exact de chaque vignette
-# puisqu'elles sont toutes identifiées de manière unique dans la configuration
-# de départ :
-chaine_conf_unique = "123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR"
-
-def test_1(cube) :
-    for i in "udfblr" :
-        print("move = " + i.upper())
-        cube.moveHoraire(i)
-        cube.moveAntiHoraire(i)
-        cube.afficheFaces()
-        cube = struct.Cube("123456789abcjklstuABCdefmnovwxDEFghipqryz{GHIJKLMNOPQR")
-
-# si les fonctions sont correctes, on devrait avoir le même cube qu'au départ.
-
-# Et un dernier test pour vraiment assurer que les fonctions font bien leur job,
-# à l'aide de l'outil fourni sur https://alg.cubing.net
-# Leur configuration de départ étant différente de la nôtre, la voici :
-chaine_alg_cubing_net = "WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY"
-
-def test_2(cube) :
-    for i in 'udb':
-        cube.moveHoraire(i)
-    for i in 'lrf':
-        cube.moveAntiHoraire(i)
-
-# et si les fonctions font bien leur job, on doit retrouver cette configuration
-# de couleur pour chaque face :
-# https://alg.cubing.net/?setup=UU-&alg=UDBL-R-F-&view=fullscreen
-
 def solve(cube_c54):
     """La fonction principale du projet qui résoud un Rubik's Cube.
 
