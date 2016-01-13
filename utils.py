@@ -60,7 +60,7 @@ class Cube:
         
                 self.L = np.array(self.L)
             else:
-                raise ValueError("Veuillez mettre la face blanche vers le haut (echanger avec ",chaine[4])
+                raise ValueError("Veuillez mettre la face blanche vers le haut (echanger avec "+chaine[4]+").")
         else :
             raise ValueError("chaine trop courte !")
 
