@@ -100,11 +100,10 @@ def place_croix(placement, mvt):
             r.append(placement[(3+i)%4])
         return r
 
-def cross(cube, face):
+def cross(cube):
     """
     On va fabriquer la croix.
     cube: Objet cube
-    face: string qui va definir la face où on fait la croix
     return: String (suite de mvts)
     On modifie notre objet cube au passage.
     De façon optimale, en général, il faudrait atteindre la croix en 6 coups (Je sais pas par quel miracle http://www.cubezone.be/crossstudy.html).
@@ -143,7 +142,7 @@ def cross(cube, face):
     # ignoreArrete = []
     place_liste = [0,0,0,0]
     # Deuxieme etape, on place succecivement les arrêtes.
-    prochaine_arrete_a_placer = locate(cube, 'U',2, 'W') # On localise la prochaine arrête.
+    prochaine_arrete_a_placer = locate(cube, 'U',2, cube.L[0][1][1]) # On localise la prochaine arrête.
     while 1 == 1:
         cubetemp = struct.Cube(cube.chaine)
         if mvt != "":
@@ -152,7 +151,7 @@ def cross(cube, face):
             # cubetemp.afficheFaces()
         # stt = str(mvt) + "test.png"
         # affichage(cubetemp, stt)    
-        prochaine_arrete_a_placer = locate(cubetemp, 'U',2, 'W') # On localise la prochaine arrête.
+        prochaine_arrete_a_placer = locate(cubetemp, 'U',2, cube.L[0][1][1]) # On localise la prochaine arrête.
         if prochaine_arrete_a_placer != None:
             None
         else:
@@ -534,10 +533,10 @@ def rearranger_croix(cube, faceup):
     '''
     mvt = ""
     if faceup:
-        face = 'U'
+        face = "U"
         idplace = 0
     else:
-        face = 'D'
+        face = "D"
         idplace = 2
 
     nbplace=0
@@ -549,45 +548,46 @@ def rearranger_croix(cube, faceup):
             else:
                 enplace.append(0)
         nbplace = sum(enplace)
+        
         if nbplace < 2:
-            cube.moveHoraire(face)
-            mvt = mvt + face
+            suitemvt(cube, face)
 
 
     if nbplace != 4: #si les 4 sont bien placé, rien a faire
         ## Cas 2 arrêtes en place côte à côte
         if enplace[3] == enplace[0] == 1:
             if faceup: #c'est plus opimise niveau mouvment si on considere differremment les face up  et down
-                mvt ="RU'R'UR"
+                mvt +="RU'R'UR"
             else:
-                mvt ="FD2F'D'FD'F'D'"
+                mvt +="FD2F'D'FD'F'D'"
         elif enplace[0]==enplace[1] == 1:
             if faceup:
-                mvt = "BU'B'UB"
+                mvt += "BU'B'UB"
             else:
-                mvt="RD2R'D'RD'R'D'"
+                mvt+="RD2R'D'RD'R'D'"
         elif enplace[1]==enplace[2] == 1:
             if faceup:
-                mvt = "LU'L'UL"
+                mvt += "LU'L'UL"
             else:
-                mvt = "BD2B'D'BD'B'D'"
+                mvt += "BD2B'D'BD'B'D'"
         elif enplace[2]==enplace[3]==1:
             if faceup:
-                mvt = "FU'F'UF"
+                mvt += "FU'F'UF"
             else:
-                mvt = "LD2L'D'LD'L'D'"
+                mvt += "LD2L'D'LD'L'D'"
 
         ##Cas 2 arrêtes en place en face
         elif enplace[0]==enplace[2]==1:
             if faceup:
-                mvt = "FU2F'U2F"
+                mvt += "FU2F'U2F"
             else:
-                mvt = "LD2L'D'LD'L'FD2F'D'FD'F'D'"
+                mvt += "FD2F'D'FD'F'D'RD2R'D'RD'R'D'FD2F'D'FD'F'D'"
+
         elif enplace[1]==enplace[3]==1:
             if faceup:
-                mvt = "LU2L'U2L"
+                mvt += "LU2L'U2L"
             else:
-                mvt = "FD2F'D'FD'D'LD2L'D'LD'L'D'"
+                mvt += "LD2L'D'LD'L'D'BD2B'D'BD'B'D'LD2L'D'LD'L'D"
     return mvt
         # suitemvt(cube,mvt)
 
@@ -1104,8 +1104,9 @@ def D_cross(cube):
     ensuite on rearrange la croix, pour que les arretes jaune soit avec leur 2eme couleur.
     rearranger_croix est adapté pour ça
     '''
-    
+
     face=cube.L[5]
+    mvt = ''
 
     if not face[0][1]==face[1][0]==face[1][2]==face[2][1]: #la croix n'est ps presente
 
@@ -1124,7 +1125,7 @@ def D_cross(cube):
         elif face[1][0] == face[2][1]:
             mvt = "RDFD'F'R'"
 
-        elif face[1][2] == face[0][1]:
+        elif face[1][2] == face[1][0]:
             mvt = "LDBD'B'L'"
 
         elif face[1][2] == face[2][1]:
@@ -1134,9 +1135,11 @@ def D_cross(cube):
             mvt = "FDLD'L'F'LBDB'D'L'"
 
         suitemvt(cube, mvt)
+        #affichage(cube,'debug')
 	#la croix est faite mais il faut que les arretes soient bien placees
-    rearranger_croix(cube, False)
-    
+    mvt = rearranger_croix(cube, False)
+
+    suitemvt(cube, mvt)
 #    return mvt + mvt1  #on re-arrange la croix
 
 def place_D_corner(cube):
@@ -1307,7 +1310,7 @@ example = [
 for i in range(0,len(example)):
     cu = struct.Cube(example[i])
     affichage(cu, str(i)+" debut")
-    a = cross(cu,"W")
+    a = cross(cu)
     suitemvt(cu,a)
     affichage(cu, str(i)+" end_1_" + a)
     b = rearranger_croix(cu, "U")
