@@ -548,9 +548,10 @@ def rearranger_croix(cube, faceup):
             else:
                 enplace.append(0)
         nbplace = sum(enplace)
-        
+
         if nbplace < 2:
             suitemvt(cube, face)
+
 
 
     if nbplace != 4: #si les 4 sont bien placé, rien a faire
@@ -588,8 +589,9 @@ def rearranger_croix(cube, faceup):
                 mvt += "LU2L'U2L"
             else:
                 mvt += "LD2L'D'LD'L'D'BD2B'D'BD'B'D'LD2L'D'LD'L'D"
+
     return mvt
-        # suitemvt(cube,mvt)
+
 
 def idChangeCornerDown(positionCoin, couleurCoin):
     '''
@@ -1093,7 +1095,7 @@ def D_cross(cube):
 
     face=cube.L[5]
     mvt = ''
-
+    affichage(cube,'debug0')
     if not face[0][1]==face[1][0]==face[1][2]==face[2][1]: #la croix n'est ps presente
 
         # cas des arretes opposees
@@ -1111,7 +1113,7 @@ def D_cross(cube):
         elif face[1][0] == face[2][1]:
             mvt = "RDFD'F'R'"
 
-        elif face[1][2] == face[1][0]:
+        elif face[1][2] == face[0][1]:
             mvt = "LDBD'B'L'"
 
         elif face[1][2] == face[2][1]:
@@ -1121,12 +1123,11 @@ def D_cross(cube):
             mvt = "FDLD'L'F'LBDB'D'L'"
 
         suitemvt(cube, mvt)
-        #affichage(cube,'debug')
+        affichage(cube,'debug')
 	#la croix est faite mais il faut que les arretes soient bien placees
     mvt = rearranger_croix(cube, False)
 
     suitemvt(cube, mvt)
-#    return mvt + mvt1  #on re-arrange la croix
 
 def place_D_corner(cube):
     #couleurs des faces
@@ -1139,7 +1140,7 @@ def place_D_corner(cube):
     'BLD' : cube.L[1][2][0] + cube.L[4][2][2] + cube.L[5][2][0]}
 
     enplace = []
-
+    mvt =''
     for i in corners: #on cherche les coin bien placés
         if (colors[i[0]] in corners[i]) and  (colors[i[1]] in corners[i]) and (colors[i[2]] in corners[i]):
             enplace.append(i)
@@ -1151,9 +1152,10 @@ def place_D_corner(cube):
             mvt = "LD'R'DL'D'RD"
             #si aucun n'est bien placé, on fait une des 4 combinaison de mouvenments.
             #il y aura alors au moins un bien placé.
-            suitemvt(cube,mvt)
+            suitemvt(cube, mvt)
             place_D_corner(cube)
-        else: #il y a alors forcément un coin bien placé
+
+        else:
 
             cornerP = enplace[0]
             # En fonction de la position des coins, il faut determiner dans quel sens les faire changer de position.
@@ -1174,71 +1176,82 @@ def place_D_corner(cube):
                     sensH = False
                 else:
                     sensH = True
-
+            
             #Les cas differents en fonction de la position du coin place et le sens dans lequel les faires bouger
             if cornerP=='FLD':
                 if sensH:
-                    mvt="R'DLD'RDL'D'"
+                    mvt+="R'DLD'RDL'D'"
 
                 else:
-                    mvt ="BD'F'DB'D'FD"
+                    mvt +="BD'F'DB'D'FD"
 
             elif cornerP =='FRD':
                 if sensH:
-                    mvt="B'DFD'BDF'D'"
+                    mvt+="B'DFD'BDF'D'"
                 else:
-                    mvt="'LD'R'DL'D'RD"
+                    mvt+="LD'R'DL'D'RD"
 
             elif cornerP =='BRD':
                 if sensH:
-                    mvt="L'DRD'LRD'"
+                    mvt+="L'DRD'LDR'D'"
                 else:
-                    mvt="FD'B'DF'D'BD"
+                    mvt+="FD'B'DF'D'BD"
 
             else:
                 if sensH:
-                    mvt="F'DBD'FDB'D'"
+                    mvt+="F'DBD'FDB'D'"
                 else:
-                    mvt="RD'L'DR'D'LD"
+                    mvt+="RD'L'DR'D'LD"
 
             suitemvt(cube,mvt)
-            
-    return mvt
+
         
+
+def cubefull(cube):
+        colors = {'U' : cube.L[0][1][1], 'L' : cube.L[1][1][1], 'F' : cube.L[2][1][1], 'R': cube.L[3][1][1],
+        'B' : cube.L[4][1][1], 'D' : cube.L[5][1][1]}
+
+        return cube.isFull('U', colors['U']) and cube.isFull('L', colors['L']) and cube.isFull('F', colors['F']) and cube.isFull('R', colors['R']) and cube.isFull('B', colors['B']) and cube.isFull('D', colors['D'])
+
 
 def orient_D_corner(cube):
     # mouvement totale
-
 
     Face={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}
     oppFace={1:'R',2:'B',3:'L',4:'F'}
 
     C= cube.L[5][1][1]
 
-    for i in range(1,5):
-        if cube.L[i][2][0] == cube.L[i][2][2] == C:
-            F=Face[i]
-            Fo = oppFace[i]
-            mvt = F + "D2" + F +"'D'"+F +"D'"+F+"'"+Fo+"'D2" + Fo+"D"+Fo+"'D"+Fo
-            
-                       
-            suitemvt(cube,mvt)
-    
+    while not cubefull(cube):
 
-    while not cube.isFull('D',C):
+        for i in range(1,5):
+            if cube.L[i][2][0] == cube.L[i][2][2] == C:
+                F=Face[i]
+                Fo = oppFace[i]
+                mvt = F + "D2" + F +"'D'"+F +"D'"+F+"'"+Fo+"'D2" + Fo+"D"+Fo+"'D"+Fo
+
+                suitemvt(cube,mvt)
+
 
         if cube.L[5][0][0] == cube.L[5][0][2] == cube.L[2][1][1]:
             mvt = "DF2D'F'DF'D'U'F2UFU'FU"
+            suitemvt(cube,mvt)
+
         elif cube.L[5][2][2] == cube.L[5][0][2] == cube.L[3][1][1]:
             mvt = "DR2D'R'DR'D'U'R2URU'RU"
+            suitemvt(cube,mvt)
+
         elif cube.L[5][2][2] == cube.L[5][2][0] == cube.L[4][1][1]:
             mvt = "DB2D'B'DB'D'U'B2UBU'BU"
+            suitemvt(cube,mvt)
+
         elif cube.L[5][0][0] == cube.L[5][2][0] == cube.L[1][1][1]:
             mvt = "DL2D'L'DL'D'U'L2ULU'LU"
-            
-        suitemvt(cube,mvt)
-    
-#    return mvt_tot      
+            suitemvt(cube,mvt)
+
+        elif not cubefull(cube):
+            mvt ="RD2R'D'RD'R'L'D2LDL'DL"
+            suitemvt(cube,mvt)
     
 
 def solve(cube_c54) :
@@ -1274,7 +1287,7 @@ def solve(cube_c54) :
 #affichage(cube, "lp.png")
 
 example = [
-"OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG"
+#"OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG"
 #"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
 #"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
 #"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
@@ -1288,13 +1301,14 @@ example = [
 #"GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
 #"BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
 #"RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
-#"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
+"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
 #"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
 #"RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
 ]
 
 for i in range(0,len(example)):
     cu = struct.Cube(example[i])
+    cutest = struct.Cube(example[i])
     affichage(cu, str(i)+" debut")
     a = cross(cu)
     suitemvt(cu,a)
@@ -1312,6 +1326,13 @@ for i in range(0,len(example)):
     affichage(cu, str(i)+" end_4_" + a + b + c + d + "XX")
     orient_D_corner(cu)
     affichage(cu, str(i)+" end_4_" + a + b + c + d + "XXX")
+    
+print(cu.solution)
+print(len(cu.solution))
+optimisation_sol(cu)
+print(len(cu.solution))
+suitemvt(cutest, cu.solution)
+affichage(cutest, 'verification')
 
 ## Test CocoM
 #ex = "RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
