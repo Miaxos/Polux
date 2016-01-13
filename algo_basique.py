@@ -703,16 +703,6 @@ def bienOriente(cube, positionCoin, couleurCoin):
         return True
     else:
         return False
-                
-#def remplacement(cube,positionCoin,coord,mvt):
-#    # Tant que le coin positionCoin n'est pas bien orientée
-#    refCoin=positionCoin
-#    refCouleur=coord
-#    while not bienOriente(refCoin, refCouleur):
-#        # Faire la suite de mouvement
-#        suitemvt(cube,mvt)
-#        refCouleur=coord
-#        affichage(cube, "ex"+"end_3")
 
 def coinMalOriente(cube):
     L=["LFU","FRU","RBU","BLU"]    
