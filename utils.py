@@ -6,18 +6,31 @@ import numpy as np
 def colonne_en_ligne(idColonne, face, fin_plage = 3, debut_plage = 0, pas_plage = 1):
     """
     Renvoie les éléments de la colonne d'indice x d'une face donnée au format d'une ligne.
-    Les 3 derniers paramètres servent à sélectionner la colonne de haut en bas
-    ou de bas en haut.
+    Les 3 derniers paramètres servent à sélectionner la colonne de haut en bas (choix par défaut)
+    ou de bas en haut (avec les valeurs -4, - 1, -1).
     """
     return np.array([face[k][idColonne] for k in range(debut_plage, fin_plage,
                                                pas_plage)])
 
 def revert_ligne(idLigne, face):
+    """
+    Inverse une ligne d'une face
+    exemple : [0,1,2] devient [2,1,0]
+    """
     copie = np.copy(face[idLigne])
     for k in range(3):
         face[idLigne][k] = copie[-k - 1]
 
 def revert_colonne(idColonne, face):
+    """
+    Inverse une colonne d'une face
+    exemple : [0, x, x
+               1, x, x
+               2, x, x] devient
+               [2, x, x
+                1, x, x
+                0, x, x]
+    """
     copie = np.array([face[k][idColonne] for k in range(3)])
     for k in range(3):
         face[k][idColonne] = copie[-k - 1]
@@ -91,16 +104,22 @@ class Cube:
 
 
     def moveHoraire(self, mouvement, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+        """
+        Réalise un mouvement dans le sens horaire sur le cube
+        """
         self.move(mouvement, "horaire")
 
     def moveAntiHoraire(self, mouvement, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
+        """
+        Réalise un mouvement dans le sens anti-horaire sur le cube
+        """
         self.move(mouvement, "antiHoraire")
 
 
     def move_vignettes(self, idFace, sens):
         """
-        Docstring
-        Basé sur la remarque que pour toutes les faces ont le même mouvement
+        Réalise une rotation sur une face uniquement, sans bouger la couronne associée au mouvement.
+        Basée sur la remarque que pour toutes les faces ont le même mouvement
         de vignettes "internes" (les auto-collants qui composent la face)
         """
         
@@ -128,11 +147,10 @@ class Cube:
                                            debut_plage, pas_plage)])
 
 
-    def move_U(self, sens, idRow = 0):
+    def move_UD(self, sens, idRow = 0):
         """
-        Docstring
-        on conserve le même ordre entre les listes lors d'un passage d'une face
-        à l'autre
+        Réalise les mouvement élémentaires "U", "U'", "D" ou "D'" en fonction de la valeur de sens et idRow.
+        Par défaut, réalise les mouvements élémentaires "U" et "U'".
         """
 
         if sens == "horaire" :
@@ -152,17 +170,19 @@ class Cube:
 
     def move_D(self, sens):
         """
-        Docstring
+        Réalise les mouvement élémentaires "D" ou "D'", qui se basent sur "U" et "U'",
+        mais dans le sens opposé, et avec des indices de lignes/colonnes différents.
         """
         if sens == "horaire" :
-            self.move_U("antiHoraire", 2)
+            self.move_UD("antiHoraire", 2)
         else :
-            self.move_U("horaire", 2)
+            self.move_UD("horaire", 2)
 
 
-    def move_F(self, sens, indicateur = "front"):
+    def move_FB(self, sens, indicateur = "front"):
         """
-        Docstring
+        Réalise les mouvement élémentaires "F", "F'", "B" ou "B'" en fonction de la valeur de sens et de indicateur.
+        Par défaut, réalise les mouvements élémentaires "F" et "F'".
         """
         if sens == "horaire":
             cycle = [0,3,5,1,0]
@@ -204,15 +224,20 @@ class Cube:
 
     def move_B(self, sens):
         """
-        Docstring
+        Réalise les mouvement élémentaires "B" ou "B'", qui se basent sur "F" et "F'",
+        mais dans le sens opposé, et avec des indices de lignes/colonnes différents.
         """
         if sens == "horaire" :
-            self.move_F("antiHoraire", "bottom")
+            self.move_FB("antiHoraire", "bottom")
         else :
-            self.move_F("horaire", "bottom")
+            self.move_FB("horaire", "bottom")
 
 
-    def move_L(self, sens, idColumn = 0):
+    def move_LR(self, sens, idColumn = 0):
+        """
+        Réalise les mouvement élémentaires "L", "L'", "R" ou "R'" en fonction de la valeur de sens et idColumn.
+        Par défaut, réalise les mouvements élémentaires "L" et "L'".
+        """
         if sens == "horaire" :
             cycle = [0,2,5,4,0]
         else :
@@ -238,10 +263,14 @@ class Cube:
                 old = np.copy(save)
                                              
     def move_R(self, sens):
+        """
+        Réalise les mouvement élémentaires "R" ou "R'", qui se basent sur "L" et "L'",
+        mais dans le sens opposé, et avec des indices de lignes/colonnes différents.
+        """
         if sens == "horaire":
-            self.move_L("antiHoraire", 2)
+            self.move_LR("antiHoraire", 2)
         else :
-            self.move_L("horaire", 2)
+            self.move_LR("horaire", 2)
 
     
     def move(self, mouvement, sens, dico = {'U':0, 'L':1, 'F':2, 'R':3, 'B':4, 'D':5}):
@@ -255,7 +284,7 @@ class Cube:
                 self.move_vignettes(idFace, sens)
 
                 if idFace == 0 :
-                    self.move_U(sens)
+                    self.move_UD(sens)
 
                 elif idFace == 5 :
                     self.move_D(sens)
@@ -263,7 +292,7 @@ class Cube:
 
 
                 elif idFace == 2 :
-                    self.move_F(sens)
+                    self.move_FB(sens)
         
                 elif idFace == 4 :
                     self.move_B(sens)
@@ -271,7 +300,7 @@ class Cube:
 
 
                 elif idFace == 1 :
-                    self.move_L(sens)
+                    self.move_LR(sens)
 
                 elif idFace == 3 :
                     self.move_R(sens)
