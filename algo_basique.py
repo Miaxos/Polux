@@ -1296,9 +1296,9 @@ def solve(cube_c54) :
     b = rearranger_croix(cu, "U")
     suitemvt(cu,b)
 
-    c = wFace_1st_crown(cu)
+    wFace_1st_crown(cu)
 
-    d = solve_second_crown(cu)
+    solve_second_crown(cu)
 
     D_cross(cu)
 
@@ -1309,6 +1309,9 @@ def solve(cube_c54) :
     optimisation_sol(cu)
 
     return "la solution est :"+cu.solution
+
+
+
 
 
 ## AU MOMENT DE MERGER, PENSER A ENLEVER LES EXEMPLES !! ##
@@ -1324,48 +1327,50 @@ def solve(cube_c54) :
 #suitemvt(cube,"LB'FR'U")
 #affichage(cube, "lp.png")
 
-#example = [
-#"OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG"
-##"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
-##"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
-##"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
-##"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
-##"OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
-##"BBOWWGWBGRRGROWOWBYYWWOOYGOWRRBBBGGBYGYOGOBRYROGRYYRYW",
-##"RYYOWGGORYYOYWBWYBRRGWOGOGYBRWGBBGOOYRRGGOBWWBBWBYRORW",
-##"WYGWWYBGYRROWRBRBOYRGOOYGGYORWGBGYRYBWWBOGOBROBRBYWGOW",
-##"WRRGWBWYBORGRGWROGYBBOOOYGYBRWRBGYGRBBWGOOGROYWOWYWBYY",
-##"ROOWWBYYWBROBGBOOGWWYGOBYGBRRGWBOBYWRWGYYRYGWGBORYORRG",
-##"YBWWWOWYBORRBBYOYGRRGWOBOGWBRWOBGWGGRYBYYOBGOYGRRYRGOW",
-##"GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
-##"BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
-##"RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
-##"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
-##"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
-##"RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
-#]
-#
-#for i in range(0,len(example)):
-#    cu = struct.Cube(example[i])
-#    cutest = struct.Cube(example[i])
-##    affichage(cu, str(i)+" debut")
-#    a = cross(cu)
-#    suitemvt(cu,a)
-##    affichage(cu, str(i)+" end_1_" + a)
-#    b = rearranger_croix(cu, "U")
-#    suitemvt(cu,b)
-##    affichage(cu, str(i)+" end_2_" + a + b)
-#    c = wFace_1st_crown(cu)
-##    affichage(cu, str(i)+" end_3" + a + b +c)
-#    d = solve_second_crown(cu)
-##    affichage(cu, str(i)+" end_4_" + a + b + c + d)
-#    D_cross(cu)
-##    affichage(cu, str(i)+" end_5_" + a + b + c + d + "X")
-#    place_D_corner(cu)
-##    affichage(cu, str(i)+" end_6_" + a + b + c + d + "XX")
-#    orient_D_corner(cu)
-##    affichage(cu, str(i)+" end" + a + b + c + d + "XXX")
-#    print(i)
+
+example = [
+"OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG"
+#"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
+#"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
+#"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
+#"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
+#"OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
+#"BBOWWGWBGRRGROWOWBYYWWOOYGOWRRBBBGGBYGYOGOBRYROGRYYRYW",
+#"RYYOWGGORYYOYWBWYBRRGWOGOGYBRWGBBGOOYRRGGOBWWBBWBYRORW",
+#"WYGWWYBGYRROWRBRBOYRGOOYGGYORWGBGYRYBWWBOGOBROBRBYWGOW",
+#"WRRGWBWYBORGRGWROGYBBOOOYGYBRWRBGYGRBBWGOOGROYWOWYWBYY",
+#"ROOWWBYYWBROBGBOOGWWYGOBYGBRRGWBOBYWRWGYYRYGWGBORYORRG",
+#"YBWWWOWYBORRBBYOYGRRGWOBOGWBRWOBGWGGRYBYYOBGOYGRRYRGOW",
+#"GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
+#"BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
+#"RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
+#"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
+#"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
+#"RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
+]
+
+for i in range(0,len(example)):
+    cu = struct.Cube(example[i])
+    cutest = struct.Cube(example[i])
+#    affichage(cu, str(i)+" debut")
+    a = cross(cu)
+    suitemvt(cu,a)
+#    affichage(cu, str(i)+" end_1_" + a)
+    b = rearranger_croix(cu, "U")
+    suitemvt(cu,b)
+#    affichage(cu, str(i)+" end_2_" + a + b)
+    c = wFace_1st_crown(cu)
+#    affichage(cu, str(i)+" end_3" + a + b +c)
+    d = solve_second_crown(cu)
+#    affichage(cu, str(i)+" end_4_" + a + b + c + d)
+    D_cross(cu)
+#    affichage(cu, str(i)+" end_5_" + a + b + c + d + "X")
+    place_D_corner(cu)
+#    affichage(cu, str(i)+" end_6_" + a + b + c + d + "XX")
+    orient_D_corner(cu)
+
+#    affichage(cu, str(i)+" end_4_" + a + b + c + d + "XXX")
+
     
 #print(cu.solution)
 #print(len(cu.solution))
@@ -1374,9 +1379,11 @@ def solve(cube_c54) :
 #suitemvt(cutest, cu.solution)
 #affichage(cutest, 'verification')
 soluce = solve("RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW")
+
 print((soluce, len(soluce)))
 #suitemvt(cutest, soluce)
 #affichage(cutest, 'test_solve')
+
 
 
 ## Test CocoM
