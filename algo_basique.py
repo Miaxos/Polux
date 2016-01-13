@@ -861,7 +861,7 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
                         # Faire la suite de mouvement
                         suitemvt(cube,"R'D'RD")
                         mvmt += "R'D'RD"
-                        affichage(cube, "ex"+"end_3") 
+                        # affichage(cube, "ex"+"end_3") 
                 # Si le coin est en LFD
                 if  ("L" in ref[0][0]) and ("F" in ref[0][0]) and ("D" in ref[0][0]):
                     # Tant que le coin positionCoin n'est pas bien orientée
@@ -869,7 +869,7 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
                         # Faire la suite de mouvement
                         suitemvt(cube,"F'D'FD")
                         mvmt += "F'D'FD"
-                        affichage(cube, "ex"+"end_3")                    
+                        # affichage(cube, "ex"+"end_3")                    
                 # Si le coin est en BLD
                 if  ("B" in ref[0][0]) and ("L" in ref[0][0]) and ("D" in ref[0][0]):
                     # Tant que le coin positionCoin n'est pas bien orientée
@@ -877,7 +877,7 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
                         # Faire la suite de mouvement
                         suitemvt(cube,"L'D'LD")
                         mvmt += "L'D'LD"
-                        affichage(cube, "ex"+"end_3")                    
+                        # affichage(cube, "ex"+"end_3")                    
                 # Si le coin est en RBD
                 if  ("R" in ref[0][0]) and ("B" in ref[0][0]) and ("D" in ref[0][0]):
                     # Tant que le coin positionCoin n'est pas bien orientée
@@ -885,7 +885,7 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
                         # Faire la suite de mouvement
                         suitemvt(cube,"B'D'BD")
                         mvmt += "B'D'BD"
-                        affichage(cube, "ex"+"end_3")
+                        # affichage(cube, "ex"+"end_3")
                     
         ## Il est possible que la face blanche ne soit pas entièrement remplie et que le nombre de coin
         ## de la face DOWN ayant une facette blanche soient épuisé
@@ -907,25 +907,25 @@ def wFace_1st_crown(cube, dico3={0:'U', 1:'L', 2:'F', 3:'R', 4:'B', 5:'D'}):
                 # Faire la suite de mouvement
                 suitemvt(cube,"R'D'RD")
                 mvmt += "R'D'RD"
-                affichage(cube, "ex"+"end_3")                   
+                # affichage(cube, "ex"+"end_3")                   
             # Si le coin est en LFU
             if  ("L" in positionCoin) and ("F" in positionCoin) and ("U" in positionCoin):
                 # Faire la suite de mouvement
                 suitemvt(cube,"F'D'FD")
                 mvmt += "F'D'FD"
-                affichage(cube, "ex"+"end_3")
+                # affichage(cube, "ex"+"end_3")
             # Si le coin est en BLU
             if  ("B" in positionCoin) and ("L" in positionCoin) and ("U" in positionCoin):
                 # Faire la suite de mouvement
                 suitemvt(cube,"L'D'LD")
                 mvmt += "L'D'LD"
-                affichage(cube, "ex"+"end_3")
+                # affichage(cube, "ex"+"end_3")
             # Si le coin est en RBU
             if  ("R" in positionCoin) and ("B" in positionCoin) and ("U" in positionCoin):
                 # Faire la suite de mouvement
                 suitemvt(cube,"B'D'BD")
                 mvmt += "B'D'BD"
-                affichage(cube, "ex"+"end_3")
+                # affichage(cube, "ex"+"end_3")
         
         # Dans le cas où un des coin est mal orienté
         val = coinMalOriente(cube)          
@@ -1064,11 +1064,9 @@ def solve_second_crown(cube) :
     correct = second_crown_correct(cube)
     #tant que la deuxieme couronne n'est pas completee
     while correct[0]==False:
-        print(i,cube.L)
         mvtTour=""
         #on appelle check_T_Shape
         face=check_T_shape(cube)
-        print(face)
         #si la fonction retourne une face, on regarde de quel coté doit se mettre le cube en comparant la couleur de la facette qui est sur la face jaune et la couleur des faces a droite et a gauche
         if(face[0]!=None and face[1]!=None and face[2]!=None):
             mvtTour+=face[1]
@@ -1329,45 +1327,50 @@ def solve(cube_c54) :
 
 
 example = [
-"OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG"
-#"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
-#"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
-#"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
-#"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
-#"OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
-#"BBOWWGWBGRRGROWOWBYYWWOOYGOWRRBBBGGBYGYOGOBRYROGRYYRYW",
-#"RYYOWGGORYYOYWBWYBRRGWOGOGYBRWGBBGOOYRRGGOBWWBBWBYRORW",
-#"WYGWWYBGYRROWRBRBOYRGOOYGGYORWGBGYRYBWWBOGOBROBRBYWGOW",
-#"WRRGWBWYBORGRGWROGYBBOOOYGYBRWRBGYGRBBWGOOGROYWOWYWBYY",
-#"ROOWWBYYWBROBGBOOGWWYGOBYGBRRGWBOBYWRWGYYRYGWGBORYORRG",
-#"YBWWWOWYBORRBBYOYGRRGWOBOGWBRWOBGWGGRYBYYOBGOYGRRYRGOW",
-#"GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
-#"BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
-#"RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
-#"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
-#"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
-#"RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
+"OGRBWYBGBGYYOYOWOWGRYOOOBGBRRYRBWWWRBWYGROWGRYBRGYWBOG",
+"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
+"YBBRWORRGRBWGGWOBOWYBGOOYGOWRYRBOGWYBBWBWYOYYOWRGYRRGG",
+"WRROWYGBYOWOYRBRBGYGBYOWGGOGRBWBGOWBOYWBRRGBGYORRYYWOW",
+"WRWWWRWOYRROGWOBBRBGGGOBYGGYRRYBWBOYOYOBORYWRGOWGYBYBG",
+"OWOBWGRRBBWGYGRYYYGGWBORWGYBRRYBRGWOYORGOBRYWBBWOYGOOW",
+"BBOWWGWBGRRGROWOWBYYWWOOYGOWRRBBBGGBYGYOGOBRYROGRYYRYW",
+"RYYOWGGORYYOYWBWYBRRGWOGOGYBRWGBBGOOYRRGGOBWWBBWBYRORW",
+"WYGWWYBGYRROWRBRBOYRGOOYGGYORWGBGYRYBWWBOGOBROBRBYWGOW",
+"WRRGWBWYBORGRGWROGYBBOOOYGYBRWRBGYGRBBWGOOGROYWOWYWBYY",
+"ROOWWBYYWBROBGBOOGWWYGOBYGBRRGWBOBYWRWGYYRYGWGBORYORRG",
+"YBWWWOWYBORRBBYOYGRRGWOBOGWBRWOBGWGGRYBYYOBGOYGRRYRGOW",
+"GRRBWOORRYOBYYGYYYBGOYOWBGYGRWOBBOOGWGRWROBRGRWBGYWWBW",
+"BGBYWWRWWOOGYGOGROWYYOORGGRYRYBBBROBYBYOWGWRBRWGGYOWBR",
+"RWBGWGBBRBYYORGYOWRBYWORGGRYRYBBGOBOBOGWWOGRGWYROYOWWY",
+"RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW",
+"OYGGWRBYRGYOWOYBYYRBYOOWGGBWRWRBWRBOYOGOGRGBBBGWOYRWRW",
+"RYGWWWRROWOWGGYGBWOGBGGBYRWRBRYOWYOYRRWOGYBORBBBBYOGYO"
 ]
 
 for i in range(0,len(example)):
-    cu = struct.Cube(example[i])
-    cutest = struct.Cube(example[i])
-#    affichage(cu, str(i)+" debut")
-    a = cross(cu)
-    suitemvt(cu,a)
-#    affichage(cu, str(i)+" end_1_" + a)
-    b = rearranger_croix(cu, "U")
-    suitemvt(cu,b)
-#    affichage(cu, str(i)+" end_2_" + a + b)
-    c = wFace_1st_crown(cu)
-#    affichage(cu, str(i)+" end_3" + a + b +c)
-    d = solve_second_crown(cu)
-#    affichage(cu, str(i)+" end_4_" + a + b + c + d)
-    D_cross(cu)
-#    affichage(cu, str(i)+" end_5_" + a + b + c + d + "X")
-    place_D_corner(cu)
-#    affichage(cu, str(i)+" end_6_" + a + b + c + d + "XX")
-    orient_D_corner(cu)
+    # cu = struct.Cube(example[i])
+    print(str(i))
+    print(len(solve(example[i]).replace("'","")))
+
+# for i in range(0,len(example)):
+#     cu = struct.Cube(example[i])
+#     cutest = struct.Cube(example[i])
+# #    affichage(cu, str(i)+" debut")
+#     a = cross(cu)
+#     suitemvt(cu,a)
+# #    affichage(cu, str(i)+" end_1_" + a)
+#     b = rearranger_croix(cu, "U")
+#     suitemvt(cu,b)
+# #    affichage(cu, str(i)+" end_2_" + a + b)
+#     c = wFace_1st_crown(cu)
+# #    affichage(cu, str(i)+" end_3" + a + b +c)
+#     d = solve_second_crown(cu)
+# #    affichage(cu, str(i)+" end_4_" + a + b + c + d)
+#     D_cross(cu)
+# #    affichage(cu, str(i)+" end_5_" + a + b + c + d + "X")
+#     place_D_corner(cu)
+# #    affichage(cu, str(i)+" end_6_" + a + b + c + d + "XX")
+#     orient_D_corner(cu)
 
 #    affichage(cu, str(i)+" end_4_" + a + b + c + d + "XXX")
 
@@ -1378,9 +1381,9 @@ for i in range(0,len(example)):
 #print(len(cu.solution))
 #suitemvt(cutest, cu.solution)
 #affichage(cutest, 'verification')
-soluce = solve("RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW")
+# soluce = solve("RYGWWOORGBRYGYYRGRWGYOORGGBYRGWBWBBOBOYBRGOBWWYOOYBRWW")
 
-print((soluce, len(soluce)))
+# print((soluce, len(soluce)))
 #suitemvt(cutest, soluce)
 #affichage(cutest, 'test_solve')
 
