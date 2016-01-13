@@ -1028,7 +1028,7 @@ def D_cross(cube):
 
     face=cube.L[5]
     mvt = ''
-    affichage(cube,'debug0')
+    
     if not face[0][1]==face[1][0]==face[1][2]==face[2][1]: #la croix n'est ps presente
 
         # cas des arretes opposees
@@ -1056,7 +1056,7 @@ def D_cross(cube):
             mvt = "FDLD'L'F'LBDB'D'L'"
 
         suitemvt(cube, mvt)
-        affichage(cube,'debug')
+        
 	#la croix est faite mais il faut que les arretes soient bien placees
     mvt = rearranger_croix(cube, False)
 
