@@ -35,30 +35,32 @@ class Cube:
         self.solution = ""
         self.chaine = chaine       
         if len(chaine) == 54 :
-            # On pose L
-            self.L=[[]]             
-                        
-            # Détermination de la face du haut
-            for k in range(3):
+            if(chaine[4] == 'W'):
+                # On pose L
+                self.L=[[]]             
+                            
+                # Détermination de la face du haut
+                for k in range(3):
                     self.L[0].append(list(chaine[0+3*k:3+3*k]))            
-                       
-            # Détermination des faces gauche, devant, droite , derrière
-            for k in range(4):              
-                self.L.append([list(chaine[9+3*k:12+3*k]),\
-                          list(chaine[21+3*k:24+3*k]),\
-                          list(chaine[33+3*k:36+3*k])])                      
-            self.L.append([])
-            
-            # Détermination de la face de dérrière
-            for k in range(3):                  
-                self.L[5].append(list(chaine[45+3*k:48+3*k]))            
-            
-            # On transforme chacune des faces en tableau numpy     
-            for k in range(6):
-                self.L[k]=np.array(self.L[k])
-    
-            self.L = np.array(self.L)
+                           
+                # Détermination des faces gauche, devant, droite , derrière
+                for k in range(4):              
+                    self.L.append([list(chaine[9+3*k:12+3*k]),\
+                              list(chaine[21+3*k:24+3*k]),\
+                              list(chaine[33+3*k:36+3*k])])                      
+                self.L.append([])
+                
+                # Détermination de la face de dérrière
+                for k in range(3):                  
+                    self.L[5].append(list(chaine[45+3*k:48+3*k]))            
+                
+                # On transforme chacune des faces en tableau numpy     
+                for k in range(6):
+                    self.L[k]=np.array(self.L[k])
         
+                self.L = np.array(self.L)
+            else:
+                raise ValueError("Veuillez mettre la face blanche vers le haut (echanger avec "+chaine[4]+").")
         else :
             raise ValueError("chaine trop courte !")
 
