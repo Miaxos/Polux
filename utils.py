@@ -3,6 +3,15 @@
 
 import numpy as np
 
+def copie(cube):
+    """
+    Une fonction qui renvoie une véritable copie du cube, et pas un alias, comme 
+    avec la commande cube_2 = cube
+    """
+	cube_2 = Cube()
+	suitemvt(cube_2, cube.solution)
+	return cube_2
+	
 def colonne_en_ligne(idColonne, face, fin_plage = 3, debut_plage = 0, pas_plage = 1):
     """
     Renvoie les éléments de la colonne d'indice x d'une face donnée au format d'une ligne.
