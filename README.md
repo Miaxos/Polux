@@ -19,7 +19,7 @@ Hypothèse sur le cube :
 * la face UP est la face de couleur blanche
 
 Et pour lancer la résolution du cube ?
-Simplement double-cliquer sur poqb.py et laisser vous guider par les instructions !
+Simplement double-cliquer sur poqb.py et laissez vous guider par les instructions !
 
 ##### Améliorations du projet  
 - Moteur de modélisation 3D
