@@ -18,6 +18,9 @@ Configuration Python utilisée (pour ne pas avoir de problèmes avec les histoir
 Hypothèse sur le cube :
 * la face UP est la face de couleur blanche
 
+Et pour lancer la résolution du cube ?
+Simplement double-cliquer sur poqb.py et laisser vous guider par les instructions !
+
 ##### Améliorations du projet  
 - Moteur de modélisation 3D
 - Reconnaissance des couleurs par image: fonctionnel (selon l'éclairage) face par face, en temps réel
