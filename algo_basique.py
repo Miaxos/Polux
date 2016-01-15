@@ -1212,4 +1212,4 @@ def solve(cube_c54) :
 
     optimisation_sol(cu)
 
-    return "la solution est :"+cu.solution+" | nombre de mouvements : "+str(len(cu.solution))
+    return cu.solution
